@@ -58,23 +58,23 @@ jobs:
 
     # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
     - name: Install OpenSSL (macOS)
+      if: matrix.platform == 'macos-latest'
       run: |
         brew update
         brew install openssl
-      if: matrix.platform = 'macos-latest'
     - name: set openssl path env variable
+      if: matrix.platform == 'macos-latest'
       run: echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
-      if: matrix.platform = 'macos-latest'
 
     # paho.mqtt requires openssl on Windows
     - name: Install OpenSSL 1.0.2s - Windows
+      if: matrix.os == 'windows-latest'
       # Prebuilt openssl:x64-windows-static from https://github.com/microsoft/vcpkg/releases/tag/2019.12
       run: |
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest https://iotaledger-files.s3.eu-central-1.amazonaws.com/trinity/desktop/prebuild/windows/vcpkg-export-openssl-1.0.2s.zip -OutFile openssl.zip
         Expand-Archive openssl.zip -DestinationPath C:\src\vcpkg
         Remove-Item openssl.zip
-      if: matrix.os == 'windows-latest'
 
     - name: Build
       uses: actions-rs/cargo@v1
