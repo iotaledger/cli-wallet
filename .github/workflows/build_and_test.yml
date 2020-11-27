@@ -55,6 +55,17 @@ jobs:
         # Restore from outdated cache for speed
         restore-keys: |
           cargo-build-target-${{ hashFiles('**/Cargo.toml') }}
+
+    # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
+    - name: Install OpenSSL (macOS)
+      run: |
+        brew update
+        brew install openssl
+      if: matrix.platform = 'macos-latest'
+    - name: set openssl path env variable
+      run: echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
+      if: matrix.platform = 'macos-latest'
+
     - name: Build
       uses: actions-rs/cargo@v1
       with:

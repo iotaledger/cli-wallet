@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - name: get version
+      - name: set version env variable
         run: echo "CRATE_VERSION=$(cat Cargo.toml | sed -n 's/.*version = "\([^"]*\)".*/\1/p' | head -1)" >> $GITHUB_ENV
       - name: create release
         id: create_release
@@ -54,11 +54,25 @@ jobs:
         with:
           toolchain: stable
           profile: minimal
+
+      # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
+      - name: Install OpenSSL (macOS)
+        run: |
+          brew update
+          brew install openssl
+        if: matrix.platform = 'macos-latest'
+      - name: set openssl path env variable
+        run: echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
+        if: matrix.platform = 'macos-latest'
+
+      # build the CLI
       - name: Build
         uses: actions-rs/cargo@v1
         with:
           command: build
           args: --release
+
+      # upload binary to the GH release
       - name: upload release asset
         id: upload-release-asset
         uses: actions/upload-release-asset@v1.0.2
