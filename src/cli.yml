@@ -1,0 +1,53 @@
+name: Wallet CLI
+version: '1.0'
+author: Lucas Nogueira <lucas.nogueira@iota.org>
+about: Interface with the IOTA Wallet Library.
+subcommands:
+  - account:
+      about: Selects an account to use.
+      args:
+        - alias:
+            about: The alias of the account to select.
+            required: true
+            index: 1
+  - new:
+      about: Creates a new account.
+      args:
+        - node:
+            short: n
+            long: node
+            about: A node to connect to.
+            required: true
+            takes_value: true
+            multiple: true
+        - alias:
+            short: a
+            long: alias
+            about: The account alias.
+            takes_value: true
+        - mnemonic:
+            short: m
+            long: mnemonic
+            about: The 24-word mnemonic.
+            takes_value: true
+  - delete:
+      about: Deletes an account.
+      args:
+        - alias:
+            about: The account alias.
+            required: true
+            index: 1
+  - sync:
+      about: Syncs all accounts with the Tangle.
+  - backup:
+      about: Backups the storage.
+      args:
+        - path:
+            about: The path to store the backup.
+            required: true
+            index: 1
+  - import:
+      about: Import accounts from a backup.
+      args:
+        - path:
+            about: Path to the backup folder.
