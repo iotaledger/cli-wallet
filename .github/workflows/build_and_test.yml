@@ -33,7 +33,7 @@ jobs:
       with:
         path: ~/.cargo/registry
         # Add date to the cache to keep it up to date
-        key: cargo-registry-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        key: ${{ matrix.platform }}-cargo-registry-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
         # Restore from outdated cache for speed
         restore-keys: |
           cargo-registry-${{ hashFiles('**/Cargo.toml') }}
@@ -42,7 +42,7 @@ jobs:
       with:
         path: ~/.cargo/git
         # Add date to the cache to keep it up to date
-        key: cargo-index-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        key: ${{ matrix.platform }}-cargo-index-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
         # Restore from outdated cache for speed
         restore-keys: |
           cargo-index-${{ hashFiles('**/Cargo.toml') }}
@@ -51,7 +51,7 @@ jobs:
       with:
         path: target
         # Add date to the cache to keep it up to date
-        key: cargo-build-target-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        key: ${{ matrix.platform }}-cargo-build-target-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
         # Restore from outdated cache for speed
         restore-keys: |
           cargo-build-target-${{ hashFiles('**/Cargo.toml') }}
