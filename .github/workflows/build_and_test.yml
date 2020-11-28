@@ -1,0 +1,98 @@
+name: Build and run tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - develop
+
+jobs:
+  build-and-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Install stable toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        override: true
+
+    - name: Get current date
+      run: echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+      if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
+    - name: Get current date
+      if: matrix.os == 'windows-latest'
+      run: echo "CURRENT_DATE=$(Get-Date -Format "yyyy-MM-dd")" >> $GITHUB_ENV
+
+    - name: Cache cargo registry
+      uses: actions/cache@v2
+      with:
+        path: ~/.cargo/registry
+        # Add date to the cache to keep it up to date
+        key: ${{ matrix.os }}-cargo-registry-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        # Restore from outdated cache for speed
+        restore-keys: |
+          cargo-registry-${{ hashFiles('**/Cargo.toml') }}
+    - name: Cache cargo index
+      uses: actions/cache@v2
+      with:
+        path: ~/.cargo/git
+        # Add date to the cache to keep it up to date
+        key: ${{ matrix.os }}-cargo-index-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        # Restore from outdated cache for speed
+        restore-keys: |
+          cargo-index-${{ hashFiles('**/Cargo.toml') }}
+    - name: Cache cargo target
+      uses: actions/cache@v2
+      with:
+        path: target
+        # Add date to the cache to keep it up to date
+        key: ${{ matrix.os }}-cargo-build-target-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        # Restore from outdated cache for speed
+        restore-keys: |
+          cargo-build-target-${{ hashFiles('**/Cargo.toml') }}
+    - name: Cache openssl installation (Windows)
+      if: matrix.os == 'windows-latest'
+      uses: actions/cache@v2
+      with:
+        path: C:\Program Files\OpenSSL-Win64
+        # Add date to the cache to keep it up to date
+        key: chocolatey-openssl-${{ env.CURRENT_DATE }}
+        # Restore from outdated cache for speed
+        restore-keys: |
+          chocolatey-openssl
+
+    # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
+    - name: Install OpenSSL (macOS)
+      if: matrix.os == 'macos-latest'
+      run: |
+        brew update
+        brew install openssl
+        echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
+
+    # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on Windows
+    - name: Install OpenSSL (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install openssl
+        echo "OPENSSL_ROOT_DIR=C:\Program Files\OpenSSL-Win64" >> $GITHUB_ENV
+
+    - name: Build
+      uses: actions-rs/cargo@v1
+      with:
+        command: build
+        args: --release -vv
+
+    - name: Run tests
+      uses: actions-rs/cargo@v1
+      with:
+        command: test
+        args: --release
