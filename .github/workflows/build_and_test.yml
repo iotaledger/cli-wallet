@@ -70,10 +70,9 @@ jobs:
     - name: Install OpenSSL (Windows)
       if: matrix.platform == 'windows-latest'
       run: |
-        vcpkg integrate install
         vcpkg.exe install openssl:x64-windows
+        vcpkg integrate install
         echo "VCPKGRS_DYNAMIC=1" >> $GITHUB_ENV
-        ls ${{ github.workspace }} -recurse -depth 2
 
     - name: Build
       uses: actions-rs/cargo@v1
