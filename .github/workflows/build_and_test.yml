@@ -72,6 +72,8 @@ jobs:
       run: |
         vcpkg.exe install openssl:x64-windows
         echo "VCPKGRS_DYNAMIC=1" >> $GITHUB_ENV
+        ls ${{ github.workspace }}/vcpkg/installed
+        echo "OPENSSL_ROOT_DIR=${{ github.workspace }}/vcpkg/installed/x64-windows" >> $GITHUB_ENV
 
     - name: Build
       uses: actions-rs/cargo@v1
