@@ -68,7 +68,9 @@ jobs:
       # paho.mqtt requires openssl on Windows
       - name: Install OpenSSL (Windows)
         if: matrix.platform == 'windows-latest'
-        run: run: choco install openssl
+        run: |
+          vcpkg.exe install openssl:x64-windows
+          echo "VCPKGRS_DYNAMIC=1" >> $GITHUB_ENV
 
       # build the CLI
       - name: Build
