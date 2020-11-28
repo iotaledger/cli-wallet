@@ -67,14 +67,9 @@ jobs:
       run: echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
 
     # paho.mqtt requires openssl on Windows
-    - name: Install OpenSSL 1.0.2s - Windows
+    - name: Install OpenSSL (Windows)
       if: matrix.platform == 'windows-latest'
-      # Prebuilt openssl:x64-windows-static from https://github.com/microsoft/vcpkg/releases/tag/2019.12
-      run: |
-        $ProgressPreference = 'SilentlyContinue'
-        Invoke-WebRequest https://iotaledger-files.s3.eu-central-1.amazonaws.com/trinity/desktop/prebuild/windows/vcpkg-export-openssl-1.0.2s.zip -OutFile openssl.zip
-        Expand-Archive openssl.zip -DestinationPath C:\src\vcpkg
-        Remove-Item openssl.zip
+      run: choco install openssl
 
     - name: Build
       uses: actions-rs/cargo@v1
