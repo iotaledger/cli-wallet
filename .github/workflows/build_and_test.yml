@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - fix/windows-ci
   pull_request:
     branches:
       - develop
@@ -28,9 +29,10 @@ jobs:
     - name: Get current date
       run: echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
       if: matrix.os == 'macos-latest' || matrix.os == 'ubuntu-latest'
+
     - name: Get current date
       if: matrix.os == 'windows-latest'
-      run: echo "CURRENT_DATE=$(Get-Date -Format "yyyy-MM-dd")" >> $GITHUB_ENV
+      run: echo "CURRENT_DATE=$(Get-Date -Format "yyyy-MM-dd")" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Cache cargo registry
       uses: actions/cache@v2
@@ -59,16 +61,6 @@ jobs:
         # Restore from outdated cache for speed
         restore-keys: |
           cargo-build-target-${{ hashFiles('**/Cargo.toml') }}
-    - name: Cache openssl installation (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: actions/cache@v2
-      with:
-        path: C:\Program Files\OpenSSL-Win64
-        # Add date to the cache to keep it up to date
-        key: chocolatey-openssl-${{ env.CURRENT_DATE }}
-        # Restore from outdated cache for speed
-        restore-keys: |
-          chocolatey-openssl
 
     # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
     - name: Install OpenSSL (macOS)
@@ -82,8 +74,8 @@ jobs:
     - name: Install OpenSSL (Windows)
       if: matrix.os == 'windows-latest'
       run: |
-        choco install openssl
-        echo "OPENSSL_ROOT_DIR=C:\Program Files\OpenSSL-Win64" >> $GITHUB_ENV
+        choco install openssl --no-progress
+        echo "OPENSSL_ROOT_DIR=C:\Program Files\OpenSSL-Win64" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Build
       uses: actions-rs/cargo@v1
