@@ -61,21 +61,6 @@ jobs:
         restore-keys: |
           cargo-build-target-${{ hashFiles('**/Cargo.toml') }}
 
-    - name: Debug
-      run: choco config list
-      if: matrix.os == 'windows-latest'
-
-    - name: Cache openssl installation (Windows)
-      if: matrix.os == 'windows-latest'
-      uses: actions/cache@v2
-      with:
-        path: C:\Program Files\OpenSSL-Win64
-        # Add date to the cache to keep it up to date
-        key: chocolatey-openssl-${{ env.CURRENT_DATE }}
-        # Restore from outdated cache for speed
-        restore-keys: |
-          chocolatey-openssl
-
     # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
     - name: Install OpenSSL (macOS)
       if: matrix.os == 'macos-latest'
