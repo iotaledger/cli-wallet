@@ -54,7 +54,7 @@ fn list_messages_command(account: &Account, matches: &ArgMatches) {
 
 // `list-addresses` command
 fn list_addresses_command(account: &Account, matches: &ArgMatches) {
-  if let Some(_) = matches.subcommand_matches("list-addresses") {
+  if matches.subcommand_matches("list-addresses").is_some() {
     let mut addresses = account.list_addresses(false);
     addresses.extend(account.list_addresses(true));
     if addresses.is_empty() {
@@ -77,7 +77,7 @@ fn sync_account_command(account: &mut Account, matches: &ArgMatches) -> Result<(
 
 // `address` command
 fn generate_address_command(account: &mut Account, matches: &ArgMatches) -> Result<()> {
-  if let Some(_) = matches.subcommand_matches("address") {
+  if matches.subcommand_matches("address").is_some() {
     let address = account.generate_address()?;
     println!("{}", address.address().to_bech32());
   }
@@ -86,7 +86,7 @@ fn generate_address_command(account: &mut Account, matches: &ArgMatches) -> Resu
 
 // `balance` command
 fn balance_command(account: &Account, matches: &ArgMatches) {
-  if let Some(_) = matches.subcommand_matches("balance") {
+  if matches.subcommand_matches("balance").is_some() {
     let balance = account
       .addresses()
       .iter()
