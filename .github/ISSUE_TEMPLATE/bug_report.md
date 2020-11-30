@@ -17,7 +17,7 @@ Which version of Rust are you running?
 
 ## Version
 
-Which version of the library are you using?
+Which version of the CLI are you using?
 
 - Version number, commit, or branch: 
 
