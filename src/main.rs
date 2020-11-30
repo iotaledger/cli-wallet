@@ -159,6 +159,7 @@ fn run() -> Result<()> {
     let matches = App::from(yaml)
         .help_template(CLI_TEMPLATE)
         .setting(AppSettings::ColoredHelp)
+        .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
     select_account_command(&account_cli, &manager, &matches);
