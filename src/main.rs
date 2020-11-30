@@ -15,7 +15,7 @@ use std::{env::var_os, sync::Mutex};
 
 mod account;
 
-const CLI_TEMPLATE: &'static str = "\
+const CLI_TEMPLATE: &str = "\
   {before-help}{bin} {version}\n\
   {about-with-newline}\n\
   {usage-heading}\n    {usage}\n\
@@ -23,7 +23,7 @@ const CLI_TEMPLATE: &'static str = "\
   {all-args}{after-help}\
 ";
 
-const ACCOUNT_CLI_TEMPLATE: &'static str = "\
+const ACCOUNT_CLI_TEMPLATE: &str = "\
   {all-args}{after-help}\
 ";
 
@@ -102,7 +102,7 @@ fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Res
 }
 
 fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
-    if let Some(_) = matches.subcommand_matches("sync") {
+    if matches.subcommand_matches("sync").is_some() {
         let synced = block_on(async move { manager.sync_accounts().await })?;
         println!("Synchronized {} accounts", synced.len());
     }
