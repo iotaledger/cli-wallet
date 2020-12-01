@@ -59,7 +59,6 @@ jobs:
       - name: Install OpenSSL (macOS)
         if: matrix.os == 'macos-latest'
         run: |
-          brew update
           brew install openssl
           echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
 
