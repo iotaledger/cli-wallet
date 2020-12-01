@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - ci/notarize
 
 jobs:
   create-release:
@@ -36,8 +35,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #os: [ubuntu-latest, macos-latest, windows-latest]
-        os: [macos-latest]
+        os: [ubuntu-latest, macos-latest, windows-latest]
         include:
           - os: ubuntu-latest
             identifier: linux
