@@ -59,6 +59,11 @@ jobs:
       - name: Set OpenSSL location (macOS)
         if: matrix.os == 'macos-latest'
         run: echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl@1.1)" >> $GITHUB_ENV
+      
+      - name: Install gon (macOS)
+        # https://github.com/mitchellh/gon
+        run: brew install mitchellh/gon/gon
+        if: matrix.os == 'macos-latest'
 
       # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on Windows
       - name: Install OpenSSL (Windows)
@@ -73,6 +78,39 @@ jobs:
         with:
           command: build
           args: --release
+      
+      - name: Import code signing assets (macOS)
+        # Based on https://github.com/Apple-Actions/import-codesign-certs/blob/master/src/security.ts
+        run: |
+          security create-keychain -p $KEYCHAIN_PASSWORD signing.keychain
+          security set-keychain-settings -lut 3600 signing.keychain
+          security unlock-keychain -p $KEYCHAIN_PASSWORD signing.keychain
+          echo $MAC_CERT_BASE64 | base64 -D -o signing.p12
+          security import signing.p12 -k signing.keychain -f pkcs12 -T "/usr/bin/codesign" -T "/usr/bin/security" -P $MAC_CERT_PASSWORD
+          rm signing.p12
+          security -q set-key-partition-list -S apple-tool:,apple: -k $KEYCHAIN_PASSWORD signing.keychain > /dev/null
+          security -v list-keychains -s signing.keychain
+          security find-identity -vp codesigning
+        env:
+          KEYCHAIN_PASSWORD: ${{ secrets.KEYCHAIN_PASSWORD }}
+          MAC_CERT_BASE64: ${{ secrets.MAC_CERT_BASE64 }}
+          MAC_CERT_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
+        if: matrix.os == 'macos-latest'
+
+      - name: Sign and notarize Wallet CLI binary (macOS)
+        run: |
+          gon gon-config.json
+          unzip wallet.zip
+          mv -f wallet target/release/wallet
+        env:
+          AC_USERNAME: ${{ secrets.ASC_APPLE_ID }}
+          AC_PASSWORD: ${{ secrets.ASC_PASSWORD }}
+        if: matrix.os == 'macos-latest'
+      
+      - name: Delete keychain (macOS)
+        run: security delete-keychain signing.keychain
+        # Run even if previous steps fail
+        if: ${{ matrix.os == 'macos-latest' && always() }}
 
       # upload binary to the GH release
       - name: upload release asset
