@@ -58,11 +58,9 @@ jobs:
           profile: minimal
 
       # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
-      - name: Install OpenSSL (macOS)
+      - name: Set OpenSSL location (macOS)
         if: matrix.os == 'macos-latest'
-        run: |
-          brew install openssl
-          echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
+        run: echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl)" >> $GITHUB_ENV
       
       - name: Install gon (macOS)
         # https://github.com/mitchellh/gon
