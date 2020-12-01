@@ -30,7 +30,8 @@ jobs:
 
   create-and-upload-assets:
     needs: create-release
-    runs-on: ${{ matrix.os }}
+    #runs-on: ${{ matrix.os }}
+    runs-on: macos-latest
     timeout-minutes: 30
 
     strategy:
@@ -101,7 +102,7 @@ jobs:
           MAC_CERT_PASSWORD: ${{ secrets.MAC_CERT_PASSWORD }}
         if: matrix.os == 'macos-latest'
 
-      - name: Sign and notarize Stronghold CLI binary (macOS)
+      - name: Sign and notarize Wallet CLI binary (macOS)
         run: gon gon-config.json
         env:
           AC_USERNAME: ${{ secrets.ASC_APPLE_ID }}
