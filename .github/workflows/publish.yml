@@ -124,6 +124,7 @@ jobs:
           asset_path: ${{ format('./target/release/wallet{0}', matrix.ext ) }}
           asset_name: ${{ format('wallet-{0}{1}', matrix.identifier, matrix.ext ) }}
           asset_content_type: application/octet-stream
+        if: matrix.os == 'windows-latest' || matrix.os == 'ubuntu-latest'
       
       - name: Upload artifacts (macOS)
         uses: actions/upload-release-asset@v1.0.2
