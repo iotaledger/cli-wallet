@@ -1552,8 +1552,7 @@ checksum = "afb2e1c3ee07430c2cf76151675e583e0f19985fa6efae47d6848a3e2c824f85"
 [[package]]
 name = "paho-mqtt"
 version = "0.8.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b379c2be1a97027ccf7771de5d3953b75b52e74dd7caf915b3d642654606a285"
+source = "git+https://github.com/rajivshah3/paho.mqtt.rust?branch=feature/openssl-static-link-master#93967713e359eef78f3f5c6d14ddd2ae6a9039b4"
 dependencies = [
  "futures 0.3.8",
  "futures-timer",
@@ -1566,8 +1565,7 @@ dependencies = [
 [[package]]
 name = "paho-mqtt-sys"
 version = "0.4.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0b0fd01a23b90ebbd5c53d483eeed0012f1c3e069c99977bf77e4194f72b648c"
+source = "git+https://github.com/rajivshah3/paho.mqtt.rust?branch=feature/openssl-static-link-master#93967713e359eef78f3f5c6d14ddd2ae6a9039b4"
 dependencies = [
  "cmake",
 ]
