@@ -22,3 +22,6 @@ futures = "0.3"
 [profile.release]
 lto = true
 codegen-units = 1
+
+[patch.crates-io]
+paho-mqtt = { git = "https://github.com/rajivshah3/paho.mqtt.rust", branch = "feature/openssl-static-link-master"}
