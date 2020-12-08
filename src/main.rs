@@ -101,9 +101,7 @@ fn new_account_command(
                 {
                     if flag {
                         let mut file = OpenOptions::new().append(true).create(true).open(".env")?;
-                        file.write_all(
-                            format!(r#"IOTA_WALLET_MNEMONIC="{}""#, mnemonic.phrase()).as_bytes(),
-                        )?;
+                        writeln!(file, r#"IOTA_WALLET_MNEMONIC="{}""#, mnemonic.phrase())?;
                         println!(
                             "mnemonic added to {:?}",
                             std::env::current_dir()?.join(".env")
