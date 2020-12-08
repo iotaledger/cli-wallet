@@ -156,7 +156,6 @@ fn run() -> Result<()> {
         &storage_path,
         SqliteStorageAdapter::new(&storage_path, "accounts")?,
     )?;
-    manager.set_stronghold_password("password")?;
 
     let yaml = load_yaml!("account-cli.yml");
     let account_cli = App::from(yaml)
