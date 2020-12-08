@@ -3,7 +3,8 @@
 
 use clap::{load_yaml, App, AppSettings, ArgMatches};
 use console::Term;
-use dialoguer::{theme::ColorfulTheme, Select};
+use dialoguer::{theme::ColorfulTheme, Confirm, Select};
+use dotenv::dotenv;
 use iota_wallet::{
     account::Account, account_manager::AccountManager, client::ClientOptionsBuilder,
     signing::SignerType, storage::sqlite::SqliteStorageAdapter, Result, WalletError,
@@ -11,7 +12,7 @@ use iota_wallet::{
 use once_cell::sync::OnceCell;
 use tokio::runtime::Runtime;
 
-use std::{env::var_os, sync::Mutex};
+use std::{env::var_os, fs::OpenOptions, io::Write, sync::Mutex};
 
 mod account;
 
@@ -94,6 +95,19 @@ fn new_account_command(
                 let mnemonic =
                     bip39::Mnemonic::new(bip39::MnemonicType::Words24, bip39::Language::English);
                 println!("Your mnemonic is `{:?}`, you must store it on an environment variable called `IOTA_WALLET_MNEMONIC` to use this CLI", mnemonic.phrase());
+                if let Ok(flag) = Confirm::new()
+                    .with_prompt("Do you want to store the mnemonic in a .env file?")
+                    .interact()
+                {
+                    if flag {
+                        let mut file = OpenOptions::new().append(true).create(true).open(".env")?;
+                        writeln!(file, r#"IOTA_WALLET_MNEMONIC="{}""#, mnemonic.phrase())?;
+                        println!(
+                            "mnemonic added to {:?}",
+                            std::env::current_dir()?.join(".env")
+                        );
+                    }
+                }
                 builder = builder.mnemonic(mnemonic.into_phrase());
             }
         }
@@ -152,7 +166,7 @@ fn run() -> Result<()> {
     let storage_path = var_os("WALLET_DATABASE_PATH")
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./wallet-cli-database".to_string());
-    let mut manager = AccountManager::with_storage_adapter(
+    let manager = AccountManager::with_storage_adapter(
         &storage_path,
         SqliteStorageAdapter::new(&storage_path, "accounts")?,
     )?;
@@ -190,6 +204,9 @@ fn run() -> Result<()> {
 }
 
 fn main() {
+    if let Ok(p) = dotenv() {
+        println!("loaded dotenv from {:?}", p);
+    }
     if let Err(e) = run() {
         print_error(e);
     }
