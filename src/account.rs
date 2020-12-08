@@ -105,8 +105,9 @@ fn transfer_command(account: &mut Account, matches: &ArgMatches) -> Result<()> {
         let transfer = Transfer::new(address, amount);
         let res: Result<()> = block_on(async move {
           let synced = account.sync().execute().await?;
-          let message = synced.transfer(transfer).await?;
-          print_message(&message);
+          let transfer_metadata = synced.transfer(transfer).await?;
+          *account = transfer_metadata.account;
+          print_message(&transfer_metadata.message);
           Ok(())
         });
         res?;

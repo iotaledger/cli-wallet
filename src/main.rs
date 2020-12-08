@@ -5,8 +5,8 @@ use clap::{load_yaml, App, AppSettings, ArgMatches};
 use console::Term;
 use dialoguer::{theme::ColorfulTheme, Select};
 use iota_wallet::{
-    account::Account, account_manager::AccountManager, client::ClientOptionsBuilder, Result,
-    WalletError,
+    account::Account, account_manager::AccountManager, client::ClientOptionsBuilder,
+    signing::SignerType, storage::sqlite::SqliteStorageAdapter, Result, WalletError,
 };
 use once_cell::sync::OnceCell;
 use tokio::runtime::Runtime;
@@ -73,13 +73,29 @@ fn new_account_command(
             .values_of("node")
             .expect("at least a node must be provided")
             .collect();
-        let mut builder =
-            manager.create_account(ClientOptionsBuilder::nodes(&nodes)?.build().unwrap());
+        let accounts = manager.get_accounts()?;
+        let mut builder = manager
+            .create_account(ClientOptionsBuilder::nodes(&nodes)?.build().unwrap())
+            .signer_type(SignerType::EnvMnemonic);
         if let Some(alias) = matches.value_of("alias") {
             builder = builder.alias(alias);
         }
         if let Some(mnemonic) = matches.value_of("mnemonic") {
             builder = builder.mnemonic(mnemonic);
+        } else if accounts.is_empty() {
+            if let Some(mnemonic) = var_os("IOTA_WALLET_MNEMONIC") {
+                builder = builder.mnemonic(
+                    mnemonic
+                        .to_str()
+                        .expect("invalid IOTA_WALLET_MNEMONIC env")
+                        .to_string(),
+                );
+            } else {
+                let mnemonic =
+                    bip39::Mnemonic::new(bip39::MnemonicType::Words24, bip39::Language::English);
+                println!("Your mnemonic is `{:?}`, you must store it on an environment variable called `IOTA_WALLET_MNEMONIC` to use this CLI", mnemonic.phrase());
+                builder = builder.mnemonic(mnemonic.into_phrase());
+            }
         }
         let account = builder.initialise()?;
         println!("Created account `{}`", account.alias());
@@ -133,10 +149,12 @@ fn run() -> Result<()> {
         .set(Mutex::new(runtime))
         .expect("Failed to store async runtime");
 
-    let mut manager = AccountManager::with_storage_path(
-        var_os("WALLET_DATABASE_PATH")
-            .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
-            .unwrap_or_else(|| "./wallet-cli-database".to_string()),
+    let storage_path = var_os("WALLET_DATABASE_PATH")
+        .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
+        .unwrap_or_else(|| "./wallet-cli-database".to_string());
+    let mut manager = AccountManager::with_storage_adapter(
+        &storage_path,
+        SqliteStorageAdapter::new(&storage_path, "accounts")?,
     )?;
     manager.set_stronghold_password("password")?;
 
