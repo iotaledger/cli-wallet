@@ -8,6 +8,7 @@ use dialoguer::Input;
 use iota::message::prelude::MessageId;
 use iota_wallet::{
     account::Account,
+    address::Address,
     message::{Message, MessageType, Transfer},
     Result,
 };
@@ -15,7 +16,21 @@ use iota_wallet::{
 use std::str::FromStr;
 
 fn print_message(message: &Message) {
-    println!("{}", serde_json::to_string_pretty(message).unwrap());
+    println!("MESSAGE {}", message.id());
+    println!("--- Value: {:?}", message.value());
+    println!("--- Timestamp: {:?}", message.timestamp());
+    println!(
+        "--- Broadcasted: {}, confirmed: {}",
+        message.broadcasted(),
+        message.confirmed()
+    );
+}
+
+fn print_address(address: &Address) {
+    println!("ADDRESS {:?}", address.address().to_bech32());
+    println!("--- Balance: {}", address.balance());
+    println!("--- Index: {}", address.key_index());
+    println!("--- Change address: {}", address.internal());
 }
 
 // `list-messages` command
@@ -63,9 +78,7 @@ fn list_addresses_command(account: &Account, matches: &ArgMatches) {
         if addresses.is_empty() {
             println!("No addresses found");
         } else {
-            addresses
-                .iter()
-                .for_each(|a| println!("{}", serde_json::to_string_pretty(a).unwrap()));
+            addresses.iter().for_each(|a| print_address(a));
         }
     }
 }
@@ -82,7 +95,7 @@ fn sync_account_command(account: &mut Account, matches: &ArgMatches) -> Result<(
 fn generate_address_command(account: &mut Account, matches: &ArgMatches) -> Result<()> {
     if matches.subcommand_matches("address").is_some() {
         let address = account.generate_address()?;
-        println!("{}", address.address().to_bech32());
+        print_address(&address);
     }
     Ok(())
 }
