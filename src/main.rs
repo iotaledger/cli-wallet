@@ -1,21 +1,25 @@
+// Copyright 2020 IOTA Stiftung
+// SPDX-License-Identifier: Apache-2.0
+
 //! Wallet CLI
 //! Create a new account: `$ cargo run -- new --node http://localhost:14265`
 
 use clap::{load_yaml, App, AppSettings, ArgMatches};
 use console::Term;
-use dialoguer::{theme::ColorfulTheme, Select};
+use dialoguer::{theme::ColorfulTheme, Confirm, Select};
+use dotenv::dotenv;
 use iota_wallet::{
-    account::Account, account_manager::AccountManager, client::ClientOptionsBuilder, Result,
-    WalletError,
+    account::Account, account_manager::AccountManager, client::ClientOptionsBuilder, signing::SignerType,
+    storage::sqlite::SqliteStorageAdapter, Result, WalletError,
 };
 use once_cell::sync::OnceCell;
 use tokio::runtime::Runtime;
 
-use std::{env::var_os, sync::Mutex};
+use std::{env::var_os, fs::OpenOptions, io::Write, sync::Mutex};
 
 mod account;
 
-const CLI_TEMPLATE: &'static str = "\
+const CLI_TEMPLATE: &str = "\
   {before-help}{bin} {version}\n\
   {about-with-newline}\n\
   {usage-heading}\n    {usage}\n\
@@ -23,7 +27,7 @@ const CLI_TEMPLATE: &'static str = "\
   {all-args}{after-help}\
 ";
 
-const ACCOUNT_CLI_TEMPLATE: &'static str = "\
+const ACCOUNT_CLI_TEMPLATE: &str = "\
   {all-args}{after-help}\
 ";
 
@@ -63,23 +67,39 @@ fn select_account_command(account_cli: &App<'_>, manager: &AccountManager, match
     }
 }
 
-fn new_account_command(
-    account_cli: &App<'_>,
-    manager: &AccountManager,
-    matches: &ArgMatches,
-) -> Result<()> {
+fn new_account_command(account_cli: &App<'_>, manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("new") {
         let nodes: Vec<&str> = matches
             .values_of("node")
             .expect("at least a node must be provided")
             .collect();
-        let mut builder =
-            manager.create_account(ClientOptionsBuilder::nodes(&nodes)?.build().unwrap());
+        let accounts = manager.get_accounts()?;
+        let mut builder = manager
+            .create_account(ClientOptionsBuilder::nodes(&nodes)?.build().unwrap())
+            .signer_type(SignerType::EnvMnemonic);
         if let Some(alias) = matches.value_of("alias") {
             builder = builder.alias(alias);
         }
         if let Some(mnemonic) = matches.value_of("mnemonic") {
             builder = builder.mnemonic(mnemonic);
+        } else if accounts.is_empty() {
+            if let Some(mnemonic) = var_os("IOTA_WALLET_MNEMONIC") {
+                builder = builder.mnemonic(mnemonic.to_str().expect("invalid IOTA_WALLET_MNEMONIC env").to_string());
+            } else {
+                let mnemonic = bip39::Mnemonic::new(bip39::MnemonicType::Words24, bip39::Language::English);
+                println!("Your mnemonic is `{:?}`, you must store it on an environment variable called `IOTA_WALLET_MNEMONIC` to use this CLI", mnemonic.phrase());
+                if let Ok(flag) = Confirm::new()
+                    .with_prompt("Do you want to store the mnemonic in a .env file?")
+                    .interact()
+                {
+                    if flag {
+                        let mut file = OpenOptions::new().append(true).create(true).open(".env")?;
+                        writeln!(file, r#"IOTA_WALLET_MNEMONIC="{}""#, mnemonic.phrase())?;
+                        println!("mnemonic added to {:?}", std::env::current_dir()?.join(".env"));
+                    }
+                }
+                builder = builder.mnemonic(mnemonic.into_phrase());
+            }
         }
         let account = builder.initialise()?;
         println!("Created account `{}`", account.alias());
@@ -102,7 +122,7 @@ fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Res
 }
 
 fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
-    if let Some(_) = matches.subcommand_matches("sync") {
+    if matches.subcommand_matches("sync").is_some() {
         let synced = block_on(async move { manager.sync_accounts().await })?;
         println!("Synchronized {} accounts", synced.len());
     }
@@ -129,16 +149,13 @@ fn import_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> 
 
 fn run() -> Result<()> {
     let runtime = Runtime::new().expect("Failed to create async runtime");
-    RUNTIME
-        .set(Mutex::new(runtime))
-        .expect("Failed to store async runtime");
+    RUNTIME.set(Mutex::new(runtime)).expect("Failed to store async runtime");
 
-    let mut manager = AccountManager::with_storage_path(
-        var_os("WALLET_DATABASE_PATH")
-            .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
-            .unwrap_or_else(|| "./wallet-cli-database".to_string()),
-    )?;
-    manager.set_stronghold_password("password")?;
+    let storage_path = var_os("WALLET_DATABASE_PATH")
+        .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
+        .unwrap_or_else(|| "./wallet-cli-database".to_string());
+    let manager =
+        AccountManager::with_storage_adapter(&storage_path, SqliteStorageAdapter::new(&storage_path, "accounts")?)?;
 
     let yaml = load_yaml!("account-cli.yml");
     let account_cli = App::from(yaml)
@@ -173,6 +190,9 @@ fn run() -> Result<()> {
 }
 
 fn main() {
+    if let Ok(p) = dotenv() {
+        println!("loaded dotenv from {:?}", p);
+    }
     if let Err(e) = run() {
         print_error(e);
     }
