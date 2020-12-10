@@ -124,7 +124,7 @@ checksum = "cdcf67bb7ba7797a081cd19009948ab533af7c355d5caf1d08c777582d351e9c"
 [[package]]
 name = "bee-common"
 version = "0.1.1-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67c354b3c4f16fb2a218e7108aa44207ef613bcd"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67690a49009b9749827a3324229a286ab0c1c4d4"
 dependencies = [
  "async-trait",
  "bee-storage",
@@ -163,7 +163,7 @@ dependencies = [
 [[package]]
 name = "bee-message"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67c354b3c4f16fb2a218e7108aa44207ef613bcd"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67690a49009b9749827a3324229a286ab0c1c4d4"
 dependencies = [
  "bech32",
  "bee-common",
@@ -187,7 +187,7 @@ dependencies = [
  "rand 0.7.3",
  "sha3",
  "thiserror",
- "zeroize 1.1.1",
+ "zeroize 1.2.0",
 ]
 
 [[package]]
@@ -204,13 +204,13 @@ dependencies = [
  "serde",
  "signature",
  "slip10",
- "zeroize 1.1.1",
+ "zeroize 1.2.0",
 ]
 
 [[package]]
 name = "bee-storage"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67c354b3c4f16fb2a218e7108aa44207ef613bcd"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67690a49009b9749827a3324229a286ab0c1c4d4"
 dependencies = [
  "async-trait",
  "futures 0.3.8",
@@ -553,7 +553,7 @@ dependencies = [
  "digest 0.9.0",
  "rand_core 0.5.1",
  "subtle 2.3.0",
- "zeroize 1.1.1",
+ "zeroize 1.2.0",
 ]
 
 [[package]]
@@ -645,7 +645,7 @@ dependencies = [
  "serde",
  "serde_bytes",
  "sha2 0.9.2",
- "zeroize 1.1.1",
+ "zeroize 1.2.0",
 ]
 
 [[package]]
@@ -1166,7 +1166,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "0.5.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#e0325ecb001201f630886e45e51ca216ffb9dad8"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#e9f4d1fbd72e9d92f98fcf0c6cadf91196905ea2"
 dependencies = [
  "bee-common",
  "bee-crypto",
@@ -1181,12 +1181,13 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
 name = "iota-core"
 version = "0.2.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#e0325ecb001201f630886e45e51ca216ffb9dad8"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#e9f4d1fbd72e9d92f98fcf0c6cadf91196905ea2"
 dependencies = [
  "bee-message",
  "bee-signing-ext",
@@ -1222,7 +1223,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#53411b00d91b85f3b471d0d6277a48de4760b108"
+source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#4fb5e608b5fc4e3c1ae4e69d2e7579f60c5f14df"
 dependencies = [
  "anyhow",
  "backtrace",
@@ -1470,9 +1471,9 @@ dependencies = [
 
 [[package]]
 name = "net2"
-version = "0.2.36"
+version = "0.2.37"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d7cf75f38f16cb05ea017784dc6dbfd354f76c223dba37701734c4f5a9337d02"
+checksum = "391630d12b68002ae1e25e8f974306474966550ad82dac6886fb8910c19568ae"
 dependencies = [
  "cfg-if 0.1.10",
  "libc",
@@ -2388,9 +2389,9 @@ checksum = "cda74da7e1a664f795bb1f8a87ec406fb89a02522cf6e50620d016add6dbbf5c"
 
 [[package]]
 name = "tokio"
-version = "0.2.23"
+version = "0.2.24"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a6d7ad61edd59bfcc7e80dababf0f4aed2e6d5e0ba1659356ae889752dfc12ff"
+checksum = "099837d3464c16a808060bb3f02263b412f6fafcb5d01c533d309985fbeebe48"
 dependencies = [
  "bytes",
  "fnv",
@@ -2827,9 +2828,9 @@ checksum = "45af6a010d13e4cf5b54c94ba5a2b2eba5596b9e46bf5875612d332a1f2b3f86"
 
 [[package]]
 name = "zeroize"
-version = "1.1.1"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "05f33972566adbd2d3588b0491eb94b98b43695c4ef897903470ede4f3f5a28a"
+checksum = "81a974bcdd357f0dca4d41677db03436324d45a4c9ed2d0b873a5a360ce41c36"
 dependencies = [
  "zeroize_derive",
 ]
