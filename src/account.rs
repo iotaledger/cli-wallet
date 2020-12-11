@@ -13,7 +13,10 @@ use iota_wallet::{
     Result,
 };
 
-use std::str::FromStr;
+use std::{
+    str::FromStr,
+    sync::{Arc, RwLock},
+};
 
 fn print_message(message: &Message) {
     println!("MESSAGE {}", message.id());
@@ -202,9 +205,13 @@ fn account_commands(account: &mut Account, matches: &ArgMatches) -> Result<()> {
 }
 
 // loop on the account prompt
-pub fn account_prompt(account_cli: &App<'_>, mut account: Account) {
+pub fn account_prompt(account_cli: &App<'_>, accounts: Arc<RwLock<Vec<Account>>>, index: usize) {
+    let alias = {
+        let accounts_ = accounts.read().unwrap();
+        accounts_[index].alias().clone()
+    };
     let command: String = Input::new()
-        .with_prompt(format!("Account `{}` command (h for help)", account.alias()))
+        .with_prompt(format!("Account `{}` command (h for help)", alias))
         .interact_text()
         .unwrap();
 
@@ -226,6 +233,8 @@ pub fn account_prompt(account_cli: &App<'_>, mut account: Account) {
                         return;
                     }
 
+                    let mut accounts_ = accounts.write().unwrap();
+                    let mut account = accounts_.get_mut(index).unwrap();
                     if let Err(e) = account_commands(&mut account, &matches) {
                         print_error(e);
                     }
@@ -237,5 +246,5 @@ pub fn account_prompt(account_cli: &App<'_>, mut account: Account) {
         }
     }
 
-    account_prompt(account_cli, account)
+    account_prompt(account_cli, accounts, index)
 }
