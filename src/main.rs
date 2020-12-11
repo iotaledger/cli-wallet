@@ -154,8 +154,10 @@ fn run() -> Result<()> {
     let storage_path = var_os("WALLET_DATABASE_PATH")
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./wallet-cli-database".to_string());
-    let manager =
+    let mut manager =
         AccountManager::with_storage_adapter(&storage_path, SqliteStorageAdapter::new(&storage_path, "accounts")?)?;
+
+    manager.start_background_sync();
 
     let yaml = load_yaml!("account-cli.yml");
     let account_cli = App::from(yaml)

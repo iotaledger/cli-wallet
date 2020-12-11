@@ -124,7 +124,7 @@ checksum = "cdcf67bb7ba7797a081cd19009948ab533af7c355d5caf1d08c777582d351e9c"
 [[package]]
 name = "bee-common"
 version = "0.1.1-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67690a49009b9749827a3324229a286ab0c1c4d4"
+source = "git+https://github.com/iotaledger/bee.git?rev=30e718917fd68320d74dc61124322bfa17556780#30e718917fd68320d74dc61124322bfa17556780"
 dependencies = [
  "async-trait",
  "bee-storage",
@@ -163,7 +163,7 @@ dependencies = [
 [[package]]
 name = "bee-message"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67690a49009b9749827a3324229a286ab0c1c4d4"
+source = "git+https://github.com/iotaledger/bee.git?rev=30e718917fd68320d74dc61124322bfa17556780#30e718917fd68320d74dc61124322bfa17556780"
 dependencies = [
  "bech32",
  "bee-common",
@@ -210,7 +210,7 @@ dependencies = [
 [[package]]
 name = "bee-storage"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#67690a49009b9749827a3324229a286ab0c1c4d4"
+source = "git+https://github.com/iotaledger/bee.git?rev=30e718917fd68320d74dc61124322bfa17556780#30e718917fd68320d74dc61124322bfa17556780"
 dependencies = [
  "async-trait",
  "futures 0.3.8",
@@ -506,7 +506,7 @@ checksum = "7a81dae078cea95a014a339291cec439d2f232ebe854a9d672b796c6afafa9b7"
 [[package]]
 name = "crypto"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#67ed2d952e25a9fdb515e7893c1db7d3c1d8da97"
+source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#8e1e344014c6c49d7bcf068553188e44bd6048c3"
 dependencies = [
  "anyhow",
  "primitives",
@@ -1166,7 +1166,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "0.5.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#e9f4d1fbd72e9d92f98fcf0c6cadf91196905ea2"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#07a0b9636e53bf953b5209d70404bcedc5b3fd5b"
 dependencies = [
  "bee-common",
  "bee-crypto",
@@ -1181,13 +1181,14 @@ dependencies = [
  "reqwest",
  "serde",
  "serde_json",
+ "thiserror",
  "tokio",
 ]
 
 [[package]]
 name = "iota-core"
 version = "0.2.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#e9f4d1fbd72e9d92f98fcf0c6cadf91196905ea2"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#07a0b9636e53bf953b5209d70404bcedc5b3fd5b"
 dependencies = [
  "bee-message",
  "bee-signing-ext",
@@ -1197,7 +1198,7 @@ dependencies = [
 [[package]]
 name = "iota-stronghold"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#67ed2d952e25a9fdb515e7893c1db7d3c1d8da97"
+source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#8e1e344014c6c49d7bcf068553188e44bd6048c3"
 dependencies = [
  "anyhow",
  "base64 0.12.3",
@@ -1223,7 +1224,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#4fb5e608b5fc4e3c1ae4e69d2e7579f60c5f14df"
+source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#9c48cea7f4a5555af7781fd9e41ca260aa1a5b2e"
 dependencies = [
  "anyhow",
  "backtrace",
@@ -1682,7 +1683,7 @@ checksum = "ac74c624d6b2d21f425f752262f42188365d7b8ff1aff74c82e45136510a4857"
 [[package]]
 name = "primitives"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#67ed2d952e25a9fdb515e7893c1db7d3c1d8da97"
+source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#8e1e344014c6c49d7bcf068553188e44bd6048c3"
 
 [[package]]
 name = "proc-macro-error"
@@ -1833,7 +1834,7 @@ dependencies = [
 [[package]]
 name = "random"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#67ed2d952e25a9fdb515e7893c1db7d3c1d8da97"
+source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#8e1e344014c6c49d7bcf068553188e44bd6048c3"
 dependencies = [
  "cc",
  "primitives",
@@ -2173,7 +2174,7 @@ checksum = "ae524f056d7d770e174287294f562e95044c68e88dec909a00d2094805db9d75"
 [[package]]
 name = "snapshot"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#67ed2d952e25a9fdb515e7893c1db7d3c1d8da97"
+source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#8e1e344014c6c49d7bcf068553188e44bd6048c3"
 dependencies = [
  "anyhow",
  "crypto",
@@ -2215,7 +2216,7 @@ checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
 [[package]]
 name = "stronghold-engine"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#67ed2d952e25a9fdb515e7893c1db7d3c1d8da97"
+source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#8e1e344014c6c49d7bcf068553188e44bd6048c3"
 dependencies = [
  "crypto",
  "primitives",
@@ -2564,7 +2565,7 @@ dependencies = [
 [[package]]
 name = "vault"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#67ed2d952e25a9fdb515e7893c1db7d3c1d8da97"
+source = "git+https://github.com/iotaledger/stronghold.rs?branch=feat/pre-refactor#8e1e344014c6c49d7bcf068553188e44bd6048c3"
 dependencies = [
  "anyhow",
  "serde",
@@ -2573,9 +2574,9 @@ dependencies = [
 
 [[package]]
 name = "vcpkg"
-version = "0.2.10"
+version = "0.2.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6454029bf181f092ad1b853286f23e2c507d8e8194d01d92da4a55c274a5508c"
+checksum = "b00bca6106a5e23f3eee943593759b7fcddb00554332e856d990c893966879fb"
 
 [[package]]
 name = "vec_map"
