@@ -88,7 +88,12 @@ fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result
             .collect();
         let accounts = manager.get_accounts()?;
         let mut builder = manager
-            .create_account(ClientOptionsBuilder::nodes(&nodes)?.build().unwrap())
+            .create_account(
+                ClientOptionsBuilder::nodes(&nodes)?
+                    .local_pow(matches.value_of("pow").unwrap_or("local") == "local")
+                    .build()
+                    .unwrap(),
+            )
             .signer_type(SignerType::EnvMnemonic);
         if let Some(alias) = matches.value_of("alias") {
             builder = builder.alias(alias);

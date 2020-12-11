@@ -30,7 +30,6 @@ subcommands:
             long: type
             about: Tessage type filter.
             takes_value: true
-            multiple: true
             possible_values: [received, sent, failed, unconfirmed, value]
   - transfer:
       about: Sends iotas to an address.
