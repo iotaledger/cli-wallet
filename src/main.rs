@@ -231,7 +231,11 @@ fn run() -> Result<()> {
     watch_accounts(accounts.clone());
 
     if std::env::args().len() == 1 {
-        match accounts.read().unwrap().len() {
+        let len = {
+            let a = accounts.read().unwrap();
+            a.len()
+        };
+        match len {
             0 => {}
             1 => account::account_prompt(&account_cli, accounts.clone(), 0),
             _ => pick_account(&account_cli, accounts.clone())?,
