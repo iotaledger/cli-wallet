@@ -20,6 +20,12 @@ subcommands:
             required: true
             takes_value: true
             multiple: true
+        - pow:
+            short: p
+            long: pow
+            about: Whether to use local or remote PoW
+            takes_value: true
+            possible_values: [local, remote]
         - alias:
             short: a
             long: alias

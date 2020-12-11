@@ -1,6 +1,6 @@
 [package]
 name = "wallet-cli"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Lucas Nogueira <lucas.nogueira@iota.org>"]
 edition = "2018"
 
