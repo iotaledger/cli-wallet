@@ -74,13 +74,13 @@ fn list_messages_command(account: &Account, matches: &ArgMatches) {
 }
 
 // `list-addresses` command
-fn list_addresses_command(account: &Account, matches: &ArgMatches) {
+fn list_addresses_command(account: &mut Account, matches: &ArgMatches) {
     if matches.subcommand_matches("list-addresses").is_some() {
-        let mut addresses = account.list_addresses(false);
-        addresses.extend(account.list_addresses(true));
+        let addresses = account.addresses_mut();
         if addresses.is_empty() {
             println!("No addresses found");
         } else {
+            addresses.sort_by_key(|a| *a.key_index());
             addresses.iter().for_each(|a| print_address(a));
         }
     }
