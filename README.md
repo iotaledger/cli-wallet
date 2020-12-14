@@ -22,6 +22,8 @@ Alternatively, you can select the account to use with the `account` command:
 $ ./wallet account "my first account"
 ```
 
+## Contributing
+
 To run the CLI from source, install Rust (usually through [Rustup](https://rustup.rs/)) and run the following commands:
 
 ```
