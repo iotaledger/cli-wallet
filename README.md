@@ -22,6 +22,13 @@ Alternatively, you can select the account to use with the `account` command:
 $ ./wallet account "my first account"
 ```
 
+To run the CLI from source, install Rust (usually through [Rustup](https://rustup.rs/)) and run the following commands:
+
+```
+$ git clone https://github.com/iotaledger/wallet.cli
+$ cargo run -- [COMMAND] [OPTIONS]
+```
+
 ## Commands
 
 The wallet CLI has a set of main commands accesible with `$ ./wallet COMMAND [ARGS]` and a dedicated command list for the account prompt.
@@ -115,13 +122,4 @@ By default the database path is `./wallet-cli-database` but you can change this 
 ```
 $ export WALLET_DATABASE_PATH=/path/to/database # or add it to your .bashrc, .zshrc
 $ ./wallet [COMMAND] [OPTIONS]
-```
-
-## Contributing
-
-To run the CLI from source, install Rust (usually through [Rustup](https://rustup.rs/)) and run the following commands:
-
-```
-$ git clone https://github.com/iotaledger/wallet.cli
-$ cargo run -- [COMMAND] [OPTIONS]
 ```
