@@ -4,7 +4,7 @@ Command line interface application for the [IOTA wallet library](https://github.
 
 ## Usage
 
-After downloading the CLI, create a new account:
+After downloading the CLI, create a new account. On Mac and Linux you will first need to `chmod +x ./wallet`.
 
 ```
 $ ./wallet new --node http://node.url:port --alias ALIAS
