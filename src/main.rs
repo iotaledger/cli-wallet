@@ -6,7 +6,7 @@
 
 use clap::{load_yaml, App, AppSettings, ArgMatches};
 use console::Term;
-use dialoguer::{theme::ColorfulTheme, Confirm, Select};
+use dialoguer::{theme::ColorfulTheme, Select};
 use dotenv::dotenv;
 use iota_wallet::{
     account::{Account, AccountIdentifier},
@@ -21,8 +21,6 @@ use tokio::runtime::Runtime;
 
 use std::{
     env::var_os,
-    fs::OpenOptions,
-    io::Write,
     sync::{Arc, Mutex, RwLock},
 };
 
@@ -100,24 +98,6 @@ fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result
         }
         if let Some(mnemonic) = matches.value_of("mnemonic") {
             builder = builder.mnemonic(mnemonic);
-        } else if accounts.is_empty() {
-            if let Some(mnemonic) = var_os("IOTA_WALLET_MNEMONIC") {
-                builder = builder.mnemonic(mnemonic.to_str().expect("invalid IOTA_WALLET_MNEMONIC env").to_string());
-            } else {
-                let mnemonic = bip39::Mnemonic::new(bip39::MnemonicType::Words24, bip39::Language::English);
-                println!("Your mnemonic is `{:?}`, you must store it on an environment variable called `IOTA_WALLET_MNEMONIC` to use this CLI", mnemonic.phrase());
-                if let Ok(flag) = Confirm::new()
-                    .with_prompt("Do you want to store the mnemonic in a .env file?")
-                    .interact()
-                {
-                    if flag {
-                        let mut file = OpenOptions::new().append(true).create(true).open(".env")?;
-                        writeln!(file, r#"IOTA_WALLET_MNEMONIC="{}""#, mnemonic.phrase())?;
-                        println!("mnemonic added to {:?}", std::env::current_dir()?.join(".env"));
-                    }
-                }
-                builder = builder.mnemonic(mnemonic.into_phrase());
-            }
         }
         let account = builder.initialise()?;
         println!("Created account `{}`", account.alias());
@@ -131,7 +111,7 @@ fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Res
     if let Some(matches) = matches.subcommand_matches("delete") {
         let account_alias = matches.value_of("alias").unwrap();
         if let Some(account) = manager.get_account_by_alias(account_alias) {
-            manager.remove_account(account.id().into())?;
+            manager.remove_account(account.id())?;
             println!("Account removed");
         } else {
             println!("Account not found");
@@ -191,7 +171,7 @@ fn watch_accounts(accounts: Arc<RwLock<Vec<Account>>>) {
         let mut accounts_ = accounts_.write().unwrap();
         let account = accounts_.iter_mut().find(|a| &a.id() == event.account_id()).unwrap();
         if let Some(message) = account.messages_mut().iter_mut().find(|m| m == event.message()) {
-            message.set_confirmed(*event.confirmed());
+            message.set_confirmed(Some(*event.confirmed()));
         }
     });
 
@@ -202,7 +182,7 @@ fn watch_accounts(accounts: Arc<RwLock<Vec<Account>>>) {
         account.append_messages(vec![event.cloned_message()]);
     });
 
-    let accounts_ = accounts.clone();
+    let accounts_ = accounts;
     iota_wallet::event::on_broadcast(move |event| {
         let mut accounts_ = accounts_.write().unwrap();
         let account = accounts_.iter_mut().find(|a| &a.id() == event.account_id()).unwrap();
@@ -272,7 +252,7 @@ fn run() -> Result<()> {
                 accounts_.push(new_account);
                 accounts_.len() - 1
             };
-            account::account_prompt(&account_cli, accounts.clone(), index);
+            account::account_prompt(&account_cli, accounts, index);
         }
         Ok(None) => {}
         Err(e) => return Err(e),
