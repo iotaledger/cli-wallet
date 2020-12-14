@@ -9,6 +9,7 @@ use iota::message::prelude::MessageId;
 use iota_wallet::{
     account::Account,
     address::Address,
+    client::ClientOptionsBuilder,
     message::{Message, MessageType, Transfer},
     Result,
 };
@@ -193,6 +194,24 @@ fn reattach_message_command(account: &mut Account, matches: &ArgMatches) -> Resu
     Ok(())
 }
 
+// `set-node` command
+fn set_node_command(account: &mut Account, matches: &ArgMatches) -> Result<()> {
+    if let Some(matches) = matches.subcommand_matches("set-node") {
+        let node = matches.value_of("node").unwrap();
+        account.set_client_options(ClientOptionsBuilder::node(node)?.build());
+    }
+    Ok(())
+}
+
+// `set-alias` command
+fn set_alias_command(account: &mut Account, matches: &ArgMatches) -> Result<()> {
+    if let Some(matches) = matches.subcommand_matches("set-alias") {
+        let alias = matches.value_of("alias").unwrap();
+        account.set_alias(alias);
+    }
+    Ok(())
+}
+
 // account prompt commands
 fn account_commands(account: &mut Account, matches: &ArgMatches) -> Result<()> {
     list_messages_command(account, &matches);
@@ -204,6 +223,8 @@ fn account_commands(account: &mut Account, matches: &ArgMatches) -> Result<()> {
     promote_message_command(account, &matches)?;
     retry_message_command(account, &matches)?;
     reattach_message_command(account, &matches)?;
+    set_node_command(account, &matches)?;
+    set_alias_command(account, &matches)?;
     Ok(())
 }
 
