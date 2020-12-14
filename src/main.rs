@@ -84,7 +84,6 @@ fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result
             .values_of("node")
             .expect("at least a node must be provided")
             .collect();
-        let accounts = manager.get_accounts()?;
         let mut builder = manager
             .create_account(
                 ClientOptionsBuilder::nodes(&nodes)?
