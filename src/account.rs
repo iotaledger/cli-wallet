@@ -25,7 +25,10 @@ fn print_message(message: &Message) {
     println!(
         "--- Broadcasted: {}, confirmed: {}",
         message.broadcasted(),
-        message.confirmed()
+        match message.confirmed() {
+            Some(c) => c.to_string(),
+            None => "unknown".to_string(),
+        }
     );
 }
 
