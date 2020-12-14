@@ -1241,6 +1241,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.1.0"
+source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#b2468ce5dc995ade1ea056c14ca99d70a1838d1a"
 dependencies = [
  "anyhow",
  "backtrace",
@@ -2622,6 +2623,7 @@ dependencies = [
  "iota-wallet",
  "once_cell",
  "serde_json",
+ "tiny-bip39",
  "tokio",
 ]
 
