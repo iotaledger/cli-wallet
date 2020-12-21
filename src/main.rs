@@ -9,20 +9,13 @@ use console::Term;
 use dialoguer::{theme::ColorfulTheme, Select};
 use dotenv::dotenv;
 use iota_wallet::{
-    account::{Account, AccountIdentifier},
-    account_manager::AccountManager,
-    client::ClientOptionsBuilder,
-    signing::SignerType,
+    account::AccountHandle, account_manager::AccountManager, client::ClientOptionsBuilder, signing::SignerType,
     storage::sqlite::SqliteStorageAdapter,
-    Result, WalletError,
 };
 use once_cell::sync::OnceCell;
 use tokio::runtime::Runtime;
 
-use std::{
-    env::var_os,
-    sync::{Arc, Mutex, RwLock},
-};
+use std::{env::var_os, sync::Mutex};
 
 mod account;
 
@@ -38,39 +31,37 @@ const ACCOUNT_CLI_TEMPLATE: &str = "\
   {all-args}{after-help}\
 ";
 
-fn print_error(e: WalletError) {
+pub type Result<T> = anyhow::Result<T>;
+
+fn print_error<E: ToString>(e: E) {
     println!("ERROR: {}", e.to_string());
 }
 
 static RUNTIME: OnceCell<Mutex<Runtime>> = OnceCell::new();
 
-pub fn block_on<C: futures::Future>(cb: C) -> C::Output {
-    let runtime = RUNTIME.get().unwrap();
-    runtime.lock().unwrap().block_on(cb)
-}
-
-fn pick_account(account_cli: &App<'_>, accounts: Arc<RwLock<Vec<Account>>>) -> Result<()> {
-    let items: Vec<String> = {
-        let accounts_ = accounts.read().unwrap();
-        accounts_.iter().map(|acc| acc.alias().clone()).collect()
-    };
+async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
+    let mut items = Vec::new();
+    for account_handle in accounts {
+        items.push(account_handle.alias().await);
+    }
     let selection = Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Select an account to manipulate")
         .items(&items)
         .default(0)
-        .interact_on_opt(&Term::stderr())?;
+        .interact_on_opt(&Term::stderr())
+        .unwrap_or_default();
     if let Some(selected) = selection {
-        account::account_prompt(account_cli, accounts.clone(), selected);
-        pick_account(account_cli, accounts)?;
+        Some(selected)
+    } else {
+        None
     }
-    Ok(())
 }
 
-fn select_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountIdentifier>> {
+async fn select_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
     if let Some(matches) = matches.subcommand_matches("account") {
         let alias = matches.value_of("alias").unwrap();
-        if let Some(account) = manager.get_account_by_alias(alias) {
-            return Ok(Some(account.id().clone()));
+        if let Some(account) = manager.get_account_by_alias(alias).await {
+            return Ok(Some(account));
         } else {
             println!("Account not found");
         }
@@ -78,7 +69,7 @@ fn select_account_command(manager: &AccountManager, matches: &ArgMatches) -> Res
     Ok(None)
 }
 
-fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<Account>> {
+async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
     if let Some(matches) = matches.subcommand_matches("new") {
         let nodes: Vec<&str> = matches
             .values_of("node")
@@ -98,19 +89,19 @@ fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result
         if let Some(mnemonic) = matches.value_of("mnemonic") {
             builder = builder.mnemonic(mnemonic);
         }
-        let account = builder.initialise()?;
-        println!("Created account `{}`", account.alias());
+        let account = builder.initialise().await?;
+        println!("Created account `{}`", account.alias().await);
         Ok(Some(account))
     } else {
         Ok(None)
     }
 }
 
-fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
+async fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("delete") {
         let account_alias = matches.value_of("alias").unwrap();
-        if let Some(account) = manager.get_account_by_alias(account_alias) {
-            manager.remove_account(account.id())?;
+        if let Some(account) = manager.get_account_by_alias(account_alias).await {
+            manager.remove_account(&account.id().await).await?;
             println!("Account removed");
         } else {
             println!("Account not found");
@@ -119,9 +110,9 @@ fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Res
     Ok(())
 }
 
-fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
+async fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if matches.subcommand_matches("sync").is_some() {
-        let synced = block_on(async move { manager.sync_accounts().await })?;
+        let synced = manager.sync_accounts().await?;
         println!("Synchronized {} accounts", synced.len());
     }
     Ok(())
@@ -136,72 +127,26 @@ fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> 
     Ok(())
 }
 
-fn import_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
+async fn import_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("backup") {
         let source = matches.value_of("path").unwrap();
-        manager.import_accounts(source)?;
+        manager.import_accounts(source).await?;
         println!("Backup successfully imported");
     }
     Ok(())
 }
 
-fn watch_accounts(accounts: Arc<RwLock<Vec<Account>>>) {
-    let accounts_ = accounts.clone();
-    iota_wallet::event::on_balance_change(move |event| {
-        let mut accounts_ = accounts_.write().unwrap();
-        let account = accounts_.iter_mut().find(|a| &a.id() == event.account_id()).unwrap();
-        let account_address = account
-            .addresses_mut()
-            .iter_mut()
-            .find(|a| a == event.address())
-            .unwrap();
-        account_address.set_balance(*event.balance());
-    });
-
-    let accounts_ = accounts.clone();
-    iota_wallet::event::on_new_transaction(move |event| {
-        let mut accounts_ = accounts_.write().unwrap();
-        let account = accounts_.iter_mut().find(|a| &a.id() == event.account_id()).unwrap();
-        account.append_messages(vec![event.cloned_message()]);
-    });
-
-    let accounts_ = accounts.clone();
-    iota_wallet::event::on_confirmation_state_change(move |event| {
-        let mut accounts_ = accounts_.write().unwrap();
-        let account = accounts_.iter_mut().find(|a| &a.id() == event.account_id()).unwrap();
-        if let Some(message) = account.messages_mut().iter_mut().find(|m| m == event.message()) {
-            message.set_confirmed(Some(*event.confirmed()));
-        }
-    });
-
-    let accounts_ = accounts.clone();
-    iota_wallet::event::on_reattachment(move |event| {
-        let mut accounts_ = accounts_.write().unwrap();
-        let account = accounts_.iter_mut().find(|a| &a.id() == event.account_id()).unwrap();
-        account.append_messages(vec![event.cloned_message()]);
-    });
-
-    let accounts_ = accounts;
-    iota_wallet::event::on_broadcast(move |event| {
-        let mut accounts_ = accounts_.write().unwrap();
-        let account = accounts_.iter_mut().find(|a| &a.id() == event.account_id()).unwrap();
-        if let Some(message) = account.messages_mut().iter_mut().find(|m| m == event.message()) {
-            message.set_broadcasted(true);
-        }
-    });
-}
-
-fn run() -> Result<()> {
+async fn run() -> Result<()> {
     let runtime = Runtime::new().expect("Failed to create async runtime");
     RUNTIME.set(Mutex::new(runtime)).expect("Failed to store async runtime");
 
     let storage_path = var_os("WALLET_DATABASE_PATH")
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./wallet-cli-database".to_string());
-    let mut manager =
-        AccountManager::with_storage_adapter(&storage_path, SqliteStorageAdapter::new(&storage_path, "accounts")?)?;
-
-    manager.start_background_sync();
+    let manager = AccountManager::builder()
+        .with_storage(&storage_path, SqliteStorageAdapter::new(&storage_path, "accounts")?)
+        .finish()
+        .await?;
 
     let yaml = load_yaml!("account-cli.yml");
     let account_cli = App::from(yaml)
@@ -209,20 +154,16 @@ fn run() -> Result<()> {
         .setting(AppSettings::DisableVersion)
         .setting(AppSettings::NoBinaryName);
 
-    let accounts = manager.get_accounts()?;
-    let accounts = Arc::new(RwLock::new(accounts));
-
-    watch_accounts(accounts.clone());
-
     if std::env::args().len() == 1 {
-        let len = {
-            let a = accounts.read().unwrap();
-            a.len()
-        };
-        match len {
+        let accounts = manager.get_accounts().await;
+        match accounts.len() {
             0 => {}
-            1 => account::account_prompt(&account_cli, accounts.clone(), 0),
-            _ => pick_account(&account_cli, accounts.clone())?,
+            1 => account::account_prompt(&account_cli, accounts.first().unwrap().clone()).await,
+            _ => {
+                while let Some(index) = pick_account(accounts.clone()).await {
+                    account::account_prompt(&account_cli, accounts[index].clone()).await;
+                }
+            }
         }
     }
 
@@ -233,42 +174,34 @@ fn run() -> Result<()> {
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
-    match select_account_command(&manager, &matches) {
-        Ok(Some(selected_account_id)) => {
-            let index = {
-                let accounts_ = accounts.read().unwrap();
-                accounts_.iter().position(|a| a.id() == &selected_account_id).unwrap()
-            };
-            account::account_prompt(&account_cli, accounts.clone(), index);
+    match select_account_command(&manager, &matches).await {
+        Ok(Some(account)) => {
+            account::account_prompt(&account_cli, account).await;
         }
         Ok(None) => {}
         Err(e) => return Err(e),
     };
-    match new_account_command(&manager, &matches) {
-        Ok(Some(new_account)) => {
-            let index = {
-                let mut accounts_ = accounts.write().unwrap();
-                accounts_.push(new_account);
-                accounts_.len() - 1
-            };
-            account::account_prompt(&account_cli, accounts, index);
+    match new_account_command(&manager, &matches).await {
+        Ok(Some(new_account_handle)) => {
+            account::account_prompt(&account_cli, new_account_handle).await;
         }
         Ok(None) => {}
         Err(e) => return Err(e),
     };
-    delete_account_command(&manager, &matches)?;
-    sync_accounts_command(&manager, &matches)?;
+    delete_account_command(&manager, &matches).await?;
+    sync_accounts_command(&manager, &matches).await?;
     backup_command(&manager, &matches)?;
-    import_command(&manager, &matches)?;
+    import_command(&manager, &matches).await?;
 
     Ok(())
 }
 
-fn main() {
+#[tokio::main]
+async fn main() {
     if let Ok(p) = dotenv() {
         println!("loaded dotenv from {:?}", p);
     }
-    if let Err(e) = run() {
+    if let Err(e) = run().await {
         print_error(e);
     }
 }

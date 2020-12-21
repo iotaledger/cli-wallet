@@ -12,6 +12,7 @@ name = "wallet"
 path = "src/main.rs"
 
 [dependencies]
+anyhow = "1.0"
 iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", branch = "develop", features = ["sqlite"] }
 iota-core = { git = "https://github.com/iotaledger/iota.rs", branch = "dev" }
 tokio = { version = "0.2", features = ["full"] }
