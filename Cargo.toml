@@ -3,6 +3,9 @@ name = "wallet-cli"
 version = "0.1.2"
 authors = ["Lucas Nogueira <lucas.nogueira@iota.org>"]
 edition = "2018"
+homepage = "https://iota.org"
+description = "Command line interface application for the IOTA wallet library."
+license = "Apache-2.0"
 
 [[bin]]
 name = "wallet"
