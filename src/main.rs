@@ -6,16 +6,14 @@
 
 use clap::{load_yaml, App, AppSettings, ArgMatches};
 use console::Term;
-use dialoguer::{theme::ColorfulTheme, Select};
-use dotenv::dotenv;
+use dialoguer::{theme::ColorfulTheme, Input, Select};
 use iota_wallet::{
     account::AccountHandle, account_manager::AccountManager, client::ClientOptionsBuilder, signing::SignerType,
-    storage::sqlite::SqliteStorageAdapter,
 };
 use once_cell::sync::OnceCell;
 use tokio::runtime::Runtime;
 
-use std::{env::var_os, sync::Mutex};
+use std::{env::var_os, path::PathBuf, sync::Mutex, time::Duration};
 
 mod account;
 
@@ -38,6 +36,14 @@ fn print_error<E: ToString>(e: E) {
 }
 
 static RUNTIME: OnceCell<Mutex<Runtime>> = OnceCell::new();
+
+fn get_password() -> String {
+    let password: String = Input::new()
+        .with_prompt("What's the stronghold password?")
+        .interact_text()
+        .unwrap();
+    password
+}
 
 async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
     let mut items = Vec::new();
@@ -69,6 +75,14 @@ async fn select_account_command(manager: &AccountManager, matches: &ArgMatches) 
     Ok(None)
 }
 
+async fn store_mnemonic_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<()> {
+    if let Some(matches) = matches.subcommand_matches("mnemonic") {
+        let mnemonic = matches.value_of("mnemonic").unwrap().to_string();
+        manager.store_mnemonic(SignerType::Stronghold, Some(mnemonic)).await?;
+    }
+    Ok(())
+}
+
 async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
     if let Some(matches) = matches.subcommand_matches("new") {
         let nodes: Vec<&str> = matches
@@ -82,12 +96,9 @@ async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> 
                     .build()
                     .unwrap(),
             )
-            .signer_type(SignerType::EnvMnemonic);
+            .signer_type(SignerType::Stronghold);
         if let Some(alias) = matches.value_of("alias") {
             builder = builder.alias(alias);
-        }
-        if let Some(mnemonic) = matches.value_of("mnemonic") {
-            builder = builder.mnemonic(mnemonic);
         }
         let account = builder.initialise().await?;
         println!("Created account `{}`", account.alias().await);
@@ -118,19 +129,20 @@ async fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -
     Ok(())
 }
 
-fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
+async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("backup") {
         let destination = matches.value_of("path").unwrap();
-        let full_path = manager.backup(destination)?;
+        let full_path = manager.backup(destination).await?;
         println!("Backup stored at {:?}", full_path);
     }
     Ok(())
 }
 
-async fn import_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
+async fn import_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("backup") {
         let source = matches.value_of("path").unwrap();
-        manager.import_accounts(source).await?;
+        let password = get_password();
+        manager.import_accounts(source, password).await?;
         println!("Backup successfully imported");
     }
     Ok(())
@@ -140,13 +152,25 @@ async fn run() -> Result<()> {
     let runtime = Runtime::new().expect("Failed to create async runtime");
     RUNTIME.set(Mutex::new(runtime)).expect("Failed to store async runtime");
 
+    // ignore stronghold password clear
+    iota_wallet::set_stronghold_password_clear_interval(Duration::from_millis(0)).await;
+
     let storage_path = var_os("WALLET_DATABASE_PATH")
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./wallet-cli-database".to_string());
-    let manager = AccountManager::builder()
-        .with_storage(&storage_path, SqliteStorageAdapter::new(&storage_path, "accounts")?)
+    let mut manager = AccountManager::builder()
+        .with_storage_path(&storage_path)
         .finish()
         .await?;
+
+    let password = get_password();
+
+    manager.set_stronghold_password(password).await?;
+
+    // on first run, we generate a random mnemonic and store it
+    if !PathBuf::from(storage_path).join("wallet.stronghold").exists() {
+        manager.store_mnemonic(SignerType::Stronghold, None).await?;
+    }
 
     let yaml = load_yaml!("account-cli.yml");
     let account_cli = App::from(yaml)
@@ -174,6 +198,8 @@ async fn run() -> Result<()> {
         .setting(AppSettings::ArgRequiredElseHelp)
         .get_matches();
 
+    store_mnemonic_command(&mut manager, &matches).await?;
+
     match select_account_command(&manager, &matches).await {
         Ok(Some(account)) => {
             account::account_prompt(&account_cli, account).await;
@@ -190,17 +216,14 @@ async fn run() -> Result<()> {
     };
     delete_account_command(&manager, &matches).await?;
     sync_accounts_command(&manager, &matches).await?;
-    backup_command(&manager, &matches)?;
-    import_command(&manager, &matches).await?;
+    backup_command(&manager, &matches).await?;
+    import_command(&mut manager, &matches).await?;
 
     Ok(())
 }
 
 #[tokio::main]
 async fn main() {
-    if let Ok(p) = dotenv() {
-        println!("loaded dotenv from {:?}", p);
-    }
     if let Err(e) = run().await {
         print_error(e);
     }
