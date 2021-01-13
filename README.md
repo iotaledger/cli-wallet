@@ -32,6 +32,10 @@ The wallet CLI has a set of main commands accesible with `$ ./wallet COMMAND [AR
 
 Prints the CLI help information. If a command is specified, the command's help will be printed.
 
+#### mnemonic [MNEMONIC]
+
+Sets the mnemonic to use.
+
 #### new --node "http://node.url:portNumber" [--alias ALIAS --mnemonic 24_WORD_MNEMONIC_PHRASE]
 
 Creates a new account connecting to the specified node URL. Optionally takes the account alias and 24 word mnemonic phrase.
