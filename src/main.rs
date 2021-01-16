@@ -5,7 +5,7 @@
 //! Create a new account: `$ cargo run -- new --node http://localhost:14265`
 
 use clap::{load_yaml, App, AppSettings, ArgMatches};
-use dialoguer::{console::Term, theme::ColorfulTheme, Input, Select};
+use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::{
     account::AccountHandle, account_manager::AccountManager, client::ClientOptionsBuilder, signing::SignerType,
 };
@@ -36,11 +36,14 @@ fn print_error<E: ToString>(e: E) {
 
 static RUNTIME: OnceCell<Mutex<Runtime>> = OnceCell::new();
 
-fn get_password() -> String {
-    let password: String = Input::new()
-        .with_prompt("What's the stronghold password?")
-        .interact_text()
-        .unwrap();
+fn get_password(manager: &AccountManager) -> String {
+    let mut prompt = Password::new();
+    prompt.with_prompt("What's the stronghold password?");
+    if !manager.storage_path().exists() {
+        prompt.with_confirmation("Confirm password", "Password mismatch");
+    }
+
+    let password: String = prompt.interact().unwrap();
     password
 }
 
@@ -140,7 +143,7 @@ async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Resul
 async fn import_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("backup") {
         let source = matches.value_of("path").unwrap();
-        let password = get_password();
+        let password = get_password(&manager);
         manager.import_accounts(source, password).await?;
         println!("Backup successfully imported");
     }
@@ -162,7 +165,7 @@ async fn run() -> Result<()> {
         .finish()
         .await?;
 
-    let password = get_password();
+    let password = get_password(&manager);
 
     manager.set_stronghold_password(password).await?;
 
