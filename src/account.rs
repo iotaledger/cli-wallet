@@ -30,9 +30,15 @@ fn print_message(message: &Message) {
     );
 }
 
-fn print_address(address: &Address) {
+async fn print_address(account_handle: &AccountHandle, address: &Address) {
     println!("ADDRESS {:?}", address.address().to_bech32());
-    println!("--- Balance: {}", address.balance());
+    println!(
+        "--- Balance: {}",
+        address
+            .available_outputs(&*account_handle.read().await)
+            .iter()
+            .fold(0, |acc, o| acc + o.amount())
+    );
     println!("--- Index: {}", address.key_index());
     println!("--- Change address: {}", address.internal());
 }
@@ -84,7 +90,9 @@ async fn list_addresses_command(account_handle: &AccountHandle, matches: &ArgMat
         if addresses.is_empty() {
             println!("No addresses found");
         } else {
-            addresses.iter().for_each(|a| print_address(a));
+            for address in addresses {
+                print_address(&account_handle, &address).await;
+            }
         }
     }
 }
@@ -101,7 +109,7 @@ async fn sync_account_command(account_handle: &AccountHandle, matches: &ArgMatch
 async fn generate_address_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
     if matches.subcommand_matches("address").is_some() {
         let address = account_handle.generate_address().await?;
-        print_address(&address);
+        print_address(account_handle, &address).await;
     }
     Ok(())
 }
@@ -110,8 +118,7 @@ async fn generate_address_command(account_handle: &AccountHandle, matches: &ArgM
 async fn balance_command(account_handle: &AccountHandle, matches: &ArgMatches) {
     if matches.subcommand_matches("balance").is_some() {
         let account = account_handle.read().await;
-        let balance = account.addresses().iter().fold(0, |acc, addr| acc + *addr.balance());
-        println!("{}", balance);
+        println!("{}", account.available_balance());
     }
 }
 
