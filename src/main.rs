@@ -5,8 +5,7 @@
 //! Create a new account: `$ cargo run -- new --node http://localhost:14265`
 
 use clap::{load_yaml, App, AppSettings, ArgMatches};
-use console::Term;
-use dialoguer::{theme::ColorfulTheme, Input, Select};
+use dialoguer::{console::Term, theme::ColorfulTheme, Input, Select};
 use iota_wallet::{
     account::AccountHandle, account_manager::AccountManager, client::ClientOptionsBuilder, signing::SignerType,
 };
