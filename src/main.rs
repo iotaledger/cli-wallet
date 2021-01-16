@@ -181,7 +181,10 @@ async fn run() -> Result<()> {
         let accounts = manager.get_accounts().await;
         match accounts.len() {
             0 => {}
-            1 => account::account_prompt(&account_cli, accounts.first().unwrap().clone()).await,
+            1 => {
+                account::account_prompt(&account_cli, accounts.first().unwrap().clone()).await;
+                return Ok(());
+            }
             _ => {
                 while let Some(index) = pick_account(accounts.clone()).await {
                     account::account_prompt(&account_cli, accounts[index].clone()).await;
