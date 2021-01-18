@@ -132,7 +132,7 @@ checksum = "cdcf67bb7ba7797a081cd19009948ab533af7c355d5caf1d08c777582d351e9c"
 [[package]]
 name = "bee-common"
 version = "0.1.1-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#e633930a59e16894b28dfa77ea30637b53fb798c"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#874359b083ec335d3e42e0fa5bbf0cf74917b14c"
 dependencies = [
  "async-trait",
  "bee-common 0.3.0-alpha",
@@ -140,7 +140,7 @@ dependencies = [
  "bee-ternary",
  "chrono",
  "fern",
- "futures",
+ "futures 0.3.12",
  "log",
  "serde 1.0.119",
  "thiserror",
@@ -183,7 +183,7 @@ dependencies = [
 [[package]]
 name = "bee-message"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#e633930a59e16894b28dfa77ea30637b53fb798c"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#874359b083ec335d3e42e0fa5bbf0cf74917b14c"
 dependencies = [
  "bech32",
  "bee-common 0.3.0-alpha",
@@ -200,7 +200,7 @@ dependencies = [
 [[package]]
 name = "bee-pow"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#e633930a59e16894b28dfa77ea30637b53fb798c"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#874359b083ec335d3e42e0fa5bbf0cf74917b14c"
 dependencies = [
  "bee-common 0.1.1-alpha",
  "bee-crypto",
@@ -246,7 +246,7 @@ version = "0.2.0-alpha"
 source = "git+https://github.com/iotaledger/bee.git?branch=dev#d0527beaa40d1f95a05d9e8564f95cfcd3bf4aa2"
 dependencies = [
  "async-trait",
- "futures",
+ "futures 0.3.12",
  "serde 1.0.119",
 ]
 
@@ -792,6 +792,12 @@ dependencies = [
 
 [[package]]
 name = "futures"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4c7e4c2612746b0df8fed4ce0c69156021b704c9aefa360311c04e6e9e002eed"
+
+[[package]]
+name = "futures"
 version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "da9052a1a50244d8d5aa9bf55cbc2fb6f357c86cc52e46c62ed390a7180cf150"
@@ -816,10 +822,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "futures-channel-preview"
+version = "0.3.0-alpha.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d5e5f4df964fa9c1c2f8bddeb5c3611631cacd93baf810fc8bb2fb4b495c263a"
+dependencies = [
+ "futures-core-preview",
+ "futures-sink-preview",
+]
+
+[[package]]
 name = "futures-core"
 version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "79e5145dde8da7d1b3892dad07a9c98fc04bc39892b1ecc9692cf53e2b780a65"
+
+[[package]]
+name = "futures-core-preview"
+version = "0.3.0-alpha.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b35b6263fb1ef523c3056565fa67b1d16f0a8604ff12b11b08c25f28a734c60a"
 
 [[package]]
 name = "futures-executor"
@@ -834,10 +856,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "futures-executor-preview"
+version = "0.3.0-alpha.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "75236e88bd9fe88e5e8bfcd175b665d0528fe03ca4c5207fabc028c8f9d93e98"
+dependencies = [
+ "futures-core-preview",
+ "futures-util-preview",
+ "num_cpus",
+]
+
+[[package]]
 name = "futures-io"
 version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "28be053525281ad8259d47e4de5de657b25e7bac113458555bb4b70bc6870500"
+
+[[package]]
+name = "futures-io-preview"
+version = "0.3.0-alpha.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f4914ae450db1921a56c91bde97a27846287d062087d4a652efc09bb3a01ebda"
 
 [[package]]
 name = "futures-macro"
@@ -852,10 +891,30 @@ dependencies = [
 ]
 
 [[package]]
+name = "futures-preview"
+version = "0.3.0-alpha.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3b1dce2a0267ada5c6ff75a8ba864b4e679a9e2aa44262af7a3b5516d530d76e"
+dependencies = [
+ "futures-channel-preview",
+ "futures-core-preview",
+ "futures-executor-preview",
+ "futures-io-preview",
+ "futures-sink-preview",
+ "futures-util-preview",
+]
+
+[[package]]
 name = "futures-sink"
 version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "caf5c69029bda2e743fddd0582d1083951d65cc9539aebf8812f36c3491342d6"
+
+[[package]]
+name = "futures-sink-preview"
+version = "0.3.0-alpha.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "86f148ef6b69f75bb610d4f9a2336d4fc88c4b5b67129d1a340dd0fd362efeec"
 
 [[package]]
 name = "futures-task"
@@ -868,9 +927,13 @@ dependencies = [
 
 [[package]]
 name = "futures-timer"
-version = "3.0.2"
+version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e64b03909df88034c26dc1547e8970b91f98bdb65165d6a4e9110d94263dbb2c"
+checksum = "8f9eb554aa23143abc64ec4d0016f038caf53bb7cbc3d91490835c54edc96550"
+dependencies = [
+ "futures-preview",
+ "pin-utils",
+]
 
 [[package]]
 name = "futures-util"
@@ -878,6 +941,7 @@ version = "0.3.12"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "632a8cd0f2a4b3fdea1657f08bde063848c3bd00f9bbf6e256b8be78802e624b"
 dependencies = [
+ "futures 0.1.30",
  "futures-channel",
  "futures-core",
  "futures-io",
@@ -889,6 +953,21 @@ dependencies = [
  "pin-utils",
  "proc-macro-hack",
  "proc-macro-nested",
+ "slab",
+]
+
+[[package]]
+name = "futures-util-preview"
+version = "0.3.0-alpha.19"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5ce968633c17e5f97936bd2797b6e38fb56cf16a7422319f7ec2e30d3c470e8d"
+dependencies = [
+ "futures-channel-preview",
+ "futures-core-preview",
+ "futures-io-preview",
+ "futures-sink-preview",
+ "memchr",
+ "pin-utils",
  "slab",
 ]
 
@@ -1209,7 +1288,7 @@ dependencies = [
  "anyhow",
  "bee-signing-ext",
  "bincode",
- "futures",
+ "futures 0.3.12",
  "iota-crypto 0.1.0",
  "riker",
  "serde 1.0.119",
@@ -1223,13 +1302,13 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#4e9eb25abd92f480b20ad425c0281eca16ff49a7"
+source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#25bc54a8a16d1ca4f0bf6605ef0bed0246299d9d"
 dependencies = [
  "async-trait",
  "backtrace",
  "blake2",
  "chrono",
- "futures",
+ "futures 0.3.12",
  "getset",
  "hex",
  "iota-core",
@@ -1243,6 +1322,7 @@ dependencies = [
  "serde_json",
  "serde_repr",
  "slip10",
+ "slog",
  "thiserror",
  "tokio",
  "url",
@@ -1535,19 +1615,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "624a8340c38c1b80fd549087862da4ba43e08858af025b236e509b6649fc13d5"
 
 [[package]]
-name = "openssl-sys"
-version = "0.9.60"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "921fc71883267538946025deffb622905ecad223c28efbfdef9bb59a0175f3e6"
-dependencies = [
- "autocfg",
- "cc",
- "libc",
- "pkg-config",
- "vcpkg",
-]
-
-[[package]]
 name = "os_str_bytes"
 version = "2.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1556,10 +1623,9 @@ checksum = "afb2e1c3ee07430c2cf76151675e583e0f19985fa6efae47d6848a3e2c824f85"
 [[package]]
 name = "paho-mqtt"
 version = "0.9.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "d82fea0990fe54e75d575bbd9bc2ee5919fd10cc0b4a95f1967528083129fc4b"
+source = "git+https://github.com/rajivshah3/paho.mqtt.rust?branch=feature/openssl-static-link-master-0.9#66b58ff517404546875f45fe1a69c9375d5d1b2a"
 dependencies = [
- "futures",
+ "futures 0.3.12",
  "futures-timer",
  "libc",
  "log",
@@ -1570,11 +1636,9 @@ dependencies = [
 [[package]]
 name = "paho-mqtt-sys"
 version = "0.5.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1ad9ac6a77a7e7c70cd51262b94ab666c9e4c38fb0f4201dba8d7f8589aa8ce4"
+source = "git+https://github.com/rajivshah3/paho.mqtt.rust?branch=feature/openssl-static-link-master-0.9#66b58ff517404546875f45fe1a69c9375d5d1b2a"
 dependencies = [
  "cmake",
- "openssl-sys",
 ]
 
 [[package]]
@@ -1680,12 +1744,6 @@ name = "pin-utils"
 version = "0.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
-
-[[package]]
-name = "pkg-config"
-version = "0.3.19"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c"
 
 [[package]]
 name = "poly1305"
@@ -1973,7 +2031,7 @@ dependencies = [
  "chrono",
  "config",
  "dashmap",
- "futures",
+ "futures 0.3.12",
  "num_cpus",
  "pin-utils",
  "rand 0.7.3",
@@ -2704,12 +2762,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "vcpkg"
-version = "0.2.11"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b00bca6106a5e23f3eee943593759b7fcddb00554332e856d990c893966879fb"
-
-[[package]]
 name = "vec_map"
 version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2723,12 +2775,12 @@ checksum = "b5a972e5669d67ba988ce3dc826706fb0a8b01471c088cb0b6110b805cc36aed"
 
 [[package]]
 name = "wallet-cli"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "clap 3.0.0-beta.2",
  "dialoguer",
- "futures",
+ "futures 0.3.12",
  "iota-core",
  "iota-wallet",
  "once_cell",
