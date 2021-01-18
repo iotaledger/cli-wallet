@@ -7,7 +7,10 @@
 use clap::{load_yaml, App, AppSettings, ArgMatches};
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::{
-    account::AccountHandle, account_manager::AccountManager, client::ClientOptionsBuilder, signing::SignerType,
+    account::AccountHandle,
+    account_manager::{AccountManager, ManagerStorage},
+    client::ClientOptionsBuilder,
+    signing::SignerType,
 };
 use once_cell::sync::OnceCell;
 use tokio::runtime::Runtime;
@@ -68,7 +71,7 @@ async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
 async fn select_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
     if let Some(matches) = matches.subcommand_matches("account") {
         let alias = matches.value_of("alias").unwrap();
-        if let Some(account) = manager.get_account_by_alias(alias).await {
+        if let Ok(account) = manager.get_account_by_alias(alias).await {
             return Ok(Some(account));
         } else {
             println!("Account not found");
@@ -97,7 +100,7 @@ async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> 
                     .local_pow(matches.value_of("pow").unwrap_or("local") == "local")
                     .build()
                     .unwrap(),
-            )
+            )?
             .signer_type(SignerType::Stronghold);
         if let Some(alias) = matches.value_of("alias") {
             builder = builder.alias(alias);
@@ -113,7 +116,7 @@ async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> 
 async fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("delete") {
         let account_alias = matches.value_of("alias").unwrap();
-        if let Some(account) = manager.get_account_by_alias(account_alias).await {
+        if let Ok(account) = manager.get_account_by_alias(account_alias).await {
             manager.remove_account(&account.id().await).await?;
             println!("Account removed");
         } else {
@@ -161,7 +164,7 @@ async fn run() -> Result<()> {
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./wallet-cli-database".to_string());
     let mut manager = AccountManager::builder()
-        .with_storage_path(&storage_path)
+        .with_storage(&storage_path, ManagerStorage::Stronghold, None)?
         .finish()
         .await?;
 
@@ -181,7 +184,7 @@ async fn run() -> Result<()> {
         .setting(AppSettings::NoBinaryName);
 
     if std::env::args().len() == 1 {
-        let accounts = manager.get_accounts().await;
+        let accounts = manager.get_accounts().await?;
         match accounts.len() {
             0 => {}
             1 => {
