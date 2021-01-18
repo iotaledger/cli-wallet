@@ -132,7 +132,7 @@ checksum = "cdcf67bb7ba7797a081cd19009948ab533af7c355d5caf1d08c777582d351e9c"
 [[package]]
 name = "bee-common"
 version = "0.1.1-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#e633930a59e16894b28dfa77ea30637b53fb798c"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#874359b083ec335d3e42e0fa5bbf0cf74917b14c"
 dependencies = [
  "async-trait",
  "bee-common 0.3.0-alpha",
@@ -183,7 +183,7 @@ dependencies = [
 [[package]]
 name = "bee-message"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#e633930a59e16894b28dfa77ea30637b53fb798c"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#874359b083ec335d3e42e0fa5bbf0cf74917b14c"
 dependencies = [
  "bech32",
  "bee-common 0.3.0-alpha",
@@ -200,7 +200,7 @@ dependencies = [
 [[package]]
 name = "bee-pow"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#e633930a59e16894b28dfa77ea30637b53fb798c"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#874359b083ec335d3e42e0fa5bbf0cf74917b14c"
 dependencies = [
  "bee-common 0.1.1-alpha",
  "bee-crypto",
@@ -1302,7 +1302,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#4e9eb25abd92f480b20ad425c0281eca16ff49a7"
+source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#25bc54a8a16d1ca4f0bf6605ef0bed0246299d9d"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -1322,6 +1322,7 @@ dependencies = [
  "serde_json",
  "serde_repr",
  "slip10",
+ "slog",
  "thiserror",
  "tokio",
  "url",
@@ -2774,7 +2775,7 @@ checksum = "b5a972e5669d67ba988ce3dc826706fb0a8b01471c088cb0b6110b805cc36aed"
 
 [[package]]
 name = "wallet-cli"
-version = "0.2.0"
+version = "0.2.1"
 dependencies = [
  "anyhow",
  "clap 3.0.0-beta.2",
