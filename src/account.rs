@@ -203,7 +203,7 @@ async fn set_node_command(account_handle: &AccountHandle, matches: &ArgMatches) 
         let node = matches.value_of("node").unwrap();
         account_handle
             .set_client_options(ClientOptionsBuilder::node(node)?.build())
-            .await;
+            .await?;
     }
     Ok(())
 }
@@ -212,7 +212,7 @@ async fn set_node_command(account_handle: &AccountHandle, matches: &ArgMatches) 
 async fn set_alias_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("set-alias") {
         let alias = matches.value_of("alias").unwrap();
-        account_handle.set_alias(alias).await;
+        account_handle.set_alias(alias).await?;
     }
     Ok(())
 }
