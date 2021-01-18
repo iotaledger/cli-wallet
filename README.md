@@ -4,7 +4,7 @@ Command line interface application for the [IOTA wallet library](https://github.
 
 ## Usage
 
-After downloading the CLI, create a new account:
+After downloading the CLI, create a new account. On Mac and Linux you will first need to `chmod +x ./wallet`.
 
 ```
 $ ./wallet new --node http://node.url:port --alias ALIAS
@@ -31,6 +31,10 @@ The wallet CLI has a set of main commands accesible with `$ ./wallet COMMAND [AR
 #### help [COMMAND]
 
 Prints the CLI help information. If a command is specified, the command's help will be printed.
+
+#### mnemonic [MNEMONIC]
+
+Sets the mnemonic to use.
 
 #### new --node "http://node.url:portNumber" [--alias ALIAS --mnemonic 24_WORD_MNEMONIC_PHRASE]
 

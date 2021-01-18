@@ -68,3 +68,20 @@ subcommands:
             about: The id of the message to reattach.
             index: 1
             required: true
+  - set-node:
+      about: Updates the account node.
+      alias: sn
+      args:
+        - node:
+            about: The node URL to connect to.
+            index: 1
+            required: true
+  - set-alias:
+      about: Updates the account alias.
+      alias: sa
+      args:
+        - alias:
+            about: The new account alias.
+            index: 1
+            required: true
+  
