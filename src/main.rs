@@ -71,7 +71,7 @@ async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
 async fn select_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
     if let Some(matches) = matches.subcommand_matches("account") {
         let alias = matches.value_of("alias").unwrap();
-        if let Ok(account) = manager.get_account_by_alias(alias).await {
+        if let Ok(account) = manager.get_account(alias).await {
             return Ok(Some(account));
         } else {
             println!("Account not found");
@@ -116,7 +116,7 @@ async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> 
 async fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("delete") {
         let account_alias = matches.value_of("alias").unwrap();
-        if let Ok(account) = manager.get_account_by_alias(account_alias).await {
+        if let Ok(account) = manager.get_account(account_alias).await {
             manager.remove_account(&account.id().await).await?;
             println!("Account removed");
         } else {
