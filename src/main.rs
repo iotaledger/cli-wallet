@@ -90,10 +90,18 @@ async fn store_mnemonic_command(manager: &mut AccountManager, matches: &ArgMatch
 
 async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
     if let Some(matches) = matches.subcommand_matches("new") {
-        let nodes: Vec<&str> = matches
-            .values_of("node")
-            .expect("at least a node must be provided")
-            .collect();
+        let nodes: Vec<&str> = matches.values_of("node").map(|v| v.collect()).unwrap_or_default();
+        let signer_type = if let Some(signer_type) = matches.value_of("type") {
+            match signer_type {
+                "stronghold" => SignerType::Stronghold,
+                "ledger-nano-simulator" => SignerType::LedgerNanoSimulator,
+                "ledger-nano" => SignerType::LedgerNano,
+                _ => panic!("unexpected account type"),
+            }
+        } else {
+            SignerType::Stronghold
+        };
+
         let mut builder = manager
             .create_account(
                 ClientOptionsBuilder::nodes(&nodes)?
@@ -101,7 +109,7 @@ async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> 
                     .build()
                     .unwrap(),
             )?
-            .signer_type(SignerType::Stronghold);
+            .signer_type(signer_type);
         if let Some(alias) = matches.value_of("alias") {
             builder = builder.alias(alias);
         }
@@ -169,7 +177,6 @@ async fn run() -> Result<()> {
         .await?;
 
     let password = get_password(&manager);
-
     manager.set_stronghold_password(password).await?;
 
     // on first run, we generate a random mnemonic and store it

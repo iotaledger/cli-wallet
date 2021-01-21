@@ -34,11 +34,11 @@ Prints the CLI help information. If a command is specified, the command's help w
 
 #### mnemonic [MNEMONIC]
 
-Sets the mnemonic to use.
+Sets the 24 word mnemonic to use.
 
-#### new --node "http://node.url:portNumber" [--alias ALIAS --mnemonic 24_WORD_MNEMONIC_PHRASE]
+#### new [--node "http://node.url:portNumber" --alias ALIAS --type TYPE]
 
-Creates a new account connecting to the specified node URL. Optionally takes the account alias and 24 word mnemonic phrase.
+Creates a new account connecting to the default testnet node. Optionally takes the account alias, account type (one of `stronghold`, `ledger-nano` or `ledger-nano-simulator`) and a custom node URL.
 
 #### account ALIAS
 
