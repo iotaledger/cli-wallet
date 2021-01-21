@@ -1,6 +1,6 @@
 [package]
 name = "wallet-cli"
-version = "0.2.2"
+version = "0.3.0"
 authors = ["Lucas Nogueira <lucas.nogueira@iota.org>"]
 edition = "2018"
 homepage = "https://iota.org"
@@ -13,7 +13,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0"
-iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", branch = "develop" }
+iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", branch = "develop", features = ["ledger-nano", "ledger-nano-simulator"] }
 iota-core = { git = "https://github.com/iotaledger/iota.rs", branch = "dev" }
 tokio = { version = "1.0", features = ["full"] }
 dialoguer = "0.7"

@@ -26,7 +26,6 @@ subcommands:
             short: n
             long: node
             about: A node to connect to.
-            required: true
             takes_value: true
             multiple: true
         - pow:
@@ -40,6 +39,12 @@ subcommands:
             long: alias
             about: The account alias.
             takes_value: true
+        - type:
+            short: t
+            long: type
+            about: Account type.
+            takes_value: true
+            possible_values: [stronghold, ledger-nano, ledger-nano-simulator]
   - delete:
       about: Deletes an account.
       args:
