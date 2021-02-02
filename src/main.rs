@@ -104,10 +104,10 @@ async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> 
 
         let mut builder = manager
             .create_account(
-                ClientOptionsBuilder::nodes(&nodes)?
-                    .local_pow(matches.value_of("pow").unwrap_or("local") == "local")
-                    .build()
-                    .unwrap(),
+                ClientOptionsBuilder::new()
+                    .with_nodes(&nodes)?
+                    .with_local_pow(matches.value_of("pow").unwrap_or("local") == "local")
+                    .build()?,
             )?
             .signer_type(signer_type);
         if let Some(alias) = matches.value_of("alias") {
