@@ -1866,7 +1866,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "0.5.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#d3243ee02b14bbe09c1f220936c61b1409662606"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#3dee1de47662ecab12b30c1eafaba80c58156e27"
 dependencies = [
  "bee-common",
  "bee-common-derive",
@@ -1892,7 +1892,7 @@ dependencies = [
 [[package]]
 name = "iota-core"
 version = "0.2.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#d3243ee02b14bbe09c1f220936c61b1409662606"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#3dee1de47662ecab12b30c1eafaba80c58156e27"
 dependencies = [
  "bee-common",
  "bee-message",
@@ -4328,7 +4328,6 @@ dependencies = [
  "iota-core",
  "iota-wallet",
  "once_cell",
- "serde_derive",
  "serde_json",
  "tokio",
 ]
