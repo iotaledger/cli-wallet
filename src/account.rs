@@ -100,7 +100,13 @@ async fn list_addresses_command(account_handle: &AccountHandle, matches: &ArgMat
 // `sync` command
 async fn sync_account_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
     if matches.subcommand_matches("sync").is_some() {
-        account_handle.sync().await.execute().await?;
+        let synced = account_handle.sync().await.execute().await?;
+        for address in synced.addresses() {
+            print_address(&account_handle, &address).await;
+        }
+        for message in synced.messages() {
+            print_message(&message);
+        }
     }
     Ok(())
 }
@@ -118,7 +124,7 @@ async fn generate_address_command(account_handle: &AccountHandle, matches: &ArgM
 async fn balance_command(account_handle: &AccountHandle, matches: &ArgMatches) {
     if matches.subcommand_matches("balance").is_some() {
         let account = account_handle.read().await;
-        println!("{}", account.available_balance());
+        println!("{:?}", account.balance());
     }
 }
 
@@ -202,7 +208,7 @@ async fn set_node_command(account_handle: &AccountHandle, matches: &ArgMatches) 
     if let Some(matches) = matches.subcommand_matches("set-node") {
         let node = matches.value_of("node").unwrap();
         account_handle
-            .set_client_options(ClientOptionsBuilder::node(node)?.build())
+            .set_client_options(ClientOptionsBuilder::new().with_nodes(&[node])?.build()?)
             .await?;
     }
     Ok(())
