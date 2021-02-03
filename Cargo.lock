@@ -289,7 +289,7 @@ dependencies = [
 [[package]]
 name = "bee-ledger"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "async-trait",
  "bee-common",
@@ -314,7 +314,7 @@ dependencies = [
 [[package]]
 name = "bee-message"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "bech32",
  "bee-common",
@@ -331,7 +331,7 @@ dependencies = [
 [[package]]
 name = "bee-network"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "async-trait",
  "bee-runtime",
@@ -350,7 +350,7 @@ dependencies = [
 [[package]]
 name = "bee-pow"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "bee-crypto",
  "bee-ternary",
@@ -361,7 +361,7 @@ dependencies = [
 [[package]]
 name = "bee-protocol"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "async-channel",
  "async-trait",
@@ -383,7 +383,7 @@ dependencies = [
  "iota-crypto 0.2.0 (git+https://github.com/iotaledger/crypto.rs?branch=dev)",
  "log",
  "num_cpus",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "rand 0.8.3",
  "ref-cast",
  "serde 1.0.123",
@@ -397,7 +397,7 @@ dependencies = [
 [[package]]
 name = "bee-rest-api"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "async-trait",
  "bech32",
@@ -468,7 +468,7 @@ dependencies = [
 [[package]]
 name = "bee-snapshot"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "async-trait",
  "bee-common",
@@ -498,7 +498,7 @@ dependencies = [
 [[package]]
 name = "bee-tangle"
 version = "0.1.0-alpha"
-source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#0bb1032716557c77f4716792f4414fb6d75854ba"
+source = "git+https://github.com/iotaledger/bee.git?branch=chrysalis-pt-2#201fa7fc93f647d7b15426245c5b0afcf4f6a12d"
 dependencies = [
  "async-trait",
  "bee-common",
@@ -1240,7 +1240,7 @@ dependencies = [
  "futures-core",
  "futures-sink",
  "nanorand",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "spinning_top",
 ]
 
@@ -1751,7 +1751,7 @@ dependencies = [
  "httparse",
  "httpdate",
  "itoa",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "socket2",
  "tokio",
  "tower-service",
@@ -1866,24 +1866,25 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "0.5.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#56e92725cac7c4e75b036ad770b6dc85a8065cfb"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#d3243ee02b14bbe09c1f220936c61b1409662606"
 dependencies = [
  "bee-common",
+ "bee-common-derive",
  "bee-crypto",
  "bee-message",
  "bee-pow",
  "bee-rest-api",
- "bee-signing",
- "bee-signing-ext",
  "blake2",
  "chrono",
  "hex",
+ "iota-crypto 0.1.0",
  "num_cpus",
  "paho-mqtt",
  "regex",
  "reqwest",
  "serde 1.0.123",
  "serde_json",
+ "slip10",
  "thiserror",
  "tokio",
 ]
@@ -1891,19 +1892,18 @@ dependencies = [
 [[package]]
 name = "iota-core"
 version = "0.2.0-alpha.3"
-source = "git+https://github.com/iotaledger/iota.rs?branch=dev#56e92725cac7c4e75b036ad770b6dc85a8065cfb"
+source = "git+https://github.com/iotaledger/iota.rs?branch=dev#d3243ee02b14bbe09c1f220936c61b1409662606"
 dependencies = [
  "bee-common",
  "bee-message",
  "bee-pow",
- "bee-signing-ext",
  "iota-client",
 ]
 
 [[package]]
 name = "iota-crypto"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/crypto.rs?rev=9259a0617ca3b72e2bb2f63d5b7197247f85061c#9259a0617ca3b72e2bb2f63d5b7197247f85061c"
+source = "git+https://github.com/iotaledger/crypto.rs.git?rev=9259a0617ca3b72e2bb2f63d5b7197247f85061c#9259a0617ca3b72e2bb2f63d5b7197247f85061c"
 dependencies = [
  "blake2b_simd",
  "chacha20poly1305 0.7.1",
@@ -1959,7 +1959,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.1.0"
-source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#019648e87ccf3544bbb3a816d204d3e01dabcf69"
+source = "git+https://github.com/iotaledger/wallet.rs?branch=develop#cff3215e502f7866fbd5344799d19b1c4775c63a"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -2159,7 +2159,7 @@ dependencies = [
  "libp2p-yamux",
  "parity-multiaddr",
  "parking_lot",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "smallvec",
  "wasm-timer",
 ]
@@ -2184,7 +2184,7 @@ dependencies = [
  "multistream-select",
  "parity-multiaddr",
  "parking_lot",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "prost",
  "prost-build",
  "rand 0.7.3",
@@ -2497,7 +2497,7 @@ dependencies = [
  "bytes",
  "futures 0.3.12",
  "log",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "smallvec",
  "unsigned-varint 0.6.0",
 ]
@@ -2841,11 +2841,11 @@ dependencies = [
 
 [[package]]
 name = "pin-project"
-version = "1.0.4"
+version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "95b70b68509f17aa2857863b6fa00bf21fc93674c7a8893de2f469f6aa7ca2f2"
+checksum = "96fa8ebb90271c4477f144354485b8068bd8f6b78b428b01ba892ca26caf0b63"
 dependencies = [
- "pin-project-internal 1.0.4",
+ "pin-project-internal 1.0.5",
 ]
 
 [[package]]
@@ -2861,9 +2861,9 @@ dependencies = [
 
 [[package]]
 name = "pin-project-internal"
-version = "1.0.4"
+version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "caa25a6393f22ce819b0f50e0be89287292fda8d425be38ee0ca14c4931d9e71"
+checksum = "758669ae3558c6f74bd2a18b41f7ac0b5a195aea6639d6a9b5e5d1ad5ba24c0b"
 dependencies = [
  "proc-macro2 1.0.24",
  "quote 1.0.8",
@@ -4033,7 +4033,7 @@ checksum = "e1a5f475f1b9d077ea1017ecbc60890fda8e54942d680ca0b1d2b47cfa2d861b"
 dependencies = [
  "futures-util",
  "log",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "tokio",
  "tungstenite",
 ]
@@ -4358,7 +4358,7 @@ dependencies = [
  "mime_guess",
  "multipart",
  "percent-encoding",
- "pin-project 1.0.4",
+ "pin-project 1.0.5",
  "scoped-tls",
  "serde 1.0.123",
  "serde_json",
