@@ -46,28 +46,30 @@ jobs:
       with:
         path: ~/.cargo/registry
         # Add date to the cache to keep it up to date
-        key: ${{ matrix.os }}-cargo-registry-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        key: ${{ matrix.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}-${{ env.CURRENT_DATE }}
         # Restore from outdated cache for speed
         restore-keys: |
-          cargo-registry-${{ hashFiles('**/Cargo.toml') }}
+          ${{ matrix.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
+
     - name: Cache cargo index
       uses: actions/cache@v2
       with:
         path: ~/.cargo/git
         # Add date to the cache to keep it up to date
-        key: ${{ matrix.os }}-cargo-index-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        key: ${{ matrix.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}-${{ env.CURRENT_DATE }}
         # Restore from outdated cache for speed
         restore-keys: |
-          cargo-index-${{ hashFiles('**/Cargo.toml') }}
+          ${{ matrix.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
+
     - name: Cache cargo target
       uses: actions/cache@v2
       with:
         path: target
         # Add date to the cache to keep it up to date
-        key: ${{ matrix.os }}-cargo-build-target-${{ hashFiles('**/Cargo.toml') }}-${{ env.CURRENT_DATE }}
+        key: ${{ matrix.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}-${{ env.CURRENT_DATE }}
         # Restore from outdated cache for speed
         restore-keys: |
-          cargo-build-target-${{ hashFiles('**/Cargo.toml') }}
+          ${{ matrix.os }}-cargo-build-target-${{ hashFiles('**/Cargo.lock') }}
 
     # paho.mqtt requires openssl and OPENSSL_ROOT_DIR on macOS
     - name: Set OpenSSL location (macOS)
