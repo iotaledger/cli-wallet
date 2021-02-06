@@ -42,7 +42,7 @@ jobs:
       run: echo "CURRENT_DATE=$(Get-Date -Format "yyyy-MM-dd")" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
 
     - name: Cache cargo registry
-      uses: actions/cache@v2
+      uses: actions/cache@v2.1.4
       with:
         path: ~/.cargo/registry
         # Add date to the cache to keep it up to date
@@ -52,7 +52,7 @@ jobs:
           ${{ matrix.os }}-cargo-registry-${{ hashFiles('**/Cargo.lock') }}
 
     - name: Cache cargo index
-      uses: actions/cache@v2
+      uses: actions/cache@v2.1.4
       with:
         path: ~/.cargo/git
         # Add date to the cache to keep it up to date
@@ -62,7 +62,7 @@ jobs:
           ${{ matrix.os }}-cargo-index-${{ hashFiles('**/Cargo.lock') }}
 
     - name: Cache cargo target
-      uses: actions/cache@v2
+      uses: actions/cache@v2.1.4
       with:
         path: target
         # Add date to the cache to keep it up to date
