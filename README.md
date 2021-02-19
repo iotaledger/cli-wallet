@@ -126,6 +126,6 @@ $ ./wallet [COMMAND] [OPTIONS]
 To run the CLI from source, install Rust (usually through [Rustup](https://rustup.rs/)) and run the following commands:
 
 ```
-$ git clone https://github.com/iotaledger/wallet.cli
+$ git clone https://github.com/iotaledger/cli-wallet
 $ cargo run -- [COMMAND] [OPTIONS]
 ```
