@@ -9,6 +9,12 @@ subcommands:
   - sync:
       about: Synchronizes the account with the Tangle.
       alias: s
+      args:
+        - gap:
+            short: g
+            long: gap
+            about: The address gap limit.
+            takes_value: true
   - address:
       about: Generates an address.
       alias: a

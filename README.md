@@ -70,7 +70,7 @@ Prints the CLI help information. If a command is specified, the command's help w
 
 Exits the account prompt.
 
-#### sync
+#### sync [--gap LIMIT]
 
 Synchronizes the account with the Tangle.
 
@@ -126,6 +126,6 @@ $ ./wallet [COMMAND] [OPTIONS]
 To run the CLI from source, install Rust (usually through [Rustup](https://rustup.rs/)) and run the following commands:
 
 ```
-$ git clone https://github.com/iotaledger/wallet.cli
+$ git clone https://github.com/iotaledger/cli-wallet
 $ cargo run -- [COMMAND] [OPTIONS]
 ```
