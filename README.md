@@ -70,7 +70,7 @@ Prints the CLI help information. If a command is specified, the command's help w
 
 Exits the account prompt.
 
-#### sync
+#### sync [--gap LIMIT]
 
 Synchronizes the account with the Tangle.
 

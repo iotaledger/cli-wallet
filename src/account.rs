@@ -99,8 +99,17 @@ async fn list_addresses_command(account_handle: &AccountHandle, matches: &ArgMat
 
 // `sync` command
 async fn sync_account_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
-    if matches.subcommand_matches("sync").is_some() {
-        let synced = account_handle.sync().await.execute().await?;
+    if let Some(matches) = matches.subcommand_matches("sync") {
+        let mut sync = account_handle.sync().await;
+        if let Some(gap_limit) = matches.value_of("gap") {
+            if let Ok(limit) = gap_limit.parse::<usize>() {
+                println!("Syncing with gap limit {}", limit);
+                sync = sync.gap_limit(limit);
+            } else {
+                return Err(anyhow::anyhow!("Gap limit must be a number"));
+            }
+        }
+        let synced = sync.execute().await?;
         for address in synced.addresses() {
             print_address(&account_handle, &address).await;
         }
@@ -145,10 +154,10 @@ async fn transfer_command(account_handle: &AccountHandle, matches: &ArgMatches) 
                 let message = synced.transfer(transfer).await?;
                 print_message(&message);
             } else {
-                println!("Amount must be a number");
+                return Err(anyhow::anyhow!("Amount must be a number"));
             }
         } else {
-            println!("Address must be a bech32 string");
+            return Err(anyhow::anyhow!("Address must be a bech32 string"));
         }
     }
     Ok(())
