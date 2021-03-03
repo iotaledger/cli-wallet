@@ -150,8 +150,7 @@ async fn transfer_command(account_handle: &AccountHandle, matches: &ArgMatches) 
                 )
                 .finish();
 
-                let synced = account_handle.sync().await.execute().await?;
-                let message = synced.transfer(transfer).await?;
+                let message = account_handle.transfer(transfer).await?;
                 print_message(&message);
             } else {
                 return Err(anyhow::anyhow!("Amount must be a number"));
@@ -172,11 +171,10 @@ enum ReplayAction {
 // promotes, retries or reattaches a message
 async fn replay_message(account_handle: &AccountHandle, action: ReplayAction, message_id: &str) -> Result<()> {
     if let Ok(message_id) = MessageId::from_str(message_id) {
-        let synced = account_handle.sync().await.execute().await?;
         let message = match action {
-            ReplayAction::Promote => synced.promote(&message_id).await?,
-            ReplayAction::Retry => synced.retry(&message_id).await?,
-            ReplayAction::Reattach => synced.reattach(&message_id).await?,
+            ReplayAction::Promote => account_handle.promote(&message_id).await?,
+            ReplayAction::Retry => account_handle.retry(&message_id).await?,
+            ReplayAction::Reattach => account_handle.reattach(&message_id).await?,
         };
         print_message(&message);
     } else {

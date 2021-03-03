@@ -136,7 +136,7 @@ async fn delete_account_command(manager: &AccountManager, matches: &ArgMatches) 
 
 async fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if matches.subcommand_matches("sync").is_some() {
-        let synced = manager.sync_accounts().await?;
+        let synced = manager.sync_accounts()?.execute().await?;
         println!("Synchronized {} accounts", synced.len());
     }
     Ok(())
@@ -176,8 +176,13 @@ async fn run() -> Result<()> {
         .finish()
         .await?;
 
-    let password = get_password(&manager);
-    manager.set_stronghold_password(password).await?;
+    loop {
+        let password = get_password(&manager);
+        if manager.set_stronghold_password(password).await.is_ok() {
+            break;
+        }
+        println!("Wrong password. Try again.")
+    }
 
     // on first run, we generate a random mnemonic and store it
     if !PathBuf::from(storage_path).join("wallet.stronghold").exists() {
