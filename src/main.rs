@@ -152,7 +152,7 @@ async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Resul
 }
 
 async fn import_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<()> {
-    if let Some(matches) = matches.subcommand_matches("backup") {
+    if let Some(matches) = matches.subcommand_matches("import") {
         let source = matches.value_of("path").unwrap();
         let password = get_password(&manager);
         manager.import_accounts(source, password).await?;
@@ -176,16 +176,20 @@ async fn run() -> Result<()> {
         .finish()
         .await?;
 
-    loop {
-        let password = get_password(&manager);
-        if manager.set_stronghold_password(password).await.is_ok() {
-            break;
+    let is_importing = std::env::args().any(|arg| arg == "import".to_string());
+
+    if !is_importing {
+        loop {
+            let password = get_password(&manager);
+            if manager.set_stronghold_password(password).await.is_ok() {
+                break;
+            }
+            println!("Wrong password. Try again.");
         }
-        println!("Wrong password. Try again.")
     }
 
     // on first run, we generate a random mnemonic and store it
-    if !PathBuf::from(storage_path).join("wallet.stronghold").exists() {
+    if !(is_importing || PathBuf::from(storage_path).join("wallet.stronghold").exists()) {
         manager.store_mnemonic(SignerType::Stronghold, None).await?;
     }
 
