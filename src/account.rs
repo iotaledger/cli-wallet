@@ -11,14 +11,17 @@ use iota_wallet::{
     account::AccountHandle,
     address::Address,
     client::ClientOptionsBuilder,
-    message::{Message, MessageType, Transfer},
+    message::{Message, MessagePayload, MessageType, TransactionEssence, Transfer},
 };
 
 use std::{num::NonZeroU64, process::Command, str::FromStr};
 
 fn print_message(message: &Message) {
     println!("MESSAGE {}", message.id());
-    println!("--- Value: {:?}", message.value());
+    if let Some(MessagePayload::Transaction(tx)) = message.payload() {
+        let TransactionEssence::Regular(essence) = tx.essence();
+        println!("--- Value: {:?}", essence.value());
+    }
     println!("--- Timestamp: {:?}", message.timestamp());
     println!(
         "--- Broadcasted: {}, confirmed: {}",
