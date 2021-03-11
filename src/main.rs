@@ -10,12 +10,19 @@ use iota_wallet::{
     account::AccountHandle,
     account_manager::{AccountManager, ManagerStorage},
     client::ClientOptionsBuilder,
+    event::{on_balance_change, on_confirmation_state_change, on_new_transaction, on_reattachment},
     signing::SignerType,
 };
-use once_cell::sync::OnceCell;
+use notify_rust::Notification;
 use tokio::runtime::Runtime;
 
-use std::{env::var_os, path::PathBuf, sync::Mutex, time::Duration};
+use std::{
+    env::var_os,
+    path::PathBuf,
+    sync::{Arc, Mutex},
+    thread::spawn,
+    time::Duration,
+};
 
 mod account;
 
@@ -36,8 +43,6 @@ pub type Result<T> = anyhow::Result<T>;
 fn print_error<E: ToString>(e: E) {
     println!("ERROR: {}", e.to_string());
 }
-
-static RUNTIME: OnceCell<Mutex<Runtime>> = OnceCell::new();
 
 fn get_password(manager: &AccountManager) -> String {
     let mut prompt = Password::new();
@@ -161,10 +166,51 @@ async fn import_command(manager: &mut AccountManager, matches: &ArgMatches) -> R
     Ok(())
 }
 
-async fn run() -> Result<()> {
-    let runtime = Runtime::new().expect("Failed to create async runtime");
-    RUNTIME.set(Mutex::new(runtime)).expect("Failed to store async runtime");
+macro_rules! message_listener {
+    ($listen: ident, $accounts: ident, $runtime: ident, $message_prefix: expr) => {
+        let accounts_ = $accounts.clone();
+        let runtime_ = $runtime.clone();
+        $listen(move |event| {
+            let accounts = accounts_.clone();
+            let runtime_ = runtime_.clone();
+            let message = event.message.clone();
+            let account_id = event.account_id.clone();
+            spawn(move || {
+                runtime_.lock().unwrap().block_on(async move {
+                    let account = accounts
+                        .read()
+                        .await
+                        .get(&account_id)
+                        .expect("account not found")
+                        .clone();
+                    match Notification::new()
+                        .summary("CLI Wallet")
+                        .body(&format!(
+                            "{}: {} on `{}`",
+                            $message_prefix,
+                            message.id().to_string(),
+                            account.read().await.alias()
+                        ))
+                        .show()
+                    {
+                        Ok(_) => {}
+                        Err(_) => {
+                            println!(
+                                "{}: {} on `{}`",
+                                $message_prefix,
+                                message.id().to_string(),
+                                account.read().await.alias()
+                            );
+                        }
+                    }
+                });
+            });
+        })
+        .await;
+    };
+}
 
+async fn run() -> Result<()> {
     // ignore stronghold password clear
     iota_wallet::set_stronghold_password_clear_interval(Duration::from_millis(0)).await;
 
@@ -175,6 +221,49 @@ async fn run() -> Result<()> {
         .with_storage(&storage_path, ManagerStorage::Stronghold, None)?
         .finish()
         .await?;
+
+    let runtime = Runtime::new().expect("Failed to create async runtime");
+    let runtime = Arc::new(Mutex::new(runtime));
+    let accounts = manager.accounts().clone();
+    let accounts_ = accounts.clone();
+    let runtime_ = runtime.clone();
+    on_balance_change(move |event| {
+        let accounts = accounts_.clone();
+        let runtime_ = runtime_.clone();
+        let account_id = event.account_id.clone();
+        let balance_change = event.balance_change.clone();
+        let address = event.address.to_bech32();
+        spawn(move || {
+            runtime_.lock().unwrap().block_on(async move {
+                let account = accounts
+                    .read()
+                    .await
+                    .get(&account_id)
+                    .expect("account not found")
+                    .clone();
+                let balance_message = if balance_change.spent > 0 {
+                    format!("{} spent on address {}", balance_change.spent, address)
+                } else {
+                    format!("{} received on address {}", balance_change.received, address)
+                };
+                match Notification::new()
+                    .summary("CLI Wallet")
+                    .body(&format!("{} on `{}`", balance_message, account.read().await.alias()))
+                    .show()
+                {
+                    Ok(_) => {}
+                    Err(_) => {
+                        println!("[BALANCE] {} on `{}`", balance_message, account.read().await.alias());
+                    }
+                }
+            });
+        });
+    })
+    .await;
+
+    message_listener!(on_new_transaction, accounts, runtime, "New transaction");
+    message_listener!(on_confirmation_state_change, accounts, runtime, "Transaction confirmed");
+    message_listener!(on_reattachment, accounts, runtime, "Transaction reattached");
 
     let is_importing = std::env::args().any(|arg| arg == "import".to_string());
 
