@@ -14,7 +14,7 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1.0"
 iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", branch = "develop", features = ["ledger-nano", "ledger-nano-simulator"] }
-iota-core = { git = "https://github.com/iotaledger/iota.rs", rev = "be869fc47117f996cf040c8466ba4023d70cacfa" }
+iota-core = { git = "https://github.com/iotaledger/iota.rs", rev = "aa4bea2f7220cf34efbc2eb933a8584104277664" }
 tokio = { version = "1.1", features = ["full"] }
 dialoguer = "0.7"
 clap = { version = "3.0.0-beta.2", features = ["yaml"] }
