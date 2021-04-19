@@ -8,7 +8,7 @@ use clap::{load_yaml, App, AppSettings, ArgMatches};
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::{
     account::AccountHandle,
-    account_manager::{AccountManager, ManagerStorage},
+    account_manager::AccountManager,
     client::ClientOptionsBuilder,
     event::{on_balance_change, on_confirmation_state_change, on_new_transaction, on_reattachment},
     signing::SignerType,
@@ -150,7 +150,8 @@ async fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -
 async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("backup") {
         let destination = matches.value_of("path").unwrap();
-        let full_path = manager.backup(destination).await?;
+        let password = get_password(&manager);
+        let full_path = manager.backup(destination, password).await?;
         println!("Backup stored at {:?}", full_path);
     }
     Ok(())
@@ -218,7 +219,7 @@ async fn run() -> Result<()> {
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./wallet-cli-database".to_string());
     let mut manager = AccountManager::builder()
-        .with_storage(&storage_path, ManagerStorage::Stronghold, None)?
+        .with_storage(&storage_path, None)?
         .finish()
         .await?;
 
