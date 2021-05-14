@@ -6,12 +6,11 @@ use crate::print_error;
 use anyhow::Result;
 use clap::{App, ArgMatches};
 use dialoguer::Input;
-use iota::message::prelude::MessageId;
 use iota_wallet::{
     account::AccountHandle,
     address::Address,
     client::ClientOptionsBuilder,
-    message::{Message, MessagePayload, MessageType, TransactionEssence, Transfer},
+    message::{Message, MessageId, MessagePayload, MessageType, TransactionEssence, Transfer},
 };
 
 use std::{num::NonZeroU64, process::Command, str::FromStr};

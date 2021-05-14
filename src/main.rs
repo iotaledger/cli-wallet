@@ -60,17 +60,12 @@ async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
     for account_handle in accounts {
         items.push(account_handle.alias().await);
     }
-    let selection = Select::with_theme(&ColorfulTheme::default())
+    Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Select an account to manipulate")
         .items(&items)
         .default(0)
         .interact_on_opt(&Term::stderr())
-        .unwrap_or_default();
-    if let Some(selected) = selection {
-        Some(selected)
-    } else {
-        None
-    }
+        .unwrap_or_default()
 }
 
 async fn select_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
@@ -232,7 +227,7 @@ async fn run() -> Result<()> {
         let accounts = accounts_.clone();
         let runtime_ = runtime_.clone();
         let account_id = event.account_id.clone();
-        let balance_change = event.balance_change.clone();
+        let balance_change = event.balance_change;
         let address = event.address.to_bech32();
         spawn(move || {
             runtime_.lock().unwrap().block_on(async move {
@@ -266,7 +261,7 @@ async fn run() -> Result<()> {
     message_listener!(on_confirmation_state_change, accounts, runtime, "Transaction confirmed");
     message_listener!(on_reattachment, accounts, runtime, "Transaction reattached");
 
-    let is_importing = std::env::args().any(|arg| arg == "import".to_string());
+    let is_importing = std::env::args().any(|arg| arg == *"import");
 
     if !is_importing {
         loop {
