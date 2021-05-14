@@ -6,12 +6,11 @@ use crate::print_error;
 use anyhow::Result;
 use clap::{App, ArgMatches};
 use dialoguer::Input;
-use iota::message::prelude::MessageId;
 use iota_wallet::{
     account::AccountHandle,
     address::Address,
     client::ClientOptionsBuilder,
-    message::{Message, MessagePayload, MessageType, TransactionEssence, Transfer},
+    message::{Message, MessageId, MessagePayload, MessageType, TransactionEssence, Transfer},
 };
 
 use std::{num::NonZeroU64, process::Command, str::FromStr};
@@ -35,25 +34,28 @@ fn print_message(message: &Message) {
 
 async fn print_address(account_handle: &AccountHandle, address: &Address) {
     println!("ADDRESS {:?}", address.address().to_bech32());
+    println!("Total balance: {}", address.balance());
     println!(
         "--- Balance: {}",
-        address
-            .available_outputs(&*account_handle.read().await)
-            .iter()
-            .fold(0, |acc, o| acc + o.amount())
+        account_handle
+            .read()
+            .await
+            .address_available_balance(address)
+            .await
+            .unwrap()
     );
     println!("--- Index: {}", address.key_index());
     println!("--- Change address: {}", address.internal());
 }
 
 // `list-messages` command
-async fn list_messages_command(account_handle: &AccountHandle, matches: &ArgMatches) {
+async fn list_messages_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("list-messages") {
         if let Some(id) = matches.value_of("id") {
             if let Ok(message_id) = MessageId::from_str(id) {
                 let account = account_handle.read().await;
-                if let Some(message) = account.get_message(&message_id) {
-                    print_message(message);
+                if let Some(message) = account.get_message(&message_id).await {
+                    print_message(&message);
                 } else {
                     println!("Message not found");
                 }
@@ -74,8 +76,7 @@ async fn list_messages_command(account_handle: &AccountHandle, matches: &ArgMatc
             } else {
                 None
             };
-
-            let messages = account.list_messages(0, 0, message_type);
+            let messages = account.list_messages(0, 0, message_type).await?;
             if messages.is_empty() {
                 println!("No messages found");
             } else {
@@ -83,6 +84,7 @@ async fn list_messages_command(account_handle: &AccountHandle, matches: &ArgMatc
             }
         }
     }
+    Ok(())
 }
 
 // `list-addresses` command
@@ -133,11 +135,12 @@ async fn generate_address_command(account_handle: &AccountHandle, matches: &ArgM
 }
 
 // `balance` command
-async fn balance_command(account_handle: &AccountHandle, matches: &ArgMatches) {
+async fn balance_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
     if matches.subcommand_matches("balance").is_some() {
         let account = account_handle.read().await;
-        println!("{:?}", account.balance());
+        println!("{:?}", account.balance().await?);
     }
+    Ok(())
 }
 
 // `transfer` command
@@ -235,11 +238,11 @@ async fn set_alias_command(account_handle: &AccountHandle, matches: &ArgMatches)
 
 // account prompt commands
 async fn account_commands(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
-    list_messages_command(account_handle, &matches).await;
+    list_messages_command(account_handle, &matches).await?;
     list_addresses_command(account_handle, &matches).await;
     sync_account_command(account_handle, &matches).await?;
     generate_address_command(account_handle, &matches).await?;
-    balance_command(account_handle, &matches).await;
+    balance_command(account_handle, &matches).await?;
     transfer_command(account_handle, &matches).await?;
     promote_message_command(account_handle, &matches).await?;
     retry_message_command(account_handle, &matches).await?;

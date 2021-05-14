@@ -8,7 +8,7 @@ use clap::{load_yaml, App, AppSettings, ArgMatches};
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::{
     account::AccountHandle,
-    account_manager::{AccountManager, ManagerStorage},
+    account_manager::AccountManager,
     client::ClientOptionsBuilder,
     event::{on_balance_change, on_confirmation_state_change, on_new_transaction, on_reattachment},
     signing::SignerType,
@@ -60,17 +60,12 @@ async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
     for account_handle in accounts {
         items.push(account_handle.alias().await);
     }
-    let selection = Select::with_theme(&ColorfulTheme::default())
+    Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Select an account to manipulate")
         .items(&items)
         .default(0)
         .interact_on_opt(&Term::stderr())
-        .unwrap_or_default();
-    if let Some(selected) = selection {
-        Some(selected)
-    } else {
-        None
-    }
+        .unwrap_or_default()
 }
 
 async fn select_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
@@ -150,7 +145,8 @@ async fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -
 async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("backup") {
         let destination = matches.value_of("path").unwrap();
-        let full_path = manager.backup(destination).await?;
+        let password = get_password(&manager);
+        let full_path = manager.backup(destination, password).await?;
         println!("Backup stored at {:?}", full_path);
     }
     Ok(())
@@ -218,7 +214,7 @@ async fn run() -> Result<()> {
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./wallet-cli-database".to_string());
     let mut manager = AccountManager::builder()
-        .with_storage(&storage_path, ManagerStorage::Stronghold, None)?
+        .with_storage(&storage_path, None)?
         .finish()
         .await?;
 
@@ -231,7 +227,7 @@ async fn run() -> Result<()> {
         let accounts = accounts_.clone();
         let runtime_ = runtime_.clone();
         let account_id = event.account_id.clone();
-        let balance_change = event.balance_change.clone();
+        let balance_change = event.balance_change;
         let address = event.address.to_bech32();
         spawn(move || {
             runtime_.lock().unwrap().block_on(async move {
@@ -265,7 +261,7 @@ async fn run() -> Result<()> {
     message_listener!(on_confirmation_state_change, accounts, runtime, "Transaction confirmed");
     message_listener!(on_reattachment, accounts, runtime, "Transaction reattached");
 
-    let is_importing = std::env::args().any(|arg| arg == "import".to_string());
+    let is_importing = std::env::args().any(|arg| arg == *"import");
 
     if !is_importing {
         loop {
