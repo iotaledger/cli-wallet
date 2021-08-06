@@ -84,8 +84,9 @@ async fn store_mnemonic_command(manager: &mut AccountManager, matches: &ArgMatch
     if let Some(matches) = matches.subcommand_matches("mnemonic") {
         let mnemonic = matches.value_of("mnemonic").unwrap().to_string();
         manager.store_mnemonic(SignerType::Stronghold, Some(mnemonic)).await?;
+        return Ok(true);
     }
-    Ok(true)
+    Ok(false)
 }
 
 async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
