@@ -80,12 +80,13 @@ async fn select_account_command(manager: &AccountManager, matches: &ArgMatches) 
     Ok(None)
 }
 
-async fn store_mnemonic_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<()> {
+async fn store_mnemonic_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<bool> {
     if let Some(matches) = matches.subcommand_matches("mnemonic") {
         let mnemonic = matches.value_of("mnemonic").unwrap().to_string();
         manager.store_mnemonic(SignerType::Stronghold, Some(mnemonic)).await?;
+        return Ok(true);
     }
-    Ok(())
+    Ok(false)
 }
 
 async fn new_account_command(manager: &AccountManager, matches: &ArgMatches) -> Result<Option<AccountHandle>> {
@@ -145,7 +146,7 @@ async fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -
 async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("backup") {
         let destination = matches.value_of("path").unwrap();
-        let password = get_password(&manager);
+        let password = get_password(manager);
         let full_path = manager.backup(destination, password).await?;
         println!("Backup stored at {:?}", full_path);
     }
@@ -155,7 +156,7 @@ async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Resul
 async fn import_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<()> {
     if let Some(matches) = matches.subcommand_matches("import") {
         let source = matches.value_of("path").unwrap();
-        let password = get_password(&manager);
+        let password = get_password(manager);
         manager.import_accounts(source, password).await?;
         println!("Backup successfully imported");
     }
@@ -273,8 +274,17 @@ async fn run() -> Result<()> {
         }
     }
 
+    let yaml = load_yaml!("cli.yml");
+    let matches = App::from(yaml)
+        .help_template(CLI_TEMPLATE)
+        .setting(AppSettings::ColoredHelp)
+        .setting(AppSettings::ArgRequiredElseHelp)
+        .get_matches();
+
+    let set_mnemonic = store_mnemonic_command(&mut manager, &matches).await?;
+
     // on first run, we generate a random mnemonic and store it
-    if !(is_importing || PathBuf::from(storage_path).join("wallet.stronghold").exists()) {
+    if !(is_importing || PathBuf::from(storage_path).join("wallet.stronghold").exists() || set_mnemonic) {
         manager.store_mnemonic(SignerType::Stronghold, None).await?;
     }
 
@@ -299,15 +309,6 @@ async fn run() -> Result<()> {
             }
         }
     }
-
-    let yaml = load_yaml!("cli.yml");
-    let matches = App::from(yaml)
-        .help_template(CLI_TEMPLATE)
-        .setting(AppSettings::ColoredHelp)
-        .setting(AppSettings::ArgRequiredElseHelp)
-        .get_matches();
-
-    store_mnemonic_command(&mut manager, &matches).await?;
 
     match select_account_command(&manager, &matches).await {
         Ok(Some(account)) => {

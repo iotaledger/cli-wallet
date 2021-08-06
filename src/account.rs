@@ -96,7 +96,7 @@ async fn list_addresses_command(account_handle: &AccountHandle, matches: &ArgMat
             println!("No addresses found");
         } else {
             for address in addresses {
-                print_address(&account_handle, &address).await;
+                print_address(account_handle, address).await;
             }
         }
     }
@@ -116,10 +116,10 @@ async fn sync_account_command(account_handle: &AccountHandle, matches: &ArgMatch
         }
         let synced = sync.execute().await?;
         for address in synced.addresses() {
-            print_address(&account_handle, &address).await;
+            print_address(account_handle, address).await;
         }
         for message in synced.messages() {
-            print_message(&message);
+            print_message(message);
         }
     }
     Ok(())
@@ -153,6 +153,7 @@ async fn transfer_command(account_handle: &AccountHandle, matches: &ArgMatches) 
                 let transfer = Transfer::builder(
                     address,
                     NonZeroU64::new(amount).ok_or_else(|| anyhow::anyhow!("amount can't be zero"))?,
+                    None,
                 )
                 .finish();
 
@@ -238,17 +239,17 @@ async fn set_alias_command(account_handle: &AccountHandle, matches: &ArgMatches)
 
 // account prompt commands
 async fn account_commands(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
-    list_messages_command(account_handle, &matches).await?;
-    list_addresses_command(account_handle, &matches).await;
-    sync_account_command(account_handle, &matches).await?;
-    generate_address_command(account_handle, &matches).await?;
-    balance_command(account_handle, &matches).await?;
-    transfer_command(account_handle, &matches).await?;
-    promote_message_command(account_handle, &matches).await?;
-    retry_message_command(account_handle, &matches).await?;
-    reattach_message_command(account_handle, &matches).await?;
-    set_node_command(account_handle, &matches).await?;
-    set_alias_command(account_handle, &matches).await?;
+    list_messages_command(account_handle, matches).await?;
+    list_addresses_command(account_handle, matches).await;
+    sync_account_command(account_handle, matches).await?;
+    generate_address_command(account_handle, matches).await?;
+    balance_command(account_handle, matches).await?;
+    transfer_command(account_handle, matches).await?;
+    promote_message_command(account_handle, matches).await?;
+    retry_message_command(account_handle, matches).await?;
+    reattach_message_command(account_handle, matches).await?;
+    set_node_command(account_handle, matches).await?;
+    set_alias_command(account_handle, matches).await?;
     Ok(())
 }
 
