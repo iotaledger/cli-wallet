@@ -3,18 +3,19 @@
 
 use crate::print_error;
 
-use anyhow::Result;
-use clap::{App, ArgMatches};
+use anyhow::{anyhow, Result};
+use clap::{ArgMatches, Command};
 use dialoguer::Input;
 use iota_wallet::{
     account::{
         types::{AccountAddress, Transaction},
         AccountHandle,
     },
-    ClientOptions,
+    AddressAndAmount,
+    iota_client::request_funds_from_faucet,
 };
 
-use std::{num::NonZeroU64, process::Command, str::FromStr};
+use std::{num::NonZeroU64, str::FromStr};
 
 fn print_transaction(transaction: &Transaction) {
     println!("TRANSACTION {:?}", transaction);
@@ -41,9 +42,9 @@ async fn print_address(account_handle: &AccountHandle, address: &AccountAddress)
     // println!("--- Address outputs: {}", address.output_ids());
 }
 
-// `list-messages` command
-async fn list_messages_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
-    if let Some(matches) = matches.subcommand_matches("list-messages") {
+// `list-transactions` command
+async fn list_transactions_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
+    if let Some(matches) = matches.subcommand_matches("list-transactions") {
         // if let Some(id) = matches.value_of("id") {
         //     if let Ok(message_id) = MessageId::from_str(id) {
         //         let account = account_handle.read().await;
@@ -108,42 +109,49 @@ async fn balance_command(account_handle: &AccountHandle, matches: &ArgMatches) -
     Ok(())
 }
 
-// `transfer` command
-async fn transfer_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
-    if let Some(matches) = matches.subcommand_matches("transfer") {
-        let address = matches.value_of("address").unwrap().to_string();
-        let amount = matches.value_of("amount").unwrap();
-        // if let Ok(address) = iota_wallet::address::parse(address) {
-        //     if let Ok(amount) = amount.parse::<u64>() {
-        //         let transfer = Transfer::builder(
-        //             address,
-        //             NonZeroU64::new(amount).ok_or_else(|| anyhow::anyhow!("amount can't be zero"))?,
-        //             None,
-        //         )
-        //         .finish();
-
-        //         let message = account_handle.transfer(transfer).await?;
-        //         print_message(&message);
-        //     } else {
-        //         return Err(anyhow::anyhow!("Amount must be a number"));
-        //     }
-        // } else {
-        //     return Err(anyhow::anyhow!("Address must be a bech32 string"));
-        // }
+// `send` command
+async fn send_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
+    if let Some(matches) = matches.subcommand_matches("send") {
+        let address = match matches.value_of("address") {
+            Some(address) => address.to_string(),
+            None => return Err(anyhow!("Missing `address`")),
+        };
+        let amount = match matches.value_of("amount") {
+            Some(amount) => u64::from_str(amount)?,
+            None => return Err(anyhow!("Missing `amount`")),
+        };
+        let outputs = vec![AddressAndAmount { address, amount }];
+        let transfer_result = account_handle.send_amount(outputs, None).await?;
+        println!("Transaction created: {:?}", transfer_result);
     }
     Ok(())
 }
 
-// `set-node` command
-// async fn set_node_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
-//     if let Some(matches) = matches.subcommand_matches("set-node") {
-//         let node = matches.value_of("node").unwrap();
-//         account_handle
-//             .set_client_options(ClientOptionsBuilder::new().with_nodes(&[node])?.build()?)
-//             .await?;
-//     }
-//     Ok(())
-// }
+// `faucet` command
+async fn faucet_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
+    if let Some(matches) = matches.subcommand_matches("faucet") {
+        let address = match account_handle
+            .list_addresses()
+            .await?
+            .last(){
+                Some(address) => address.clone(),
+                None => return Err(anyhow::anyhow!("Generate an address first!"))
+            };
+            let faucet_url = match matches.value_of("faucet_url") {
+                Some(faucet_url) => faucet_url,
+                None => "http://localhost:14265/api/plugins/faucet/v1/enqueue",
+            };
+            println!(
+                "{}",
+                request_funds_from_faucet(
+                    faucet_url,
+                    &address.address().to_bech32()
+                )
+                .await?
+            );
+    }
+    Ok(())
+}
 
 // `set-alias` command
 // async fn set_alias_command(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
@@ -156,19 +164,19 @@ async fn transfer_command(account_handle: &AccountHandle, matches: &ArgMatches) 
 
 // account prompt commands
 async fn account_commands(account_handle: &AccountHandle, matches: &ArgMatches) -> Result<()> {
-    list_messages_command(account_handle, matches).await?;
+    list_transactions_command(account_handle, matches).await?;
     list_addresses_command(account_handle, matches).await;
     sync_account_command(account_handle, matches).await?;
     generate_address_command(account_handle, matches).await?;
     balance_command(account_handle, matches).await?;
-    transfer_command(account_handle, matches).await?;
-    // set_node_command(account_handle, matches).await?;
+    send_command(account_handle, matches).await?;
+    faucet_command(account_handle, matches).await?;
     // set_alias_command(account_handle, matches).await?;
     Ok(())
 }
 
 // loop on the account prompt
-pub async fn account_prompt(account_cli: &App<'_>, account_handle: AccountHandle) {
+pub async fn account_prompt(account_cli: &Command<'_>, account_handle: AccountHandle) {
     loop {
         let exit = account_prompt_internal(account_cli, account_handle.clone()).await;
         if exit {
@@ -178,7 +186,7 @@ pub async fn account_prompt(account_cli: &App<'_>, account_handle: AccountHandle
 }
 
 // loop on the account prompt
-pub async fn account_prompt_internal(account_cli: &App<'_>, account_handle: AccountHandle) -> bool {
+pub async fn account_prompt_internal(account_cli: &Command<'_>, account_handle: AccountHandle) -> bool {
     let alias = {
         let account = account_handle.read().await;
         account.alias().clone()
@@ -194,9 +202,10 @@ pub async fn account_prompt_internal(account_cli: &App<'_>, account_handle: Acco
             cli.print_help().unwrap();
         }
         "clear" => {
-            let _ = Command::new("clear").status();
+            let _ = std::process::Command::new("clear").status();
         }
         _ => {
+            let command = format!("accountCommand {}", command);
             match account_cli
                 .clone()
                 .try_get_matches_from(command.split(' ').collect::<Vec<&str>>())

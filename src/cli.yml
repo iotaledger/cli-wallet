@@ -22,18 +22,6 @@ subcommands:
   - new:
       about: Creates a new account.
       args:
-        - node:
-            short: n
-            long: node
-            about: A node to connect to.
-            takes_value: true
-            multiple: true
-        - pow:
-            short: p
-            long: pow
-            about: Whether to use local or remote PoW
-            takes_value: true
-            possible_values: [local, remote]
         - alias:
             short: a
             long: alias
@@ -45,24 +33,13 @@ subcommands:
             about: Account type.
             takes_value: true
             possible_values: [stronghold, ledger-nano, ledger-nano-simulator]
-  - delete:
-      about: Deletes an account.
-      args:
-        - alias:
-            about: The account alias.
-            required: true
-            index: 1
   - sync:
       about: Syncs all accounts with the Tangle.
-  - backup:
-      about: Backups the storage.
+  - set-node:
+      about: Updates the account node.
+      alias: sn
       args:
-        - path:
-            about: The path to store the backup.
-            required: true
+        - node:
+            about: The node URL to connect to.
             index: 1
-  - import:
-      about: Import accounts from a backup.
-      args:
-        - path:
-            about: Path to the backup folder.
+            required: true

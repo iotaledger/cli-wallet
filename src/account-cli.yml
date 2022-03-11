@@ -24,8 +24,8 @@ subcommands:
   - list-addresses:
       about: List the account addresses.
       alias: la
-  - list-messages:
-      about: List the account messages.
+  - list-transactions:
+      about: List the account transactions.
       alias: lm
       args:
         - id:
@@ -37,7 +37,7 @@ subcommands:
             about: Tessage type filter.
             takes_value: true
             possible_values: [received, sent, failed, unconfirmed, value]
-  - transfer:
+  - send:
       about: Sends iotas to an address.
       alias: t
       args:
@@ -51,43 +51,5 @@ subcommands:
             index: 2
             required: true
             takes_value: true
-  - promote:
-      about: Promotes a pending message.
-      alias: p
-      args:
-        - id:
-            about: The id of the message to promote.
-            index: 1
-            required: true
-  - retry:
-      about: Retry a pending message.
-      alias: r
-      args:
-        - id:
-            about: The id of the message to retry.
-            index: 1
-            required: true
-  - reattach:
-      about: Reattaches a pending message.
-      args:
-        - id:
-            about: The id of the message to reattach.
-            index: 1
-            required: true
-  - set-node:
-      about: Updates the account node.
-      alias: sn
-      args:
-        - node:
-            about: The node URL to connect to.
-            index: 1
-            required: true
-  - set-alias:
-      about: Updates the account alias.
-      alias: sa
-      args:
-        - alias:
-            about: The new account alias.
-            index: 1
-            required: true
+
   

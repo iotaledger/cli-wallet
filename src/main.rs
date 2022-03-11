@@ -4,39 +4,18 @@
 //! Wallet CLI
 //! Create a new account: `$ cargo run -- new --node http://localhost:14265`
 
-use clap::{load_yaml, AppSettings, ArgMatches, Command};
+use clap::{arg, AppSettings, Arg, ArgMatches, Command, Parser};
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::{
     account::AccountHandle,
     account_manager::AccountManager,
-    events::types::Event,
     signing::{stronghold::StrongholdSigner, SignerType},
     ClientOptions,
 };
-use notify_rust::Notification;
-use tokio::runtime::Runtime;
-
-use std::{
-    env::var_os,
-    path::PathBuf,
-    sync::{Arc, Mutex},
-    thread::spawn,
-    time::Duration,
-};
+// use notify_rust::Notification;
+use std::env::var_os;
 
 mod account;
-
-const CLI_TEMPLATE: &str = "\
-  {before-help}{bin} {version}\n\
-  {about-with-newline}\n\
-  {usage-heading}\n    {usage}\n\
-  \n\
-  {all-args}{after-help}\
-";
-
-const ACCOUNT_CLI_TEMPLATE: &str = "\
-  {all-args}{after-help}\
-";
 
 pub type Result<T> = anyhow::Result<T>;
 
@@ -89,6 +68,7 @@ async fn store_mnemonic_command(manager: &mut AccountManager, matches: &ArgMatch
             .await
             .store_mnemonic(std::path::Path::new(""), mnemonic)
             .await?;
+        println!("Mnemonic stored successfully");
         return Ok(true);
     }
     Ok(false)
@@ -116,70 +96,6 @@ async fn sync_accounts_command(manager: &AccountManager, matches: &ArgMatches) -
     Ok(())
 }
 
-// async fn backup_command(manager: &AccountManager, matches: &ArgMatches) -> Result<()> {
-//     if let Some(matches) = matches.subcommand_matches("backup") {
-//         let destination = matches.value_of("path").unwrap();
-//         let password = get_password(manager);
-//         let full_path = manager.backup(destination, password).await?;
-//         println!("Backup stored at {:?}", full_path);
-//     }
-//     Ok(())
-// }
-
-// async fn import_command(manager: &mut AccountManager, matches: &ArgMatches) -> Result<()> {
-//     if let Some(matches) = matches.subcommand_matches("import") {
-//         let source = matches.value_of("path").unwrap();
-//         let password = get_password(manager);
-//         manager.import_accounts(source, password).await?;
-//         println!("Backup successfully imported");
-//     }
-//     Ok(())
-// }
-
-// macro_rules! message_listener {
-//     ($listen: ident, $accounts: ident, $runtime: ident, $message_prefix: expr) => {
-//         let accounts_ = $accounts.clone();
-//         let runtime_ = $runtime.clone();
-//         $listen(move |event| {
-//             let accounts = accounts_.clone();
-//             let runtime_ = runtime_.clone();
-//             let message = event.message.clone();
-//             let account_id = event.account_id.clone();
-//             spawn(move || {
-//                 runtime_.lock().unwrap().block_on(async move {
-//                     let account = accounts
-//                         .read()
-//                         .await
-//                         .get(&account_id)
-//                         .expect("account not found")
-//                         .clone();
-//                     match Notification::new()
-//                         .summary("CLI Wallet")
-//                         .body(&format!(
-//                             "{}: {} on `{}`",
-//                             $message_prefix,
-//                             message.id().to_string(),
-//                             account.read().await.alias()
-//                         ))
-//                         .show()
-//                     {
-//                         Ok(_) => {}
-//                         Err(_) => {
-//                             println!(
-//                                 "{}: {} on `{}`",
-//                                 $message_prefix,
-//                                 message.id().to_string(),
-//                                 account.read().await.alias()
-//                             );
-//                         }
-//                     }
-//                 });
-//             });
-//         })
-//         .await;
-//     };
-// }
-
 async fn run() -> Result<()> {
     // ignore stronghold password clear
     // iota_wallet::set_stronghold_password_clear_interval(Duration::from_millis(0)).await;
@@ -192,7 +108,8 @@ async fn run() -> Result<()> {
 
     let signer = loop {
         password = get_password();
-        match StrongholdSigner::try_new_signer_handle(&password, std::path::Path::new(&storage_path)) {
+        match StrongholdSigner::try_new_signer_handle(&password, std::path::Path::new(&format!("./wallet.stronghold")))
+        {
             Ok(signer) => break signer,
             Err(err) => println!("{}", err),
         }
@@ -211,80 +128,87 @@ async fn run() -> Result<()> {
         .finish()
         .await?;
 
-    // let runtime = Runtime::new().expect("Failed to create async runtime");
-    // let runtime = Arc::new(Mutex::new(runtime));
-    // let accounts = manager.accounts().clone();
-    // let accounts_ = accounts.clone();
-    // let runtime_ = runtime.clone();
-    // on_balance_change(move |event| {
-    //     let accounts = accounts_.clone();
-    //     let runtime_ = runtime_.clone();
-    //     let account_id = event.account_id.clone();
-    //     let balance_change = event.balance_change;
-    //     let address = event.address.to_bech32();
-    //     spawn(move || {
-    //         runtime_.lock().unwrap().block_on(async move {
-    //             let account = accounts
-    //                 .read()
-    //                 .await
-    //                 .get(&account_id)
-    //                 .expect("account not found")
-    //                 .clone();
-    //             let balance_message = if balance_change.spent > 0 {
-    //                 format!("{} spent on address {}", balance_change.spent, address)
-    //             } else {
-    //                 format!("{} received on address {}", balance_change.received, address)
-    //             };
-    //             match Notification::new()
-    //                 .summary("CLI Wallet")
-    //                 .body(&format!("{} on `{}`", balance_message, account.read().await.alias()))
-    //                 .show()
-    //             {
-    //                 Ok(_) => {}
-    //                 Err(_) => {
-    //                     println!("[BALANCE] {} on `{}`", balance_message, account.read().await.alias());
-    //                 }
-    //             }
-    //         });
-    //     });
-    // })
-    // .await;
-
-    // message_listener!(on_new_transaction, accounts, runtime, "New transaction");
-    // message_listener!(on_confirmation_state_change, accounts, runtime, "Transaction confirmed");
-    // message_listener!(on_reattachment, accounts, runtime, "Transaction reattached");
-
-    // let is_importing = std::env::args().any(|arg| arg == *"import");
-
-    // if !is_importing {
-    //     loop {
-    //         let password = get_password(&manager);
-    //         if manager.set_stronghold_password(password).await.is_ok() {
-    //             break;
-    //         }
-    //         println!("Wrong password. Try again.");
-    //     }
-    // }
-
-    let yaml = load_yaml!("cli.yml");
-    let matches = Command::from(yaml)
-        .help_template(CLI_TEMPLATE)
-        .setting(AppSettings::ColoredHelp)
-        .setting(AppSettings::ArgRequiredElseHelp)
+    let matches = Command::new("AccountManager")
+        .subcommand(
+            Command::new("mnemonic")
+                .about("mnemonic to store")
+                .arg(Arg::new("mnemonic").takes_value(true))
+                .arg_required_else_help(false),
+        )
+        .subcommand(
+            Command::new("account")
+                .about("Get an existing account")
+                .arg(
+                    Arg::new("alias")
+                        //.long("--alias")
+                        .takes_value(true),
+                )
+                .arg_required_else_help(true),
+        )
+        .subcommand(
+            Command::new("new")
+                .about("Create a new account")
+                .arg(Arg::new("alias").takes_value(true))
+                .arg_required_else_help(true),
+        )
+        .subcommand(
+            Command::new("sync")
+                .about("Syncs all accounts")
+                .arg_required_else_help(false),
+        )
+        // .help_template(CLI_TEMPLATE)
         .get_matches();
 
     let set_mnemonic = store_mnemonic_command(&mut manager, &matches).await?;
 
-    // on first run, we generate a random mnemonic and store it
-    // if !(is_importing || PathBuf::from(storage_path).join("wallet.stronghold").exists() || set_mnemonic) {
-    //     manager.store_mnemonic(SignerType::Stronghold, None).await?;
-    // }
-
-    let yaml = load_yaml!("account-cli.yml");
-    let account_cli = Command::from(yaml)
-        .help_template(ACCOUNT_CLI_TEMPLATE)
-        .setting(AppSettings::DisableVersion)
-        .setting(AppSettings::NoBinaryName);
+    let account_cli = Command::new("Account cli")
+        .subcommand(
+            Command::new("exit")
+                .about("Exits from the account prompt.")
+                .arg_required_else_help(false),
+        )
+        .subcommand(
+            Command::new("sync")
+                .about("Synchronizes the account with the Tangle.")
+                .arg_required_else_help(false),
+        )
+        .subcommand(
+            Command::new("address")
+                .about("Generates an address.")
+                .arg_required_else_help(false),
+        )
+        .subcommand(
+            Command::new("balance")
+                .about("Gets the account balance.")
+                .arg_required_else_help(false),
+        )
+        .subcommand(
+            Command::new("list-addresses")
+                .about("List the account addresses.")
+                .arg_required_else_help(false),
+        )
+        .subcommand(
+            Command::new("list-transactions")
+                .about("List the account transactions.")
+                .arg_required_else_help(false),
+        )
+        .subcommand(
+            Command::new("send")
+                .about("Send an amount to a bech32 address: `send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000`")
+                .arg(Arg::new("address").takes_value(true))
+                .arg_required_else_help(true)
+                .arg(Arg::new("amount").takes_value(true))
+                .arg_required_else_help(true),
+        )
+        .subcommand(
+            Command::new("faucet")
+                .about("Request funds from the faucet to the last address, `faucet_url` is optional, default is `http://localhost:14265/api/plugins/faucet/v1/enqueue`")
+                .arg(Arg::new("faucet_url").takes_value(true))
+        )
+        .after_help(
+            "Longer explanation to appear after the options when \
+                     displaying the help information from --help or -h",
+        );
 
     if std::env::args().len() == 1 {
         let accounts = manager.get_accounts().await?;
@@ -316,10 +240,7 @@ async fn run() -> Result<()> {
         Ok(None) => {}
         Err(e) => return Err(e),
     };
-    // delete_account_command(&manager, &matches).await?;
     sync_accounts_command(&manager, &matches).await?;
-    // backup_command(&manager, &matches).await?;
-    // import_command(&mut manager, &matches).await?;
 
     Ok(())
 }

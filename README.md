@@ -44,21 +44,10 @@ Creates a new account connecting to the default testnet node. Optionally takes t
 
 Selects the account associated with the specified alias.
 
-#### delete ALIAS
-
-Deletes the account associated with the specified alias.
-
 #### sync
 
 Synchronizes all accounts with the Tangle.
 
-#### backup PATH
-
-Backups the wallet database to the specified path.
-
-#### import PATH
-
-Imports the accounts stored on the specified backup path.
 
 ### Account prompt commands
 
@@ -86,7 +75,7 @@ Gets the account balance.
 
 Lists the account's addresses.
 
-#### list-messages [MESSAGE_ID] [--type TYPE]
+#### list-transactions [MESSAGE_ID] [--type TYPE]
 
 Lists the account's messages.
 If an id is specified, the query will look for the message associated with that id.
@@ -94,21 +83,9 @@ If a type is specified, the messages will be filtered based on it.
 
 - Possible `type` values: "received, "sent", "failed", "unconfirmed" or "value"
 
-#### transfer ADDRESS AMOUNT
+#### send ADDRESS AMOUNT
 
-Transfer funds from the account to the given Bech32 address.
-
-#### promote [MESSAGE_ID]
-
-Promotes the specified message.
-
-#### reattach [MESSAGE_ID]
-
-Reattaches the specified message.
-
-#### retry [MESSAGE_ID]
-
-Retries (promotes or reattaches) the specified message.
+Send funds from the account to the given Bech32 address.
 
 ## Caveats
 
