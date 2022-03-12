@@ -1,6 +1,6 @@
 [package]
-name = "wallet-cli"
-version = "0.5.3"
+name = "stardust-cli-wallet"
+version = "0.1.0-alpha"
 authors = ["IOTA Stiftung"]
 edition = "2021"
 homepage = "https://iota.org"
@@ -13,14 +13,14 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0.56"
-iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "3621db720237c864042c72f9879127c8b017526c" }
+iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "4a9471630a83785a2c89209ae250ddfcde17299f" }
 # iota-wallet = { path = "../wallet.rs" }
 tokio = { version = "1.12.0", default-features = false }
-dialoguer = "0.8.0"
+dialoguer = "0.10.0"
 clap = { version = "3.1.6", features = ["derive"] }
-serde_json = { version = "1.0.68", default-features = false }
-futures = "0.3.17"
-notify-rust = "4.5.6"
+# serde_json = { version = "1.0.68", default-features = false }
+# futures = "0.3.17"
+# notify-rust = "4.5.6"
 
 [profile.release]
 lto = true
