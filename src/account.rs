@@ -3,7 +3,7 @@
 
 use crate::commands::account::{
     balance_command, faucet_command, generate_address_command, list_addresses_command, list_transactions_command,
-    send_command, sync_account_command, AccountCli, AccountCommands,
+    send_command, send_native_command, sync_account_command, AccountCli, AccountCommands,
 };
 use clap::Parser;
 use dialoguer::Input;
@@ -50,7 +50,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
                     return false;
                 }
             };
-            if let Err(err) = match &account_cli.command {
+            if let Err(err) = match account_cli.command {
                 AccountCommands::Address => generate_address_command(&account_handle).await,
                 AccountCommands::Balance => balance_command(&account_handle).await,
                 AccountCommands::Exit => {
@@ -59,9 +59,12 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
                 AccountCommands::Faucet { url } => faucet_command(&account_handle, url).await,
                 AccountCommands::ListAddresses => list_addresses_command(&account_handle).await,
                 AccountCommands::ListTransactions => list_transactions_command(&account_handle).await,
-                AccountCommands::Send { address, amount } => {
-                    send_command(&account_handle, address.to_owned(), *amount).await
-                }
+                AccountCommands::Send { address, amount } => send_command(&account_handle, address, amount).await,
+                AccountCommands::SendNative {
+                    address,
+                    token_id,
+                    native_token_amount,
+                } => send_native_command(&account_handle, address, token_id, native_token_amount).await,
                 AccountCommands::Sync => sync_account_command(&account_handle).await,
             } {
                 println!("Error: {}", err);

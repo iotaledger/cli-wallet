@@ -8,9 +8,11 @@ use iota_wallet::{
         types::{AccountAddress, Transaction},
         AccountHandle,
     },
-    iota_client::request_funds_from_faucet,
-    AddressAndAmount,
+    iota_client::{bee_message::output::TokenId, request_funds_from_faucet},
+    AddressAndAmount, AddressNativeTokens, U256,
 };
+
+use std::str::FromStr;
 
 #[derive(Parser)]
 #[clap(version, long_about = None)]
@@ -35,6 +37,14 @@ pub enum AccountCommands {
     /// Send an amount to a bech32 address: `send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r
     /// 1000000`
     Send { address: String, amount: u64 },
+    /// Send a native token to a bech32 address: `send-native
+    /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r
+    /// 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
+    SendNative {
+        address: String,
+        token_id: String,
+        native_token_amount: String,
+    },
     /// Sync the account with the Tangle.
     Sync,
     /// Exit from the account prompt.
@@ -93,8 +103,25 @@ pub async fn send_command(account_handle: &AccountHandle, address: String, amoun
     Ok(())
 }
 
+// `send-native` command
+pub async fn send_native_command(
+    account_handle: &AccountHandle,
+    address: String,
+    token_id: String,
+    native_token_amount: String,
+) -> Result<()> {
+    let outputs = vec![AddressNativeTokens {
+        address,
+        native_tokens: vec![(TokenId::from_str(&token_id)?, U256::from_dec_str(&native_token_amount)?)],
+        ..Default::default()
+    }];
+    let transfer_result = account_handle.send_native_tokens(outputs, None).await?;
+    println!("Transaction created: {:?}", transfer_result);
+    Ok(())
+}
+
 // `faucet` command
-pub async fn faucet_command(account_handle: &AccountHandle, url: &Option<String>) -> Result<()> {
+pub async fn faucet_command(account_handle: &AccountHandle, url: Option<String>) -> Result<()> {
     let address = match account_handle.list_addresses().await?.last() {
         Some(address) => address.clone(),
         None => return Err(anyhow::anyhow!("Generate an address first!")),
