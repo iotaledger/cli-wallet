@@ -163,10 +163,17 @@ fn print_transaction(transaction: &Transaction) {
     // );
 }
 
-pub async fn print_address(_account_handle: &AccountHandle, address: &AccountAddress) {
+pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) {
     println!("ADDRESS {:?}", address.address().to_bech32());
-    // println!("Address balance: {}", address.balance());
     println!("--- Index: {}", address.key_index());
-    println!("--- Change address: {}", address.internal());
-    // println!("--- Address outputs: {}", address.output_ids());
+    if *address.internal() {
+        println!("--- Change address: {}", address.internal());
+    }
+    let addresses_with_balance = account_handle.list_addresses_with_balance().await.unwrap();
+    if let Ok(index) = addresses_with_balance.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
+        (a.key_index(), a.internal())
+    }) {
+        println!("--- Address balance: {}", addresses_with_balance[index].amount());
+        println!("--- Address outputs: {:#?}", addresses_with_balance[index].output_ids());
+    }
 }

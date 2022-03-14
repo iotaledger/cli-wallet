@@ -1,9 +1,10 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-//! Wallet CLI
-//! Create a new account: `$ cargo run -- new --node http://localhost:14265`
+//! Stardust CLI Wallet
+//! Create a new account: `cargo run init --node http://node.url:port --mnemonic MNEMONIC`
 
+use anyhow::Result;
 use clap::Parser;
 use iota_wallet::{account_manager::AccountManager, signing::stronghold::StrongholdSigner, ClientOptions};
 use std::env::var_os;
@@ -14,11 +15,12 @@ mod commands;
 mod helpers;
 use account_manager::match_account_manager_command;
 use commands::account_manager::AccountManagerCli;
-use helpers::{get_password, pick_account};
-
-pub type Result<T> = anyhow::Result<T>;
+use helpers::{get_password, help_command, pick_account};
 
 async fn run() -> Result<()> {
+    // Print help overview and exit before showing the password prompt
+    help_command();
+
     let storage_path = var_os("WALLET_DATABASE_PATH")
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./stardust-cli-wallet-db".to_string());

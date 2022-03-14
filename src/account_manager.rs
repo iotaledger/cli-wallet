@@ -23,7 +23,7 @@ pub async fn match_account_manager_command(
         }
         AccountManagerCommands::SetNode { url } => {
             account_manager
-                .set_client_options(ClientOptions::new().with_node(&url)?)
+                .set_client_options(ClientOptions::new().with_node(&url)?.with_node_sync_disabled())
                 .await?;
         }
         AccountManagerCommands::New { alias } => {

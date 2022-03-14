@@ -55,6 +55,13 @@ Creates a new account, optionally takes an account alias.
 
 Selects the account associated with the specified alias.
 
+#### set-node NODE
+
+Set the node url to be used. 
+```
+./wallet set-node "http://localhost:14265"
+```
+
 #### sync
 
 Synchronizes all accounts with the Tangle.

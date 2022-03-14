@@ -1,6 +1,8 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use crate::AccountManagerCli;
+use clap::Parser;
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::account::AccountHandle;
 use std::path::Path;
@@ -29,4 +31,20 @@ pub async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
         .default(0)
         .interact_on_opt(&Term::stderr())
         .unwrap_or_default()
+}
+
+pub fn help_command() {
+    if let Err(r) = AccountManagerCli::try_parse() {
+        // If only one argument from the user is provided, try to use it as identifier
+        let mut iter = std::env::args();
+        // The first element is traditionally the path of the executable
+        iter.next();
+        if let Some(input) = iter.next() {
+            if input == "help" {
+                // this prints the help output
+                r.print().expect("Error writing Error");
+                std::process::exit(0);
+            }
+        }
+    }
 }
