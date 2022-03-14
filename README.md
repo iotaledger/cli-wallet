@@ -89,6 +89,10 @@ Generates a new unused address.
 
 Gets the account balance.
 
+#### faucet [URL]
+
+Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:14265/api/plugins/faucet/v1/enqueue`.
+
 #### list-addresses
 
 Lists the account's addresses.
@@ -100,11 +104,18 @@ Lists the account's transactions.
 #### send ADDRESS AMOUNT
 
 Send funds from the account to the given Bech32 address.
-Example: `send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000`
+
+```
+send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000
+```
 
 #### send-native ADDRESS TOKEN_ID AMOUNT
 
-Send native tokens to a bech32 address: `send-native atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
+Send native tokens to a bech32 address:
+
+```
+send-native atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10
+```
 
 ## Caveats
 
