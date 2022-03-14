@@ -70,12 +70,16 @@ async fn run() -> Result<()> {
     // This will print the help message if parsing fails
     AccountManagerCli::parse();
 
-    loop {
-        // Show the account selector
-        if let Some(index) = pick_account(account_manager.get_accounts().await?).await {
-            account::account_prompt(account_manager.get_account(index as u32).await?).await;
+    let accounts = account_manager.get_accounts().await?;
+    if !accounts.is_empty() {
+        loop {
+            // Show the account selector
+            if let Some(index) = pick_account(accounts.clone()).await {
+                account::account_prompt(account_manager.get_account(index as u32).await?).await;
+            }
         }
     }
+    Ok(())
 }
 
 #[tokio::main]

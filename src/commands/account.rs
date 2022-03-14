@@ -37,7 +37,7 @@ pub enum AccountCommands {
     /// Send an amount to a bech32 address: `send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r
     /// 1000000`
     Send { address: String, amount: u64 },
-    /// Send a native token to a bech32 address: `send-native
+    /// Send native tokens to a bech32 address: `send-native
     /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r
     /// 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
     SendNative {

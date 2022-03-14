@@ -3,7 +3,7 @@
 
 use crate::{
     commands::account_manager::{
-        new_account_command, select_account_command, store_mnemonic_command, sync_accounts_command, AccountManagerCli,
+        init_command, new_account_command, select_account_command, sync_accounts_command, AccountManagerCli,
         AccountManagerCommands,
     },
     Result,
@@ -15,8 +15,8 @@ pub async fn match_account_manager_command(
     account_manager_cli: AccountManagerCli,
 ) -> Result<()> {
     match account_manager_cli.command {
-        AccountManagerCommands::Mnemonic { mnemonic } => {
-            store_mnemonic_command(account_manager, mnemonic).await?;
+        AccountManagerCommands::Init(mnemonic_url) => {
+            init_command(account_manager, mnemonic_url).await?;
         }
         AccountManagerCommands::Sync => {
             sync_accounts_command(account_manager).await?;

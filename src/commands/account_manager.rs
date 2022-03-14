@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 use crate::{account::account_prompt, Result};
-use clap::{Parser, Subcommand};
-use iota_wallet::account_manager::AccountManager;
+use clap::{Args, Parser, Subcommand};
+use iota_wallet::{account_manager::AccountManager, iota_client::utils::generate_mnemonic, ClientOptions};
 
 #[derive(Parser)]
 #[clap(version, long_about = None)]
@@ -17,14 +17,22 @@ pub struct AccountManagerCli {
 pub enum AccountManagerCommands {
     /// Get an existing account with the alias or account index
     Get { identifier: String },
+    /// Initialize the wallet with a mnemonic and node url, if nothing is provided, a new mnemonic will be generated and "http://localhost:14265" used
+    Init(MnemonicAndUrl),
     /// Create a new account with an optional alias
     New { alias: Option<String> },
-    /// Store a mnemonic in Stronghold
-    Mnemonic { mnemonic: String },
     /// Set the node to use
     SetNode { url: String },
     /// Sync all accounts
     Sync,
+}
+
+#[derive(Args)]
+pub struct MnemonicAndUrl {
+    #[clap(short, long)]
+    pub mnemonic: Option<String>,
+    #[clap(short, long)]
+    pub node: Option<String>,
 }
 
 pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<()> {
@@ -37,7 +45,25 @@ pub async fn select_account_command(manager: &AccountManager, identifier: String
     Ok(())
 }
 
-pub async fn store_mnemonic_command(manager: &AccountManager, mnemonic: String) -> Result<()> {
+pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl) -> Result<()> {
+    if let Some(node) = mnemonic_url.node {
+        manager
+            .set_client_options(ClientOptions::new().with_node(&node)?)
+            .await?;
+    }
+
+    let mnemonic = match mnemonic_url.mnemonic {
+        Some(mnemonic) => mnemonic,
+        None => generate_mnemonic()?,
+    };
+    println!(
+        "**Important** write this mnemonic phrase in a safe place.
+        It is the only way to recover your account if you ever forget your password/lose the .stronghold file."
+    );
+    println!("////////////////////////////\n");
+    println!("{}", mnemonic);
+    println!("\n////////////////////////////");
+
     manager
         .get_signer()
         .lock()

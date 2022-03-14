@@ -1,30 +1,41 @@
-# IOTA Wallet CLI
+# IOTA Stardust CLI Wallet
 
 Command line interface application for the [IOTA wallet library](https://github.com/iotaledger/wallet.rs).
 
 ## Usage
 
-After downloading the CLI, create a new account. On Mac and Linux you will first need to `chmod +x ./wallet`.
+After downloading the CLI, initialize the signer for the wallet. On Mac and Linux you will first need to `chmod +x ./wallet`.
 
 ```
-$ ./wallet new --node http://node.url:port --alias ALIAS
+./wallet init --node http://node.url:port --mnemonic MNEMONIC
+// Example:
+./wallet init --node "http://localhost:14265" --mnemonic "giant dynamic museum toddler six deny defense ostrich bomb access mercy 
+blood explain muscle shoot shallow glad autumn author calm heavy hawk abuse rally"
+```
+
+Then create a new account
+
+```
+./wallet new ALIAS
+// Example:
+./wallet new Alice
 ```
 
 If you already created an account, you can just run the CLI without args to get to the account selector:
 
 ```
-$ ./wallet
+./wallet
 ```
 
-Alternatively, you can select the account to use with the `account` command:
+Alternatively, you can select an existing account by it's alias, to use with the `account` command:
 
 ```
-$ ./wallet account "my first account"
+./wallet account Alice
 ```
 
 ## Commands
 
-The wallet CLI has a set of main commands accesible with `$ ./wallet COMMAND [ARGS]` and a dedicated command list for the account prompt.
+The wallet CLI has a set of main commands accesible with `./wallet COMMAND [ARGS]` and a dedicated command list for the account prompt.
 
 ### Main commands
 
@@ -32,13 +43,13 @@ The wallet CLI has a set of main commands accesible with `$ ./wallet COMMAND [AR
 
 Prints the CLI help information. If a command is specified, the command's help will be printed.
 
-#### mnemonic [MNEMONIC]
+#### init [MNEMONIC]
 
-Sets the 24 word mnemonic to use.
+Initialize the wallet with a mnemonic, if none is provided, a new one will be generated.
 
-#### new [--node "http://node.url:portNumber" --alias ALIAS --type TYPE]
+#### new [ALIAS]
 
-Creates a new account connecting to the default testnet node. Optionally takes the account alias, account type (one of `stronghold`, `ledger-nano` or `ledger-nano-simulator`) and a custom node URL.
+Creates a new account, optionally takes an account alias.
 
 #### account ALIAS
 
@@ -59,9 +70,9 @@ Prints the CLI help information. If a command is specified, the command's help w
 
 Exits the account prompt.
 
-#### sync [--gap LIMIT]
+#### sync
 
-Synchronizes the account with the Tangle.
+Synchronizes the account with the Tangle and returns the balance.
 
 #### address
 
@@ -75,17 +86,18 @@ Gets the account balance.
 
 Lists the account's addresses.
 
-#### list-transactions [MESSAGE_ID] [--type TYPE]
+#### list-transactions
 
-Lists the account's messages.
-If an id is specified, the query will look for the message associated with that id.
-If a type is specified, the messages will be filtered based on it.
-
-- Possible `type` values: "received, "sent", "failed", "unconfirmed" or "value"
+Lists the account's transactions.
 
 #### send ADDRESS AMOUNT
 
 Send funds from the account to the given Bech32 address.
+Example: `send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000`
+
+#### send-native ADDRESS TOKEN_ID AMOUNT
+
+Send native tokens to a bech32 address: `send-native atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
 
 ## Caveats
 
@@ -94,8 +106,8 @@ Send funds from the account to the given Bech32 address.
 By default the database path is `./wallet-cli-database` but you can change this with the `WALLET_DATABASE_PATH` environment variable:
 
 ```
-$ export WALLET_DATABASE_PATH=/path/to/database # or add it to your .bashrc, .zshrc
-$ ./wallet [COMMAND] [OPTIONS]
+export WALLET_DATABASE_PATH=/path/to/database # or add it to your .bashrc, .zshrc
+./wallet [COMMAND] [OPTIONS]
 ```
 
 ## Contributing
@@ -103,6 +115,6 @@ $ ./wallet [COMMAND] [OPTIONS]
 To run the CLI from source, install Rust (usually through [Rustup](https://rustup.rs/)) and run the following commands:
 
 ```
-$ git clone https://github.com/iotaledger/cli-wallet
-$ cargo run -- [COMMAND] [OPTIONS]
+git clone https://github.com/iotaledger/cli-wallet
+cargo run -- [COMMAND] [OPTIONS]
 ```
