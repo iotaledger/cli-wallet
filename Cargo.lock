@@ -157,7 +157,7 @@ dependencies = [
 [[package]]
 name = "bee-ledger"
 version = "0.7.0"
-source = "git+https://github.com/iotaledger/bee?rev=d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b#d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b"
+source = "git+https://github.com/iotaledger/bee?rev=b7e49f697586b08bdfb595de151df229dbe6e42f#b7e49f697586b08bdfb595de151df229dbe6e42f"
 dependencies = [
  "bee-message",
  "packable",
@@ -168,7 +168,7 @@ dependencies = [
 [[package]]
 name = "bee-message"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/bee?rev=d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b#d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b"
+source = "git+https://github.com/iotaledger/bee?rev=b7e49f697586b08bdfb595de151df229dbe6e42f#b7e49f697586b08bdfb595de151df229dbe6e42f"
 dependencies = [
  "bech32",
  "bee-pow",
@@ -178,10 +178,10 @@ dependencies = [
  "derive_more",
  "digest",
  "hashbrown 0.12.0",
- "hex",
  "iota-crypto 0.9.1",
  "iterator-sorted",
  "packable",
+ "prefix-hex",
  "primitive-types",
  "serde 1.0.130",
  "serde-big-array",
@@ -191,7 +191,7 @@ dependencies = [
 [[package]]
 name = "bee-pow"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/bee?rev=d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b#d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b"
+source = "git+https://github.com/iotaledger/bee?rev=b7e49f697586b08bdfb595de151df229dbe6e42f#b7e49f697586b08bdfb595de151df229dbe6e42f"
 dependencies = [
  "bee-ternary",
  "iota-crypto 0.9.1",
@@ -201,14 +201,14 @@ dependencies = [
 [[package]]
 name = "bee-rest-api"
 version = "0.2.2"
-source = "git+https://github.com/iotaledger/bee?rev=d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b#d6e3fa6c6c1ebaa8fe6ad926e3539afae488bb8b"
+source = "git+https://github.com/iotaledger/bee?rev=b7e49f697586b08bdfb595de151df229dbe6e42f#b7e49f697586b08bdfb595de151df229dbe6e42f"
 dependencies = [
  "bee-ledger",
  "bee-message",
  "bee-pow",
- "hex",
  "multiaddr",
  "packable",
+ "prefix-hex",
  "primitive-types",
  "serde 1.0.130",
  "serde_json",
@@ -1060,7 +1060,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "1.1.1"
-source = "git+https://github.com/iotaledger/iota.rs?rev=bb414aa95044207921ee21bac839e2221f0f071d#bb414aa95044207921ee21bac839e2221f0f071d"
+source = "git+https://github.com/iotaledger/iota.rs?rev=a14444a835a27ca7132f7bbfe379ed07043df1f3#a14444a835a27ca7132f7bbfe379ed07043df1f3"
 dependencies = [
  "async-trait",
  "bee-common",
@@ -1134,7 +1134,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/wallet.rs?rev=f1128a3201e5cbe6d52a951c6af6d4f2ebc51bb3#f1128a3201e5cbe6d52a951c6af6d4f2ebc51bb3"
+source = "git+https://github.com/iotaledger/wallet.rs?rev=dc18fb9bd128de0c6cab2f606a2a8b5fdfe1c554#dc18fb9bd128de0c6cab2f606a2a8b5fdfe1c554"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -1144,7 +1144,6 @@ dependencies = [
  "iota-client",
  "iota-crypto 0.9.1",
  "log",
- "once_cell",
  "packable",
  "primitive-types",
  "rocksdb",
@@ -1631,6 +1630,17 @@ name = "ppv-lite86"
 version = "0.2.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "ac74c624d6b2d21f425f752262f42188365d7b8ff1aff74c82e45136510a4857"
+
+[[package]]
+name = "prefix-hex"
+version = "0.2.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0f120947380f07a50dd8d9985d3591f6632d688b8060321c3783aac91fa902c7"
+dependencies = [
+ "hex",
+ "primitive-types",
+ "uint",
+]
 
 [[package]]
 name = "primitive-types"

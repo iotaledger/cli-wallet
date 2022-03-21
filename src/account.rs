@@ -3,7 +3,8 @@
 
 use crate::commands::account::{
     balance_command, faucet_command, generate_address_command, list_addresses_command, list_transactions_command,
-    send_command, send_native_command, sync_account_command, AccountCli, AccountCommands,
+    mint_native_token_command, mint_nft_command, send_command, send_micro_command, send_native_command,
+    send_nft_command, sync_account_command, AccountCli, AccountCommands,
 };
 use clap::Parser;
 use dialoguer::Input;
@@ -59,12 +60,27 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
                 AccountCommands::Faucet { url } => faucet_command(&account_handle, url).await,
                 AccountCommands::ListAddresses => list_addresses_command(&account_handle).await,
                 AccountCommands::ListTransactions => list_transactions_command(&account_handle).await,
+                AccountCommands::MintNativeToken {
+                    maximum_supply,
+                    token_tag,
+                } => mint_native_token_command(&account_handle, maximum_supply, token_tag).await,
+                AccountCommands::MintNft {
+                    address,
+                    immutable_metadata,
+                    metadata,
+                } => mint_nft_command(&account_handle, address, immutable_metadata, metadata).await,
                 AccountCommands::Send { address, amount } => send_command(&account_handle, address, amount).await,
+                AccountCommands::SendMicro { address, amount } => {
+                    send_micro_command(&account_handle, address, amount).await
+                }
                 AccountCommands::SendNative {
                     address,
                     token_id,
                     native_token_amount,
                 } => send_native_command(&account_handle, address, token_id, native_token_amount).await,
+                AccountCommands::SendNft { address, nft_id } => {
+                    send_nft_command(&account_handle, address, nft_id).await
+                }
                 AccountCommands::Sync => sync_account_command(&account_handle).await,
             } {
                 println!("Error: {}", err);

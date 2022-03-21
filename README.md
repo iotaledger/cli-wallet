@@ -43,7 +43,7 @@ The wallet CLI has a set of main commands accesible with `./wallet COMMAND [ARGS
 
 Prints the CLI help information. If a command is specified, the command's help will be printed.
 
-#### init [MNEMONIC]
+#### init [NODE, MNEMONIC]
 
 Initialize the wallet with a mnemonic, if none is provided, a new one will be generated.
 
@@ -101,6 +101,14 @@ Lists the account's addresses.
 
 Lists the account's transactions.
 
+#### mint-native-token SUPPLY [TOKENTAG]
+
+Mint a native token: `mint-native-token 100 "tokentag"`
+
+#### mint-nft [ADDRESS, IMMUTABLEMETADATA, METADATA] 
+
+Mint an nft to an optional bech32 encoded address: `mint-nft atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r "immutable metadata" "metadata"`
+
 #### send ADDRESS AMOUNT
 
 Send funds from the account to the given Bech32 address.
@@ -109,6 +117,10 @@ Send funds from the account to the given Bech32 address.
 send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000
 ```
 
+#### send-micro ADDRESS AMOUNT
+
+Send an amount below the storage deposit minimum to a bech32 address: `send-micro atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 10`
+
 #### send-native ADDRESS TOKEN_ID AMOUNT
 
 Send native tokens to a bech32 address:
@@ -116,6 +128,10 @@ Send native tokens to a bech32 address:
 ```
 send-native atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10
 ```
+
+#### send-nft ADDRESS NFT_ID
+
+Send an nft to a bech32 encoded address: `send-nft atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae01`
 
 ## Caveats
 
