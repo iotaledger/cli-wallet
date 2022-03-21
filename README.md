@@ -107,31 +107,24 @@ Mint a native token: `mint-native-token 100 "tokentag"`
 
 #### mint-nft [ADDRESS, IMMUTABLEMETADATA, METADATA] 
 
-Mint an nft to an optional bech32 encoded address: `mint-nft atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r "immutable metadata" "metadata"`
+Mint an nft to an optional bech32 encoded address: `mint-nft atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e "immutable-metadata" "metadata"`
 
 #### send ADDRESS AMOUNT
 
 Send funds from the account to the given Bech32 address.
-
-```
-send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000
-```
+Example: `send atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 1000000`
 
 #### send-micro ADDRESS AMOUNT
 
-Send an amount below the storage deposit minimum to a bech32 address: `send-micro atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 10`
+Send an amount below the storage deposit minimum to a bech32 address: `send-micro atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 10`
 
 #### send-native ADDRESS TOKEN_ID AMOUNT
 
-Send native tokens to a bech32 address:
-
-```
-send-native atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10
-```
+Send native tokens to a bech32 address: `send-native atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
 
 #### send-nft ADDRESS NFT_ID
 
-Send an nft to a bech32 encoded address: `send-nft atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae01`
+Send an nft to a bech32 encoded address: `send-nft atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 0x0f9d4ddb128e97af0eb05b960e84e6e6659868da`
 
 ## Caveats
 
