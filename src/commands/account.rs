@@ -8,8 +8,11 @@ use iota_wallet::{
         types::{AccountAddress, Transaction},
         AccountHandle,
     },
-    iota_client::{bee_message::output::TokenId, request_funds_from_faucet},
-    AddressAndAmount, AddressNativeTokens, U256,
+    iota_client::{
+        bee_message::output::{NftId, TokenId, TokenTag},
+        request_funds_from_faucet,
+    },
+    AddressAndAmount, AddressAndNftId, AddressMicroAmount, AddressNativeTokens, NativeTokenOptions, NftOptions, U256,
 };
 
 use std::str::FromStr;
@@ -34,9 +37,24 @@ pub enum AccountCommands {
     ListAddresses,
     /// List the account transactions.
     ListTransactions,
-    /// Send an amount to a bech32 address: `send atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r
-    /// 1000000`
+    /// Mint an nft to an optional bech32 encoded address: `mint-nft
+    /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r "immutable metadata" "metadata"`
+    MintNft {
+        address: Option<String>,
+        immutable_metadata: Option<String>,
+        metadata: Option<String>,
+    },
+    /// Mint a native token: `mint-native-token 100 "tokentag"`
+    MintNativeToken {
+        maximum_supply: String,
+        token_tag: Option<String>,
+    },
+    /// Send an amount to a bech32 encoded address: `send
+    /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000`
     Send { address: String, amount: u64 },
+    /// Send an amount below the storage deposit minimum to a bech32 address: `send
+    /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1`
+    SendMicro { address: String, amount: u64 },
     /// Send native tokens to a bech32 address: `send-native
     /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r
     /// 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
@@ -45,6 +63,8 @@ pub enum AccountCommands {
         token_id: String,
         native_token_amount: String,
     },
+    /// Send an nft to a bech32 encoded address
+    SendNft { address: String, nft_id: String },
     /// Sync the account with the Tangle.
     Sync,
     /// Exit from the account prompt.
@@ -72,6 +92,60 @@ pub async fn list_addresses_command(account_handle: &AccountHandle) -> Result<()
             print_address(account_handle, &address).await;
         }
     }
+    Ok(())
+}
+
+// `mint-nft` command
+pub async fn mint_nft_command(
+    account_handle: &AccountHandle,
+    address: Option<String>,
+    immutable_metadata: Option<String>,
+    metadata: Option<String>,
+) -> Result<()> {
+    let immutable_metadata = immutable_metadata.map(|immutable_metadata| immutable_metadata.as_bytes().to_vec());
+    let metadata = metadata.map(|metadata| metadata.as_bytes().to_vec());
+    let nft_options = vec![NftOptions {
+        address,
+        immutable_metadata,
+        metadata,
+    }];
+
+    let transfer_result = account_handle.mint_nfts(nft_options, None).await?;
+    println!("Minting transaction sent: {:?}", transfer_result);
+    Ok(())
+}
+
+// `mint-native-token` command
+pub async fn mint_native_token_command(
+    account_handle: &AccountHandle,
+    // todo: enable this when there is support to mint additional tokens for an existing token
+    // circulating_supply: String,
+    maximum_supply: String,
+    token_tag: Option<String>,
+) -> Result<()> {
+    let token_tag = token_tag.map(|token_tag| token_tag.as_bytes().to_vec());
+    let token_tag = if let Some(mut token_tag) = token_tag {
+        if token_tag.len() > 12 {
+            return Err(anyhow::anyhow!("Token tag is too long in bytes {}/12", token_tag.len()));
+        } else {
+            // Fill remaining bytes with zeros
+            token_tag.resize(12, 0u8);
+            let bytes: [u8; 12] = token_tag.try_into().expect("Invalid token tag byte length");
+            TokenTag::new(bytes)
+        }
+    } else {
+        TokenTag::new([0u8; 12])
+    };
+    let native_token_options = NativeTokenOptions {
+        account_address: None,
+        token_tag,
+        circulating_supply: U256::from_dec_str(&maximum_supply)?,
+        maxium_supply: U256::from_dec_str(&maximum_supply)?,
+    };
+
+    let transfer_result = account_handle.mint_native_token(native_token_options, None).await?;
+
+    println!("Minting transaction sent: {:?}", transfer_result);
     Ok(())
 }
 
@@ -103,6 +177,19 @@ pub async fn send_command(account_handle: &AccountHandle, address: String, amoun
     Ok(())
 }
 
+// `send-micro` command
+pub async fn send_micro_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<()> {
+    let outputs = vec![AddressMicroAmount {
+        address,
+        amount,
+        return_address: None,
+        expiration: None,
+    }];
+    let transfer_result = account_handle.send_micro_transaction(outputs, None).await?;
+    println!("Micro transaction created: {:?}", transfer_result);
+    Ok(())
+}
+
 // `send-native` command
 pub async fn send_native_command(
     account_handle: &AccountHandle,
@@ -116,6 +203,17 @@ pub async fn send_native_command(
         ..Default::default()
     }];
     let transfer_result = account_handle.send_native_tokens(outputs, None).await?;
+    println!("Transaction created: {:?}", transfer_result);
+    Ok(())
+}
+
+// `send-nft` command
+pub async fn send_nft_command(account_handle: &AccountHandle, address: String, nft_id: String) -> Result<()> {
+    let outputs = vec![AddressAndNftId {
+        address,
+        nft_id: NftId::from_str(&nft_id)?,
+    }];
+    let transfer_result = account_handle.send_nft(outputs, None).await?;
     println!("Transaction created: {:?}", transfer_result);
     Ok(())
 }
