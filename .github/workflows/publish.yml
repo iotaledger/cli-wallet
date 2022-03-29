@@ -64,7 +64,8 @@ jobs:
       
       - name: Install gon (macOS)
         # https://github.com/mitchellh/gon
-        run: brew install mitchellh/gon/gon
+        # Replaced by mistydemeo because of https://github.com/mitchellh/homebrew-gon/pull/1
+        run: brew install mistydemeo/gon/gon
         if: matrix.os == 'macos-latest'
 
       - name: Install LLVM and Clang (Windows) # required for bindgen to work, see https://github.com/rust-lang/rust-bindgen/issues/1797
