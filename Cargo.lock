@@ -1215,6 +1215,7 @@ dependencies = [
  "slog-stdlog",
  "thiserror",
  "tokio",
+ "ureq",
  "url",
  "zeroize",
 ]
