@@ -26,15 +26,14 @@ async fn run() -> Result<()> {
         .unwrap_or_else(|| "./stardust-cli-wallet-db".to_string());
 
     let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
-    let signer = loop {
-        let password = get_password(stronghold_path);
-        match StrongholdSigner::try_new_signer_handle(&password, stronghold_path) {
-            Ok(signer) => break signer,
-            Err(err) => println!("{}", err),
-        }
-    };
+    let password = get_password(stronghold_path);
+    let signer = StrongholdSigner::builder()
+        .password(&password)
+        .snapshot_path(stronghold_path.to_path_buf())
+        .build();
 
-    let account_manager = AccountManager::builder(signer)
+    let account_manager = AccountManager::builder()
+        .with_signer(signer.into())
         .with_client_options(
             ClientOptions::new()
                 .with_node("http://localhost:14265")?

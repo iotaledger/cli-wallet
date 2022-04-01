@@ -3,7 +3,12 @@
 
 use crate::{account::account_prompt, Result};
 use clap::{Args, Parser, Subcommand};
-use iota_wallet::{account_manager::AccountManager, iota_client::utils::generate_mnemonic, ClientOptions};
+use iota_wallet::{
+    account::{OutputsToCollect, SyncOptions},
+    account_manager::AccountManager,
+    iota_client::utils::generate_mnemonic,
+    ClientOptions,
+};
 
 #[derive(Parser)]
 #[clap(version, long_about = None)]
@@ -64,12 +69,7 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
     println!("{}", mnemonic);
     println!("\n////////////////////////////");
 
-    manager
-        .get_signer()
-        .lock()
-        .await
-        .store_mnemonic(std::path::Path::new(""), mnemonic)
-        .await?;
+    manager.get_signer().lock().await.store_mnemonic(mnemonic).await?;
     println!("Mnemonic stored successfully");
     Ok(())
 }
@@ -86,7 +86,12 @@ pub async fn new_account_command(manager: &AccountManager, alias: Option<String>
 }
 
 pub async fn sync_accounts_command(manager: &AccountManager) -> Result<()> {
-    let total_balance = manager.sync(None).await?;
+    let total_balance = manager
+        .sync(Some(SyncOptions {
+            try_collect_outputs: OutputsToCollect::All,
+            ..Default::default()
+        }))
+        .await?;
     println!("Synchronized all accounts: {:?}", total_balance);
     Ok(())
 }

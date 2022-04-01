@@ -6,7 +6,7 @@ use clap::{Parser, Subcommand};
 use iota_wallet::{
     account::{
         types::{AccountAddress, Transaction},
-        AccountHandle,
+        AccountHandle, OutputsToCollect, SyncOptions,
     },
     iota_client::{
         bee_message::output::{NftId, TokenId, TokenTag},
@@ -151,7 +151,12 @@ pub async fn mint_native_token_command(
 
 // `sync` command
 pub async fn sync_account_command(account_handle: &AccountHandle) -> Result<()> {
-    let sync = account_handle.sync(None).await?;
+    let sync = account_handle
+        .sync(Some(SyncOptions {
+            try_collect_outputs: OutputsToCollect::All,
+            ..Default::default()
+        }))
+        .await?;
     println!("Synced: {:?}", sync);
     Ok(())
 }
