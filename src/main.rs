@@ -39,7 +39,7 @@ async fn run() -> Result<()> {
                 .with_node("http://localhost:14265")?
                 .with_node_sync_disabled(),
         )
-        .with_storage_folder(&storage_path)
+        .with_storage_path(&storage_path)
         .finish()
         .await?;
 
