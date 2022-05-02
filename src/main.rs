@@ -6,7 +6,11 @@
 
 use anyhow::Result;
 use clap::Parser;
-use iota_wallet::{account_manager::AccountManager, signing::stronghold::StrongholdSigner, ClientOptions};
+use iota_wallet::{
+    account_manager::AccountManager,
+    secret::{stronghold::StrongholdSecretManager, SecretManager},
+    ClientOptions,
+};
 use std::env::var_os;
 
 mod account;
@@ -27,13 +31,15 @@ async fn run() -> Result<()> {
 
     let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
     let password = get_password(stronghold_path);
-    let signer = StrongholdSigner::builder()
-        .password(&password)
-        .snapshot_path(stronghold_path.to_path_buf())
-        .build();
+    let secret_manager = SecretManager::Stronghold(
+        StrongholdSecretManager::builder()
+            .password(&password)
+            .snapshot_path(stronghold_path.to_path_buf())
+            .build(),
+    );
 
     let account_manager = AccountManager::builder()
-        .with_signer(signer.into())
+        .with_secret_manager(secret_manager)
         .with_client_options(
             ClientOptions::new()
                 .with_node("http://localhost:14265")?

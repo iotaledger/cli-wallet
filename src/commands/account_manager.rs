@@ -6,7 +6,7 @@ use clap::{Args, Parser, Subcommand};
 use iota_wallet::{
     account::{OutputsToCollect, SyncOptions},
     account_manager::AccountManager,
-    iota_client::utils::generate_mnemonic,
+    iota_client::{secret::SecretManager, utils::generate_mnemonic},
     ClientOptions,
 };
 
@@ -69,8 +69,13 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
     println!("{}", mnemonic);
     println!("\n////////////////////////////");
 
-    manager.get_signer().lock().await.store_mnemonic(mnemonic).await?;
+    if let SecretManager::Stronghold(secret_manager) = &mut *manager.get_secret_manager().write().await {
+        secret_manager.store_mnemonic(mnemonic).await?;
+    } else {
+        panic!("cli-wallet only supports Stronghold-backed secret managers at the moment.");
+    }
     println!("Mnemonic stored successfully");
+
     Ok(())
 }
 
