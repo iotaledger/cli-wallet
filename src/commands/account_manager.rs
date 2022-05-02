@@ -72,7 +72,7 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
     if let SecretManager::Stronghold(secret_manager) = &mut *manager.get_secret_manager().write().await {
         secret_manager.store_mnemonic(mnemonic).await?;
     } else {
-        // TODO: ?
+        panic!("cli-wallet only supports Stronghold-backed secret managers at the moment.");
     }
     println!("Mnemonic stored successfully");
 
