@@ -12,7 +12,8 @@ use iota_wallet::{
         bee_message::output::{NftId, TokenId, TokenTag},
         request_funds_from_faucet,
     },
-    AddressAndAmount, AddressAndNftId, AddressMicroAmount, AddressNativeTokens, NativeTokenOptions, NftOptions, U256,
+    AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
+    U256,
 };
 
 use std::str::FromStr;
@@ -140,7 +141,7 @@ pub async fn mint_native_token_command(
         account_address: None,
         token_tag,
         circulating_supply: U256::from_dec_str(&maximum_supply)?,
-        maxium_supply: U256::from_dec_str(&maximum_supply)?,
+        maximum_supply: U256::from_dec_str(&maximum_supply)?,
     };
 
     let transfer_result = account_handle.mint_native_token(native_token_options, None).await?;
@@ -176,7 +177,7 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<()> {
 
 // `send` command
 pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<()> {
-    let outputs = vec![AddressAndAmount { address, amount }];
+    let outputs = vec![AddressWithAmount { address, amount }];
     let transfer_result = account_handle.send_amount(outputs, None).await?;
     println!("Transaction created: {:?}", transfer_result);
     Ok(())
@@ -184,7 +185,7 @@ pub async fn send_command(account_handle: &AccountHandle, address: String, amoun
 
 // `send-micro` command
 pub async fn send_micro_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<()> {
-    let outputs = vec![AddressMicroAmount {
+    let outputs = vec![AddressWithMicroAmount {
         address,
         amount,
         return_address: None,
@@ -272,7 +273,7 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
     if *address.internal() {
         println!("--- Change address: {}", address.internal());
     }
-    let addresses_with_balance = account_handle.list_addresses_with_balance().await.unwrap();
+    let addresses_with_balance = account_handle.list_addresses_with_unspent_outputs().await.unwrap();
     if let Ok(index) = addresses_with_balance.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
         (a.key_index(), a.internal())
     }) {
