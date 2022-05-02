@@ -13,7 +13,7 @@ path = "src/main.rs"
 
 [dependencies]
 anyhow = "1.0.56"
-iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "58c94fe52148b2c857ebf920d64d7f8b88ae0194" }
+iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "3f98da3b885b3c004892b3c21f22a348e60e5394" }
 # iota-wallet = { path = "../wallet.rs" }
 tokio = { version = "1.12.0", default-features = false }
 dialoguer = "0.10.0"
