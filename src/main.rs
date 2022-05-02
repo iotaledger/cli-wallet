@@ -39,7 +39,7 @@ async fn run() -> Result<()> {
     );
 
     let account_manager = AccountManager::builder()
-        .with_secret_manager(secret_manager.into())
+        .with_secret_manager(secret_manager)
         .with_client_options(
             ClientOptions::new()
                 .with_node("http://localhost:14265")?
