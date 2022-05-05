@@ -45,10 +45,11 @@ pub enum AccountCommands {
         immutable_metadata: Option<String>,
         metadata: Option<String>,
     },
-    /// Mint a native token: `mint-native-token 100 "tokentag"`
+    /// Mint a native token: `mint-native-token 100 "tokentag" "0x..." (foundry metadata)`
     MintNativeToken {
         maximum_supply: String,
         token_tag: Option<String>,
+        foundry_metadata: Option<String>,
     },
     /// Send an amount to a bech32 encoded address: `send
     /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000`
@@ -123,6 +124,7 @@ pub async fn mint_native_token_command(
     // circulating_supply: String,
     maximum_supply: String,
     token_tag: Option<String>,
+    foundry_metadata: Option<String>,
 ) -> Result<()> {
     let token_tag = token_tag.map(|token_tag| token_tag.as_bytes().to_vec());
     let token_tag = if let Some(mut token_tag) = token_tag {
@@ -137,11 +139,13 @@ pub async fn mint_native_token_command(
     } else {
         TokenTag::new([0u8; 12])
     };
+
     let native_token_options = NativeTokenOptions {
         account_address: None,
         token_tag,
         circulating_supply: U256::from_dec_str(&maximum_supply)?,
         maximum_supply: U256::from_dec_str(&maximum_supply)?,
+        foundry_metadata: foundry_metadata.map(|s| prefix_hex::decode(&s)).transpose()?,
     };
 
     let transfer_result = account_handle.mint_native_token(native_token_options, None).await?;
