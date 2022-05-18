@@ -9,7 +9,7 @@ After downloading the CLI, initialize the signer for the wallet. On Mac and Linu
 ```
 ./wallet init --node http://node.url:port --mnemonic MNEMONIC
 // Example:
-./wallet init --node "http://localhost:14265" --mnemonic "giant dynamic museum toddler six deny defense ostrich bomb access mercy 
+./wallet init --node "http://localhost:14265" --mnemonic "giant dynamic museum toddler six deny defense ostrich bomb access mercy
 blood explain muscle shoot shallow glad autumn author calm heavy hawk abuse rally"
 ```
 
@@ -57,7 +57,7 @@ Selects the account associated with the specified alias.
 
 #### set-node NODE
 
-Set the node url to be used. 
+Set the node url to be used.
 ```
 ./wallet set-node "http://localhost:14265"
 ```
@@ -101,11 +101,11 @@ Lists the account's addresses.
 
 Lists the account's transactions.
 
-#### mint-native-token SUPPLY [TOKENTAG]
+#### mint-native-token SUPPLY [TOKENTAG] [FOUNDRY METADATA]
 
-Mint a native token: `mint-native-token 100 "tokentag"`
+Mint a native token: `mint-native-token 100 "tokentag" "0x..."`
 
-#### mint-nft [ADDRESS, IMMUTABLEMETADATA, METADATA] 
+#### mint-nft [ADDRESS, IMMUTABLEMETADATA, METADATA]
 
 Mint an nft to an optional bech32 encoded address: `mint-nft atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e "immutable-metadata" "metadata"`
 

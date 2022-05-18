@@ -63,7 +63,8 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
                 AccountCommands::MintNativeToken {
                     maximum_supply,
                     token_tag,
-                } => mint_native_token_command(&account_handle, maximum_supply, token_tag).await,
+                    foundry_metadata,
+                } => mint_native_token_command(&account_handle, maximum_supply, token_tag, foundry_metadata).await,
                 AccountCommands::MintNft {
                     address,
                     immutable_metadata,
