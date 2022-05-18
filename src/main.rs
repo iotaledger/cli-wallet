@@ -4,6 +4,8 @@
 //! Stardust CLI Wallet
 //! Create a new account: `cargo run init --node http://node.url:port --mnemonic MNEMONIC`
 
+use std::env::var_os;
+
 use anyhow::Result;
 use clap::Parser;
 use iota_wallet::{
@@ -11,7 +13,6 @@ use iota_wallet::{
     secret::{stronghold::StrongholdSecretManager, SecretManager},
     ClientOptions,
 };
-use std::env::var_os;
 
 mod account;
 mod account_manager;

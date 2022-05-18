@@ -1,7 +1,8 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::Result;
+use std::str::FromStr;
+
 use clap::{Parser, Subcommand};
 use iota_wallet::{
     account::{
@@ -16,7 +17,7 @@ use iota_wallet::{
     U256,
 };
 
-use std::str::FromStr;
+use crate::Result;
 
 #[derive(Parser)]
 #[clap(version, long_about = None)]

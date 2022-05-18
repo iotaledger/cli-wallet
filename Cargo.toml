@@ -12,17 +12,23 @@ name = "wallet"
 path = "src/main.rs"
 
 [dependencies]
-anyhow = "1.0.56"
-clap = { version = "3.1.6", features = [ "derive" ] }
-dialoguer = "0.10.0"
-iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "62e554445db31c2183370eded892b44556bb8af3" }
+anyhow = { version = "1.0.57", default-features = false }
+clap = { version = "3.1.18", default-features = false, features = [ "derive", "std" ] }
+dialoguer = { version = "0.10.1", default-features = false, features = [ "password" ] }
+iota-crypto = { version = "0.11.0", default-features = false, features = [ "std", "random", "sha", "pbkdf", "hmac", "bip39", "bip39-en", "chacha", "blake2b", "slip10" ] }
+iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "24a13faee519809152c7e198c1675bb6b31ee2a8", default-features = false, features = [ "storage", "stronghold" ] }
 prefix-hex = { version = "0.4.0", default-features = false, features = [ "std" ] }
-tokio = { version = "1.12.0", default-features = false }
+tokio = { version = "1.18.2", default-features = false }
 
-# serde_json = { version = "1.0.68", default-features = false }
-# futures = "0.3.17"
-# notify-rust = "4.5.6"
+[profile.dev]
+panic = "abort"
 
 [profile.release]
-lto = true
+panic = "abort"
+
+[profile.production]
 codegen-units = 1
+inherits = "release"
+lto = true
+panic = "abort"
+strip = "symbols"

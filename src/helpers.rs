@@ -1,11 +1,13 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use crate::AccountManagerCli;
+use std::path::Path;
+
 use clap::Parser;
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::account::AccountHandle;
-use std::path::Path;
+
+use crate::AccountManagerCli;
 
 pub fn get_password(path: &Path) -> String {
     let mut prompt = Password::new();
