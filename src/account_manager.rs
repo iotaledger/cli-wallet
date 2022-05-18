@@ -1,6 +1,8 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use iota_wallet::{account_manager::AccountManager, ClientOptions};
+
 use crate::{
     commands::account_manager::{
         init_command, new_account_command, select_account_command, sync_accounts_command, AccountManagerCli,
@@ -8,7 +10,6 @@ use crate::{
     },
     Result,
 };
-use iota_wallet::{account_manager::AccountManager, ClientOptions};
 
 pub async fn match_account_manager_command(
     account_manager: &AccountManager,
