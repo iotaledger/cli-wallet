@@ -4,23 +4,28 @@
 //! Stardust CLI Wallet
 //! Create a new account: `cargo run init --node http://node.url:port --mnemonic MNEMONIC`
 
+mod account;
+mod account_manager;
+mod commands;
+mod helpers;
+
 use std::env::var_os;
 
 use anyhow::Result;
 use clap::Parser;
+use fern_logger::{Error as LoggerError, LoggerConfigBuilder, LoggerOutputConfigBuilder};
 use iota_wallet::{
     account_manager::AccountManager,
     secret::{stronghold::StrongholdSecretManager, SecretManager},
     ClientOptions,
 };
+use log::LevelFilter;
 
-mod account;
-mod account_manager;
-mod commands;
-mod helpers;
-use account_manager::match_account_manager_command;
-use commands::account_manager::AccountManagerCli;
-use helpers::{get_password, help_command, pick_account};
+use self::{
+    account_manager::match_account_manager_command,
+    commands::account_manager::AccountManagerCli,
+    helpers::{get_password, help_command, pick_account},
+};
 
 async fn run() -> Result<()> {
     // Print help overview and exit before showing the password prompt
@@ -90,9 +95,26 @@ async fn run() -> Result<()> {
     Ok(())
 }
 
+fn logger_init() -> Result<(), LoggerError> {
+    let stdout = LoggerOutputConfigBuilder::default()
+        .name("stdout")
+        .level_filter(LevelFilter::Debug)
+        .color_enabled(true);
+    let config = LoggerConfigBuilder::default().with_output(stdout).finish();
+
+    fern_logger::logger_init(config)?;
+
+    Ok(())
+}
+
 #[tokio::main]
 async fn main() {
+    if let Err(e) = logger_init() {
+        println!("Logger error: {e}");
+        return;
+    }
+
     if let Err(e) = run().await {
-        println!("ERROR: {e}");
+        println!("Error: {e}");
     }
 }
