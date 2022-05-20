@@ -35,7 +35,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
     match command.as_str() {
         "h" => {
             if let Err(err) = AccountCli::try_parse_from(vec!["Account:", "help"]) {
-                log::error!("{err}");
+                println!("{err}");
             }
         }
         "clear" => {
@@ -48,7 +48,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
             let account_cli = match AccountCli::try_parse_from(command.split(' ')) {
                 Ok(account_cli) => account_cli,
                 Err(err) => {
-                    log::error!("{err}");
+                    println!("{err}");
                     return false;
                 }
             };
