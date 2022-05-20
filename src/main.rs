@@ -115,6 +115,6 @@ async fn main() {
     }
 
     if let Err(e) = run().await {
-        println!("Error: {e}");
+        log::error!("Error: {e}");
     }
 }

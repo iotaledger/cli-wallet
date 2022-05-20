@@ -42,11 +42,11 @@ pub struct MnemonicAndUrl {
 }
 
 pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<()> {
-    if let Ok(account) = manager.get_account(identifier).await {
+    if let Ok(account) = manager.get_account(identifier.clone()).await {
         account_prompt(account).await;
         return Ok(());
     } else {
-        println!("Account not found");
+        log::error!("Account \"{identifier}\"not found.");
     }
     Ok(())
 }
@@ -62,32 +62,35 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
         Some(mnemonic) => mnemonic,
         None => generate_mnemonic()?,
     };
-    println!(
-        "**Important** write this mnemonic phrase in a safe place.
-        It is the only way to recover your account if you ever forget your password/lose the .stronghold file."
+    log::info!("IMPORTANT: write this mnemonic phrase in a safe place.");
+    log::info!(
+        "It is the only way to recover your account if you ever forget your password/lose the .stronghold file."
     );
-    println!("////////////////////////////\n");
-    println!("{}", mnemonic);
-    println!("\n////////////////////////////");
+    log::info!("{mnemonic}");
 
     if let SecretManager::Stronghold(secret_manager) = &mut *manager.get_secret_manager().write().await {
         secret_manager.store_mnemonic(mnemonic).await?;
     } else {
         panic!("cli-wallet only supports Stronghold-backed secret managers at the moment.");
     }
-    println!("Mnemonic stored successfully");
+    log::info!("Mnemonic stored successfully");
 
     Ok(())
 }
 
 pub async fn new_account_command(manager: &AccountManager, alias: Option<String>) -> Result<()> {
     let mut builder = manager.create_account();
+
     if let Some(alias) = alias {
         builder = builder.with_alias(alias);
     }
+
     let account_handle = builder.finish().await?;
-    println!("Created account `{}`", account_handle.read().await.alias());
+
+    log::info!("Created account `{}`", account_handle.read().await.alias());
+
     account_prompt(account_handle).await;
+
     Ok(())
 }
 
@@ -98,6 +101,8 @@ pub async fn sync_accounts_command(manager: &AccountManager) -> Result<()> {
             ..Default::default()
         }))
         .await?;
-    println!("Synchronized all accounts: {:?}", total_balance);
+
+    log::info!("Synchronized all accounts: {:?}", total_balance);
+
     Ok(())
 }

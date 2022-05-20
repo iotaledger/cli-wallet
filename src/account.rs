@@ -35,7 +35,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
     match command.as_str() {
         "h" => {
             if let Err(err) = AccountCli::try_parse_from(vec!["Account:", "help"]) {
-                let _ = err.print();
+                log::error!("{err}");
             }
         }
         "clear" => {
@@ -47,8 +47,8 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
             let command = format!("Account: {}", command.trim());
             let account_cli = match AccountCli::try_parse_from(command.split(' ')) {
                 Ok(account_cli) => account_cli,
-                Err(e) => {
-                    let _ = e.print();
+                Err(err) => {
+                    log::error!("{err}");
                     return false;
                 }
             };
@@ -83,7 +83,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
                 AccountCommand::SendNft { address, nft_id } => send_nft_command(&account_handle, address, nft_id).await,
                 AccountCommand::Sync => sync_account_command(&account_handle).await,
             } {
-                println!("Error: {}", err);
+                log::error!("{}", err);
             }
         }
     }

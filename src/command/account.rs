@@ -78,7 +78,7 @@ pub enum AccountCommand {
 pub async fn list_transactions_command(account_handle: &AccountHandle) -> Result<()> {
     let transactions = account_handle.list_transactions().await?;
     if transactions.is_empty() {
-        println!("No transactions found");
+        log::info!("No transactions found");
     } else {
         transactions.iter().for_each(print_transaction);
     }
@@ -89,7 +89,7 @@ pub async fn list_transactions_command(account_handle: &AccountHandle) -> Result
 pub async fn list_addresses_command(account_handle: &AccountHandle) -> Result<()> {
     let addresses = account_handle.list_addresses().await.unwrap();
     if addresses.is_empty() {
-        println!("No addresses found");
+        log::info!("No addresses found");
     } else {
         for address in addresses {
             print_address(account_handle, &address).await;
@@ -114,7 +114,7 @@ pub async fn mint_nft_command(
     }];
 
     let transfer_result = account_handle.mint_nfts(nft_options, None).await?;
-    println!("Minting transaction sent: {:?}", transfer_result);
+    log::info!("Minting transaction sent: {transfer_result:?}");
     Ok(())
 }
 
@@ -151,7 +151,7 @@ pub async fn mint_native_token_command(
 
     let transfer_result = account_handle.mint_native_token(native_token_options, None).await?;
 
-    println!("Minting transaction sent: {:?}", transfer_result);
+    log::info!("Minting transaction sent: {:?}", transfer_result);
     Ok(())
 }
 
@@ -163,7 +163,7 @@ pub async fn sync_account_command(account_handle: &AccountHandle) -> Result<()> 
             ..Default::default()
         }))
         .await?;
-    println!("Synced: {:?}", sync);
+    log::info!("Synced: {:?}", sync);
     Ok(())
 }
 
@@ -176,7 +176,7 @@ pub async fn generate_address_command(account_handle: &AccountHandle) -> Result<
 
 // `balance` command
 pub async fn balance_command(account_handle: &AccountHandle) -> Result<()> {
-    println!("{:?}", account_handle.balance().await?);
+    log::info!("{:?}", account_handle.balance().await?);
     Ok(())
 }
 
@@ -184,7 +184,7 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<()> {
 pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<()> {
     let outputs = vec![AddressWithAmount { address, amount }];
     let transfer_result = account_handle.send_amount(outputs, None).await?;
-    println!("Transaction created: {:?}", transfer_result);
+    log::info!("Transaction created: {:?}", transfer_result);
     Ok(())
 }
 
@@ -197,7 +197,7 @@ pub async fn send_micro_command(account_handle: &AccountHandle, address: String,
         expiration: None,
     }];
     let transfer_result = account_handle.send_micro_transaction(outputs, None).await?;
-    println!("Micro transaction created: {:?}", transfer_result);
+    log::info!("Micro transaction created: {:?}", transfer_result);
     Ok(())
 }
 
@@ -214,7 +214,7 @@ pub async fn send_native_command(
         ..Default::default()
     }];
     let transfer_result = account_handle.send_native_tokens(outputs, None).await?;
-    println!("Transaction created: {:?}", transfer_result);
+    log::info!("Transaction created: {:?}", transfer_result);
     Ok(())
 }
 
@@ -225,7 +225,7 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
         nft_id: NftId::from_str(&nft_id)?,
     }];
     let transfer_result = account_handle.send_nft(outputs, None).await?;
-    println!("Transaction created: {:?}", transfer_result);
+    log::info!("Transaction created: {:?}", transfer_result);
     Ok(())
 }
 
@@ -239,7 +239,7 @@ pub async fn faucet_command(account_handle: &AccountHandle, url: Option<String>)
         Some(faucet_url) => faucet_url,
         None => "http://localhost:14265/api/plugins/faucet/v1/enqueue",
     };
-    println!(
+    log::info!(
         "{}",
         request_funds_from_faucet(faucet_url, &address.address().to_bech32()).await?
     );
@@ -256,7 +256,7 @@ pub async fn faucet_command(account_handle: &AccountHandle, url: Option<String>)
 // }
 
 fn print_transaction(transaction: &Transaction) {
-    println!("TRANSACTION {:?}", transaction);
+    log::info!("TRANSACTION {:?}", transaction);
     // if let Some(MessagePayload::Transaction(tx)) = message.payload() {
     //     let TransactionEssence::Regular(essence) = tx.essence();
     //     println!("--- Value: {:?}", essence.value());

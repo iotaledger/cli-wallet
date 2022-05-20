@@ -24,7 +24,7 @@ pub fn get_password(path: &Path) -> String {
 pub async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
     let mut items = Vec::new();
     for account_handle in accounts {
-        println!("{}", account_handle.read().await.index());
+        log::info!("{}", account_handle.read().await.index());
         items.push(account_handle.read().await.alias().clone());
     }
     Select::with_theme(&ColorfulTheme::default())
@@ -37,9 +37,9 @@ pub async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
 
 pub fn help_command() {
     if let Err(r) = AccountManagerCli::try_parse() {
-        // If only one argument from the user is provided, try to use it as identifier
+        // If only one argument from the user is provided, try to use it as identifier.
         let mut iter = std::env::args();
-        // The first element is traditionally the path of the executable
+        // The first element is the path of the executable.
         iter.next();
         if let Some(input) = iter.next() {
             if input == "help" {
