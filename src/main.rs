@@ -7,13 +7,14 @@
 mod account;
 mod account_manager;
 mod command;
+mod error;
 mod helper;
 
 use std::env::var_os;
 
 use anyhow::Result;
 use clap::Parser;
-use fern_logger::{Error as LoggerError, LoggerConfigBuilder, LoggerOutputConfigBuilder};
+use fern_logger::{LoggerConfigBuilder, LoggerOutputConfigBuilder};
 use iota_wallet::{
     account_manager::AccountManager,
     secret::{stronghold::StrongholdSecretManager, SecretManager},
@@ -24,6 +25,7 @@ use log::LevelFilter;
 use self::{
     account_manager::match_account_manager_command,
     command::account_manager::AccountManagerCli,
+    error::Error,
     helper::{get_password, help_command, pick_account},
 };
 
@@ -95,7 +97,7 @@ async fn run() -> Result<()> {
     Ok(())
 }
 
-fn logger_init() -> Result<(), LoggerError> {
+fn logger_init() -> Result<(), Error> {
     let stdout = LoggerOutputConfigBuilder::default()
         .name("stdout")
         .level_filter(LevelFilter::Debug)
@@ -110,11 +112,11 @@ fn logger_init() -> Result<(), LoggerError> {
 #[tokio::main]
 async fn main() {
     if let Err(e) = logger_init() {
-        println!("Logger error: {e}");
+        println!("{e}");
         return;
     }
 
     if let Err(e) = run().await {
-        log::error!("Error: {e}");
+        log::error!("{e}");
     }
 }

@@ -2293,6 +2293,7 @@ dependencies = [
  "iota-wallet",
  "log",
  "prefix-hex 0.4.0",
+ "thiserror",
  "tokio",
 ]
 
