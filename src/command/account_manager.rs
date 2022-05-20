@@ -16,11 +16,11 @@ use crate::{account::account_prompt, Result};
 #[clap(propagate_version = true)]
 pub struct AccountManagerCli {
     #[clap(subcommand)]
-    pub command: AccountManagerCommands,
+    pub command: AccountManagerCommand,
 }
 
 #[derive(Subcommand)]
-pub enum AccountManagerCommands {
+pub enum AccountManagerCommand {
     /// Get an existing account with the alias or account index
     Get { identifier: String },
     /// Initialize the wallet with a mnemonic and node url, if nothing is provided, a new mnemonic will be generated and "http://localhost:14265" used

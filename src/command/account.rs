@@ -24,11 +24,11 @@ use crate::Result;
 #[clap(propagate_version = true)]
 pub struct AccountCli {
     #[clap(subcommand)]
-    pub command: AccountCommands,
+    pub command: AccountCommand,
 }
 
 #[derive(Subcommand)]
-pub enum AccountCommands {
+pub enum AccountCommand {
     /// Generate a new address.
     Address,
     /// Print the account balance.

@@ -6,8 +6,8 @@
 
 mod account;
 mod account_manager;
-mod commands;
-mod helpers;
+mod command;
+mod helper;
 
 use std::env::var_os;
 
@@ -23,8 +23,8 @@ use log::LevelFilter;
 
 use self::{
     account_manager::match_account_manager_command,
-    commands::account_manager::AccountManagerCli,
-    helpers::{get_password, help_command, pick_account},
+    command::account_manager::AccountManagerCli,
+    helper::{get_password, help_command, pick_account},
 };
 
 async fn run() -> Result<()> {

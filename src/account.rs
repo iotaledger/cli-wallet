@@ -5,10 +5,10 @@ use clap::Parser;
 use dialoguer::Input;
 use iota_wallet::account::AccountHandle;
 
-use crate::commands::account::{
+use crate::command::account::{
     balance_command, faucet_command, generate_address_command, list_addresses_command, list_transactions_command,
     mint_native_token_command, mint_nft_command, send_command, send_micro_command, send_native_command,
-    send_nft_command, sync_account_command, AccountCli, AccountCommands,
+    send_nft_command, sync_account_command, AccountCli, AccountCommand,
 };
 
 // loop on the account prompt
@@ -53,37 +53,35 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
                 }
             };
             if let Err(err) = match account_cli.command {
-                AccountCommands::Address => generate_address_command(&account_handle).await,
-                AccountCommands::Balance => balance_command(&account_handle).await,
-                AccountCommands::Exit => {
+                AccountCommand::Address => generate_address_command(&account_handle).await,
+                AccountCommand::Balance => balance_command(&account_handle).await,
+                AccountCommand::Exit => {
                     return true;
                 }
-                AccountCommands::Faucet { url } => faucet_command(&account_handle, url).await,
-                AccountCommands::ListAddresses => list_addresses_command(&account_handle).await,
-                AccountCommands::ListTransactions => list_transactions_command(&account_handle).await,
-                AccountCommands::MintNativeToken {
+                AccountCommand::Faucet { url } => faucet_command(&account_handle, url).await,
+                AccountCommand::ListAddresses => list_addresses_command(&account_handle).await,
+                AccountCommand::ListTransactions => list_transactions_command(&account_handle).await,
+                AccountCommand::MintNativeToken {
                     maximum_supply,
                     token_tag,
                     foundry_metadata,
                 } => mint_native_token_command(&account_handle, maximum_supply, token_tag, foundry_metadata).await,
-                AccountCommands::MintNft {
+                AccountCommand::MintNft {
                     address,
                     immutable_metadata,
                     metadata,
                 } => mint_nft_command(&account_handle, address, immutable_metadata, metadata).await,
-                AccountCommands::Send { address, amount } => send_command(&account_handle, address, amount).await,
-                AccountCommands::SendMicro { address, amount } => {
+                AccountCommand::Send { address, amount } => send_command(&account_handle, address, amount).await,
+                AccountCommand::SendMicro { address, amount } => {
                     send_micro_command(&account_handle, address, amount).await
                 }
-                AccountCommands::SendNative {
+                AccountCommand::SendNative {
                     address,
                     token_id,
                     native_token_amount,
                 } => send_native_command(&account_handle, address, token_id, native_token_amount).await,
-                AccountCommands::SendNft { address, nft_id } => {
-                    send_nft_command(&account_handle, address, nft_id).await
-                }
-                AccountCommands::Sync => sync_account_command(&account_handle).await,
+                AccountCommand::SendNft { address, nft_id } => send_nft_command(&account_handle, address, nft_id).await,
+                AccountCommand::Sync => sync_account_command(&account_handle).await,
             } {
                 println!("Error: {}", err);
             }
