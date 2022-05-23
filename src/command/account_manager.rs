@@ -11,7 +11,7 @@ use iota_wallet::{
 
 use crate::{account::account_prompt, error::Error};
 
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 #[clap(version, long_about = None)]
 #[clap(propagate_version = true)]
 pub struct AccountManagerCli {
@@ -19,7 +19,7 @@ pub struct AccountManagerCli {
     pub command: AccountManagerCommand,
 }
 
-#[derive(Subcommand)]
+#[derive(Debug, Subcommand)]
 pub enum AccountManagerCommand {
     /// Get an existing account with the alias or account index
     Get { identifier: String },
@@ -33,7 +33,7 @@ pub enum AccountManagerCommand {
     Sync,
 }
 
-#[derive(Args)]
+#[derive(Debug, Args)]
 pub struct MnemonicAndUrl {
     #[clap(short, long)]
     pub mnemonic: Option<String>,

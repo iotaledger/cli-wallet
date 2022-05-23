@@ -19,7 +19,7 @@ use iota_wallet::{
 
 use crate::error::Error;
 
-#[derive(Parser)]
+#[derive(Debug, Parser)]
 #[clap(version, long_about = None)]
 #[clap(propagate_version = true)]
 pub struct AccountCli {
@@ -27,7 +27,7 @@ pub struct AccountCli {
     pub command: AccountCommand,
 }
 
-#[derive(Subcommand)]
+#[derive(Debug, Subcommand)]
 pub enum AccountCommand {
     /// Generate a new address.
     Address,
