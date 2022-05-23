@@ -26,7 +26,6 @@ pub async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
     let mut items = Vec::new();
 
     for account_handle in accounts {
-        log::info!("{}", account_handle.read().await.index());
         items.push(account_handle.read().await.alias().clone());
     }
 
