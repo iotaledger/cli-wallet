@@ -34,7 +34,10 @@ pub enum AccountCommand {
     /// Print the account balance.
     Balance,
     /// Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:14265/api/plugins/faucet/v1/enqueue`
-    Faucet { url: Option<String> },
+    Faucet {
+        url: Option<String>,
+        address: Option<String>,
+    },
     /// List the account addresses.
     ListAddresses,
     /// List the account transactions.
@@ -239,20 +242,25 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
 }
 
 // `faucet` command
-pub async fn faucet_command(account_handle: &AccountHandle, url: Option<String>) -> Result<(), Error> {
-    let address = match account_handle.list_addresses().await?.last() {
-        Some(address) => address.clone(),
-        None => return Err(Error::NoAddressForFaucet),
+pub async fn faucet_command(
+    account_handle: &AccountHandle,
+    url: Option<String>,
+    address: Option<String>,
+) -> Result<(), Error> {
+    let address = if let Some(address) = address {
+        address
+    } else {
+        match account_handle.list_addresses().await?.last() {
+            Some(address) => address.address().to_bech32(),
+            None => return Err(Error::NoAddressForFaucet),
+        }
     };
     let faucet_url = match &url {
         Some(faucet_url) => faucet_url,
         None => "http://localhost:14265/api/plugins/faucet/v1/enqueue",
     };
 
-    log::info!(
-        "{}",
-        request_funds_from_faucet(faucet_url, &address.address().to_bech32()).await?
-    );
+    log::info!("{}", request_funds_from_faucet(faucet_url, &address).await?);
 
     Ok(())
 }

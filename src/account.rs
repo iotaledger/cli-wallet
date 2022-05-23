@@ -59,7 +59,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::Exit => {
                     return Ok(true);
                 }
-                AccountCommand::Faucet { url } => faucet_command(&account_handle, url).await,
+                AccountCommand::Faucet { url, address } => faucet_command(&account_handle, url, address).await,
                 AccountCommand::ListAddresses => list_addresses_command(&account_handle).await,
                 AccountCommand::ListTransactions => list_transactions_command(&account_handle).await,
                 AccountCommand::MintNativeToken {
