@@ -8,13 +8,13 @@ use crate::{
         init_command, new_account_command, select_account_command, sync_accounts_command, AccountManagerCli,
         AccountManagerCommand,
     },
-    Result,
+    error::Error,
 };
 
 pub async fn match_account_manager_command(
     account_manager: &AccountManager,
     account_manager_cli: AccountManagerCli,
-) -> Result<()> {
+) -> Result<(), Error> {
     match account_manager_cli.command {
         AccountManagerCommand::Init(mnemonic_url) => {
             init_command(account_manager, mnemonic_url).await?;
@@ -34,5 +34,6 @@ pub async fn match_account_manager_command(
             select_account_command(account_manager, identifier).await?;
         }
     }
+
     Ok(())
 }

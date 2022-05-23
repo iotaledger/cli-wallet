@@ -17,7 +17,7 @@ use iota_wallet::{
     U256,
 };
 
-use crate::Result;
+use crate::error::Error;
 
 #[derive(Parser)]
 #[clap(version, long_about = None)]
@@ -74,7 +74,7 @@ pub enum AccountCommand {
 }
 
 /// `list-transactions` command
-pub async fn list_transactions_command(account_handle: &AccountHandle) -> Result<()> {
+pub async fn list_transactions_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let transactions = account_handle.list_transactions().await?;
 
     if transactions.is_empty() {
@@ -87,7 +87,7 @@ pub async fn list_transactions_command(account_handle: &AccountHandle) -> Result
 }
 
 /// `list-addresses` command
-pub async fn list_addresses_command(account_handle: &AccountHandle) -> Result<()> {
+pub async fn list_addresses_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let addresses = account_handle.list_addresses().await?;
 
     if addresses.is_empty() {
@@ -107,7 +107,7 @@ pub async fn mint_nft_command(
     address: Option<String>,
     immutable_metadata: Option<String>,
     metadata: Option<String>,
-) -> Result<()> {
+) -> Result<(), Error> {
     let immutable_metadata = immutable_metadata.map(|immutable_metadata| immutable_metadata.as_bytes().to_vec());
     let metadata = metadata.map(|metadata| metadata.as_bytes().to_vec());
     let nft_options = vec![NftOptions {
@@ -129,12 +129,15 @@ pub async fn mint_native_token_command(
     // circulating_supply: String,
     maximum_supply: String,
     foundry_metadata: Option<String>,
-) -> Result<()> {
+) -> Result<(), Error> {
     let native_token_options = NativeTokenOptions {
         account_address: None,
-        circulating_supply: U256::from_dec_str(&maximum_supply)?,
-        maximum_supply: U256::from_dec_str(&maximum_supply)?,
-        foundry_metadata: foundry_metadata.map(|s| prefix_hex::decode(&s)).transpose()?,
+        circulating_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellanous(e.to_string()))?,
+        maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellanous(e.to_string()))?,
+        foundry_metadata: foundry_metadata
+            .map(|s| prefix_hex::decode(&s))
+            .transpose()
+            .map_err(|e| Error::Miscellanous(e.to_string()))?,
     };
 
     let transfer_result = account_handle.mint_native_token(native_token_options, None).await?;
@@ -145,7 +148,7 @@ pub async fn mint_native_token_command(
 }
 
 // `sync` command
-pub async fn sync_account_command(account_handle: &AccountHandle) -> Result<()> {
+pub async fn sync_account_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let sync = account_handle
         .sync(Some(SyncOptions {
             try_collect_outputs: OutputsToCollect::All,
@@ -159,7 +162,7 @@ pub async fn sync_account_command(account_handle: &AccountHandle) -> Result<()> 
 }
 
 // `address` command
-pub async fn generate_address_command(account_handle: &AccountHandle) -> Result<()> {
+pub async fn generate_address_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let address = account_handle.generate_addresses(1, None).await?;
 
     print_address(account_handle, &address[0]).await?;
@@ -168,14 +171,14 @@ pub async fn generate_address_command(account_handle: &AccountHandle) -> Result<
 }
 
 // `balance` command
-pub async fn balance_command(account_handle: &AccountHandle) -> Result<()> {
+pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error> {
     log::info!("{:?}", account_handle.balance().await?);
 
     Ok(())
 }
 
 // `send` command
-pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<()> {
+pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<(), Error> {
     let outputs = vec![AddressWithAmount { address, amount }];
     let transfer_result = account_handle.send_amount(outputs, None).await?;
 
@@ -185,7 +188,7 @@ pub async fn send_command(account_handle: &AccountHandle, address: String, amoun
 }
 
 // `send-micro` command
-pub async fn send_micro_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<()> {
+pub async fn send_micro_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<(), Error> {
     let outputs = vec![AddressWithMicroAmount {
         address,
         amount,
@@ -206,10 +209,13 @@ pub async fn send_native_command(
     address: String,
     token_id: String,
     native_token_amount: String,
-) -> Result<()> {
+) -> Result<(), Error> {
     let outputs = vec![AddressNativeTokens {
         address,
-        native_tokens: vec![(TokenId::from_str(&token_id)?, U256::from_dec_str(&native_token_amount)?)],
+        native_tokens: vec![(
+            TokenId::from_str(&token_id)?,
+            U256::from_dec_str(&native_token_amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+        )],
         ..Default::default()
     }];
     let transfer_result = account_handle.send_native_tokens(outputs, None).await?;
@@ -220,7 +226,7 @@ pub async fn send_native_command(
 }
 
 // `send-nft` command
-pub async fn send_nft_command(account_handle: &AccountHandle, address: String, nft_id: String) -> Result<()> {
+pub async fn send_nft_command(account_handle: &AccountHandle, address: String, nft_id: String) -> Result<(), Error> {
     let outputs = vec![AddressAndNftId {
         address,
         nft_id: NftId::from_str(&nft_id)?,
@@ -233,10 +239,10 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
 }
 
 // `faucet` command
-pub async fn faucet_command(account_handle: &AccountHandle, url: Option<String>) -> Result<()> {
+pub async fn faucet_command(account_handle: &AccountHandle, url: Option<String>) -> Result<(), Error> {
     let address = match account_handle.list_addresses().await?.last() {
         Some(address) => address.clone(),
-        None => return Err(anyhow::anyhow!("Generate an address first!")),
+        None => return Err(Error::NoAddressForFaucet),
     };
     let faucet_url = match &url {
         Some(faucet_url) => faucet_url,
@@ -277,7 +283,7 @@ fn print_transaction(transaction: &Transaction) {
     // );
 }
 
-pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<()> {
+pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<(), Error> {
     println!("ADDRESS {:?}", address.address().to_bech32());
     println!("--- Index: {}", address.key_index());
     if *address.internal() {

@@ -7,18 +7,19 @@ use clap::Parser;
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::account::AccountHandle;
 
-use crate::AccountManagerCli;
+use crate::{error::Error, AccountManagerCli};
 
-pub fn get_password(path: &Path) -> Result<String, std::io::Error> {
+pub fn get_password(path: &Path) -> Result<String, Error> {
     let mut prompt = Password::new();
 
     prompt.with_prompt("What's the stronghold password?");
+
     // Check if the stronghold exists already
     if !path.exists() {
         prompt.with_confirmation("Confirm password", "Password mismatch");
     }
 
-    prompt.interact()
+    Ok(prompt.interact()?)
 }
 
 pub async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {

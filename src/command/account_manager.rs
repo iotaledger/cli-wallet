@@ -9,7 +9,7 @@ use iota_wallet::{
     ClientOptions,
 };
 
-use crate::{account::account_prompt, Result};
+use crate::{account::account_prompt, error::Error};
 
 #[derive(Parser)]
 #[clap(version, long_about = None)]
@@ -41,7 +41,7 @@ pub struct MnemonicAndUrl {
     pub node: Option<String>,
 }
 
-pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<(), std::io::Error> {
+pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<(), Error> {
     if let Ok(account) = manager.get_account(identifier.clone()).await {
         account_prompt(account).await?
     } else {
@@ -51,7 +51,7 @@ pub async fn select_account_command(manager: &AccountManager, identifier: String
     Ok(())
 }
 
-pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl) -> Result<()> {
+pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl) -> Result<(), Error> {
     if let Some(node) = mnemonic_url.node {
         manager
             .set_client_options(ClientOptions::new().with_node(&node)?)
@@ -78,7 +78,7 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
     Ok(())
 }
 
-pub async fn new_account_command(manager: &AccountManager, alias: Option<String>) -> Result<()> {
+pub async fn new_account_command(manager: &AccountManager, alias: Option<String>) -> Result<(), Error> {
     let mut builder = manager.create_account();
 
     if let Some(alias) = alias {
@@ -94,7 +94,7 @@ pub async fn new_account_command(manager: &AccountManager, alias: Option<String>
     Ok(())
 }
 
-pub async fn sync_accounts_command(manager: &AccountManager) -> Result<()> {
+pub async fn sync_accounts_command(manager: &AccountManager) -> Result<(), Error> {
     let total_balance = manager
         .sync(Some(SyncOptions {
             try_collect_outputs: OutputsToCollect::All,

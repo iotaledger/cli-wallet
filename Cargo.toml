@@ -12,7 +12,6 @@ name = "wallet"
 path = "src/main.rs"
 
 [dependencies]
-anyhow = { version = "1.0.57", default-features = false }
 clap = { version = "3.1.18", default-features = false, features = [ "derive", "std" ] }
 dialoguer = { version = "0.10.1", default-features = false, features = [ "password" ] }
 fern-logger = { version = "0.5.0", default-features = false }

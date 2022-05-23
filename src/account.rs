@@ -5,14 +5,17 @@ use clap::Parser;
 use dialoguer::Input;
 use iota_wallet::account::AccountHandle;
 
-use crate::command::account::{
-    balance_command, faucet_command, generate_address_command, list_addresses_command, list_transactions_command,
-    mint_native_token_command, mint_nft_command, send_command, send_micro_command, send_native_command,
-    send_nft_command, sync_account_command, AccountCli, AccountCommand,
+use crate::{
+    command::account::{
+        balance_command, faucet_command, generate_address_command, list_addresses_command, list_transactions_command,
+        mint_native_token_command, mint_nft_command, send_command, send_micro_command, send_native_command,
+        send_nft_command, sync_account_command, AccountCli, AccountCommand,
+    },
+    error::Error,
 };
 
 // loop on the account prompt
-pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), std::io::Error> {
+pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), Error> {
     loop {
         if account_prompt_internal(account_handle.clone()).await? {
             return Ok(());
@@ -21,7 +24,7 @@ pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), std::io
 }
 
 // loop on the account prompt
-pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bool, std::io::Error> {
+pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bool, Error> {
     let alias = {
         let account = account_handle.read().await;
         account.alias().clone()

@@ -12,7 +12,6 @@ mod helper;
 
 use std::env::var_os;
 
-use anyhow::Result;
 use clap::Parser;
 use fern_logger::{LoggerConfigBuilder, LoggerOutputConfigBuilder};
 use iota_wallet::{
@@ -29,7 +28,7 @@ use self::{
     helper::{get_password, help_command, pick_account},
 };
 
-async fn run() -> Result<()> {
+async fn run() -> Result<(), Error> {
     // Print help overview and exit before showing the password prompt
     help_command();
 
