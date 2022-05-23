@@ -1,11 +1,11 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_wallet::{account_manager::AccountManager, ClientOptions};
+use iota_wallet::account_manager::AccountManager;
 
 use crate::{
     command::account_manager::{
-        init_command, new_account_command, select_account_command, sync_accounts_command, AccountManagerCli,
+        init_command, new_command, select_command, set_node_command, sync_command, AccountManagerCli,
         AccountManagerCommand,
     },
     error::Error,
@@ -20,19 +20,16 @@ pub async fn match_account_manager_command(
             init_command(account_manager, mnemonic_url).await?;
         }
         AccountManagerCommand::New { alias } => {
-            new_account_command(account_manager, alias).await?;
+            new_command(account_manager, alias).await?;
         }
         AccountManagerCommand::Select { identifier } => {
-            select_account_command(account_manager, identifier).await?;
+            select_command(account_manager, identifier).await?;
         }
         AccountManagerCommand::SetNode { url } => {
-            // TODO make a function
-            account_manager
-                .set_client_options(ClientOptions::new().with_node(&url)?.with_node_sync_disabled())
-                .await?;
+            set_node_command(account_manager, url).await?;
         }
         AccountManagerCommand::Sync => {
-            sync_accounts_command(account_manager).await?;
+            sync_command(account_manager).await?;
         }
     }
 
