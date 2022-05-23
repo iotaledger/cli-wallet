@@ -9,24 +9,26 @@ use iota_wallet::account::AccountHandle;
 
 use crate::AccountManagerCli;
 
-pub fn get_password(path: &Path) -> String {
+pub fn get_password(path: &Path) -> Result<String, std::io::Error> {
     let mut prompt = Password::new();
+
     prompt.with_prompt("What's the stronghold password?");
     // Check if the stronghold exists already
     if !path.exists() {
         prompt.with_confirmation("Confirm password", "Password mismatch");
     }
 
-    let password: String = prompt.interact().unwrap();
-    password
+    prompt.interact()
 }
 
 pub async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
     let mut items = Vec::new();
+
     for account_handle in accounts {
         log::info!("{}", account_handle.read().await.index());
         items.push(account_handle.read().await.alias().clone());
     }
+
     Select::with_theme(&ColorfulTheme::default())
         .with_prompt("Select an account to manipulate")
         .items(&items)
@@ -39,6 +41,7 @@ pub fn help_command() {
     if let Err(r) = AccountManagerCli::try_parse() {
         // If only one argument from the user is provided, try to use it as identifier.
         let mut iter = std::env::args();
+
         // The first element is the path of the executable.
         iter.next();
         if let Some(input) = iter.next() {

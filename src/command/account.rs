@@ -76,24 +76,28 @@ pub enum AccountCommand {
 /// `list-transactions` command
 pub async fn list_transactions_command(account_handle: &AccountHandle) -> Result<()> {
     let transactions = account_handle.list_transactions().await?;
+
     if transactions.is_empty() {
         log::info!("No transactions found");
     } else {
         transactions.iter().for_each(print_transaction);
     }
+
     Ok(())
 }
 
 /// `list-addresses` command
 pub async fn list_addresses_command(account_handle: &AccountHandle) -> Result<()> {
-    let addresses = account_handle.list_addresses().await.unwrap();
+    let addresses = account_handle.list_addresses().await?;
+
     if addresses.is_empty() {
         log::info!("No addresses found");
     } else {
         for address in addresses {
-            print_address(account_handle, &address).await;
+            print_address(account_handle, &address).await?;
         }
     }
+
     Ok(())
 }
 
@@ -111,9 +115,10 @@ pub async fn mint_nft_command(
         immutable_metadata,
         metadata,
     }];
-
     let transfer_result = account_handle.mint_nfts(nft_options, None).await?;
+
     log::info!("Minting transaction sent: {transfer_result:?}");
+
     Ok(())
 }
 
@@ -135,6 +140,7 @@ pub async fn mint_native_token_command(
     let transfer_result = account_handle.mint_native_token(native_token_options, None).await?;
 
     log::info!("Minting transaction sent: {:?}", transfer_result);
+
     Ok(())
 }
 
@@ -146,20 +152,25 @@ pub async fn sync_account_command(account_handle: &AccountHandle) -> Result<()> 
             ..Default::default()
         }))
         .await?;
+
     log::info!("Synced: {:?}", sync);
+
     Ok(())
 }
 
 // `address` command
 pub async fn generate_address_command(account_handle: &AccountHandle) -> Result<()> {
     let address = account_handle.generate_addresses(1, None).await?;
-    print_address(account_handle, &address[0]).await;
+
+    print_address(account_handle, &address[0]).await?;
+
     Ok(())
 }
 
 // `balance` command
 pub async fn balance_command(account_handle: &AccountHandle) -> Result<()> {
     log::info!("{:?}", account_handle.balance().await?);
+
     Ok(())
 }
 
@@ -167,7 +178,9 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<()> {
 pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<()> {
     let outputs = vec![AddressWithAmount { address, amount }];
     let transfer_result = account_handle.send_amount(outputs, None).await?;
+
     log::info!("Transaction created: {:?}", transfer_result);
+
     Ok(())
 }
 
@@ -179,8 +192,11 @@ pub async fn send_micro_command(account_handle: &AccountHandle, address: String,
         return_address: None,
         expiration: None,
     }];
+
     let transfer_result = account_handle.send_micro_transaction(outputs, None).await?;
+
     log::info!("Micro transaction created: {:?}", transfer_result);
+
     Ok(())
 }
 
@@ -197,7 +213,9 @@ pub async fn send_native_command(
         ..Default::default()
     }];
     let transfer_result = account_handle.send_native_tokens(outputs, None).await?;
+
     log::info!("Transaction created: {:?}", transfer_result);
+
     Ok(())
 }
 
@@ -208,7 +226,9 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
         nft_id: NftId::from_str(&nft_id)?,
     }];
     let transfer_result = account_handle.send_nft(outputs, None).await?;
+
     log::info!("Transaction created: {:?}", transfer_result);
+
     Ok(())
 }
 
@@ -222,17 +242,19 @@ pub async fn faucet_command(account_handle: &AccountHandle, url: Option<String>)
         Some(faucet_url) => faucet_url,
         None => "http://localhost:14265/api/plugins/faucet/v1/enqueue",
     };
+
     log::info!(
         "{}",
         request_funds_from_faucet(faucet_url, &address.address().to_bech32()).await?
     );
+
     Ok(())
 }
 
 // `set-alias` command
 // pub async fn set_alias_command(account_handle: &AccountHandle) -> Result<()> {
 //     if let Some(matches) = matches.subcommand_matches("set-alias") {
-//         let alias = matches.value_of("alias").unwrap();
+//         let alias = matches.value_of("alias")?;
 //         account_handle.set_alias(alias).await?;
 //     }
 //     Ok(())
@@ -255,17 +277,21 @@ fn print_transaction(transaction: &Transaction) {
     // );
 }
 
-pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) {
+pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<()> {
     println!("ADDRESS {:?}", address.address().to_bech32());
     println!("--- Index: {}", address.key_index());
     if *address.internal() {
         println!("--- Change address: {}", address.internal());
     }
-    let addresses_with_balance = account_handle.list_addresses_with_unspent_outputs().await.unwrap();
+
+    let addresses_with_balance = account_handle.list_addresses_with_unspent_outputs().await?;
+
     if let Ok(index) = addresses_with_balance.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
         (a.key_index(), a.internal())
     }) {
         println!("--- Address balance: {}", addresses_with_balance[index].amount());
         println!("--- Address outputs: {:#?}", addresses_with_balance[index].output_ids());
     }
+
+    Ok(())
 }

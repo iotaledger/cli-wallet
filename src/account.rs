@@ -12,25 +12,23 @@ use crate::command::account::{
 };
 
 // loop on the account prompt
-pub async fn account_prompt(account_handle: AccountHandle) {
+pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), std::io::Error> {
     loop {
-        let exit = account_prompt_internal(account_handle.clone()).await;
-        if exit {
-            break;
+        if account_prompt_internal(account_handle.clone()).await? {
+            return Ok(());
         }
     }
 }
 
 // loop on the account prompt
-pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
+pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bool, std::io::Error> {
     let alias = {
         let account = account_handle.read().await;
         account.alias().clone()
     };
     let command: String = Input::new()
         .with_prompt(format!("Account `{}` command (h for help)", alias))
-        .interact_text()
-        .unwrap();
+        .interact_text()?;
 
     match command.as_str() {
         "h" => {
@@ -49,14 +47,14 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
                 Ok(account_cli) => account_cli,
                 Err(err) => {
                     println!("{err}");
-                    return false;
+                    return Ok(false);
                 }
             };
             if let Err(err) = match account_cli.command {
                 AccountCommand::Address => generate_address_command(&account_handle).await,
                 AccountCommand::Balance => balance_command(&account_handle).await,
                 AccountCommand::Exit => {
-                    return true;
+                    return Ok(true);
                 }
                 AccountCommand::Faucet { url } => faucet_command(&account_handle, url).await,
                 AccountCommand::ListAddresses => list_addresses_command(&account_handle).await,
@@ -87,5 +85,5 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> bool {
         }
     }
 
-    false
+    Ok(false)
 }

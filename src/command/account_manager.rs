@@ -41,13 +41,13 @@ pub struct MnemonicAndUrl {
     pub node: Option<String>,
 }
 
-pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<()> {
+pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<(), std::io::Error> {
     if let Ok(account) = manager.get_account(identifier.clone()).await {
-        account_prompt(account).await;
-        return Ok(());
+        account_prompt(account).await?
     } else {
         log::error!("Account \"{identifier}\"not found.");
     }
+
     Ok(())
 }
 
@@ -89,7 +89,7 @@ pub async fn new_account_command(manager: &AccountManager, alias: Option<String>
 
     log::info!("Created account `{}`", account_handle.read().await.alias());
 
-    account_prompt(account_handle).await;
+    account_prompt(account_handle).await?;
 
     Ok(())
 }

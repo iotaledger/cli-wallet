@@ -38,7 +38,7 @@ async fn run() -> Result<()> {
         .unwrap_or_else(|| "./stardust-cli-wallet-db".to_string());
 
     let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
-    let password = get_password(stronghold_path);
+    let password = get_password(stronghold_path)?;
     let secret_manager = SecretManager::Stronghold(
         StrongholdSecretManager::builder()
             .password(&password)
@@ -65,7 +65,7 @@ async fn run() -> Result<()> {
         1 => {
             // Show the account selector
             if let Some(index) = pick_account(account_manager.get_accounts().await?).await {
-                account::account_prompt(account_manager.get_account(index as u32).await?).await;
+                account::account_prompt(account_manager.get_account(index as u32).await?).await?;
             }
         }
         2 => {
@@ -75,7 +75,7 @@ async fn run() -> Result<()> {
             iter.next();
             if let Some(identifier) = iter.next() {
                 if let Ok(account_handle) = account_manager.get_account(identifier).await {
-                    account::account_prompt(account_handle).await;
+                    account::account_prompt(account_handle).await?;
                 }
             }
         }
@@ -90,7 +90,7 @@ async fn run() -> Result<()> {
         loop {
             // Show the account selector
             if let Some(index) = pick_account(accounts.clone()).await {
-                account::account_prompt(account_manager.get_account(index as u32).await?).await;
+                account::account_prompt(account_manager.get_account(index as u32).await?).await?;
             }
         }
     }
