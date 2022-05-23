@@ -33,6 +33,8 @@ pub enum AccountCommand {
     Address,
     /// Print the account balance.
     Balance,
+    /// Consolidate all basic outputs into one address.
+    Consolidate,
     /// Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:14265/api/plugins/faucet/v1/enqueue`
     Faucet {
         url: Option<String>,
@@ -306,6 +308,15 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
         println!("--- Address balance: {}", addresses_with_balance[index].amount());
         println!("--- Address outputs: {:#?}", addresses_with_balance[index].output_ids());
     }
+
+    Ok(())
+}
+
+// `consolidate` command
+pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    log::info!("Consolidating outputs.");
+
+    account_handle.consolidate_outputs().await?;
 
     Ok(())
 }

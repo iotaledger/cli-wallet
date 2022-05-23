@@ -7,9 +7,9 @@ use iota_wallet::account::AccountHandle;
 
 use crate::{
     command::account::{
-        balance_command, faucet_command, generate_address_command, list_addresses_command, list_transactions_command,
-        mint_native_token_command, mint_nft_command, send_command, send_micro_command, send_native_command,
-        send_nft_command, sync_account_command, AccountCli, AccountCommand,
+        balance_command, consolidate_command, faucet_command, generate_address_command, list_addresses_command,
+        list_transactions_command, mint_native_token_command, mint_nft_command, send_command, send_micro_command,
+        send_native_command, send_nft_command, sync_account_command, AccountCli, AccountCommand,
     },
     error::Error,
 };
@@ -56,6 +56,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
             if let Err(err) = match account_cli.command {
                 AccountCommand::Address => generate_address_command(&account_handle).await,
                 AccountCommand::Balance => balance_command(&account_handle).await,
+                AccountCommand::Consolidate => consolidate_command(&account_handle).await,
                 AccountCommand::Exit => {
                     return Ok(true);
                 }
