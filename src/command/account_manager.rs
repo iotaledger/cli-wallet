@@ -21,15 +21,15 @@ pub struct AccountManagerCli {
 
 #[derive(Debug, Subcommand)]
 pub enum AccountManagerCommand {
-    /// Get an existing account with the alias or account index
-    Get { identifier: String },
-    /// Initialize the wallet with a mnemonic and node url, if nothing is provided, a new mnemonic will be generated and "http://localhost:14265" used
+    /// Initialize the wallet with a mnemonic and node url, if nothing is provided, a new mnemonic will be generated and "http://localhost:14265" used.
     Init(MnemonicAndUrl),
-    /// Create a new account with an optional alias
+    /// Create a new account with an optional alias.
     New { alias: Option<String> },
-    /// Set the node to use
+    /// Select an existing account with the alias or account index.
+    Select { identifier: String },
+    /// Set the node to use.
     SetNode { url: String },
-    /// Sync all accounts
+    /// Sync all accounts.
     Sync,
 }
 
@@ -39,16 +39,6 @@ pub struct MnemonicAndUrl {
     pub mnemonic: Option<String>,
     #[clap(short, long)]
     pub node: Option<String>,
-}
-
-pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<(), Error> {
-    if let Ok(account) = manager.get_account(identifier.clone()).await {
-        account_prompt(account).await?
-    } else {
-        log::error!("Account \"{identifier}\"not found.");
-    }
-
-    Ok(())
 }
 
 pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl) -> Result<(), Error> {
@@ -90,6 +80,16 @@ pub async fn new_account_command(manager: &AccountManager, alias: Option<String>
     log::info!("Created account `{}`", account_handle.read().await.alias());
 
     account_prompt(account_handle).await?;
+
+    Ok(())
+}
+
+pub async fn select_account_command(manager: &AccountManager, identifier: String) -> Result<(), Error> {
+    if let Ok(account) = manager.get_account(identifier.clone()).await {
+        account_prompt(account).await?
+    } else {
+        log::error!("Account \"{identifier}\"not found.");
+    }
 
     Ok(())
 }

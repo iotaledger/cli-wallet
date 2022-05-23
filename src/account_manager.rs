@@ -19,19 +19,20 @@ pub async fn match_account_manager_command(
         AccountManagerCommand::Init(mnemonic_url) => {
             init_command(account_manager, mnemonic_url).await?;
         }
-        AccountManagerCommand::Sync => {
-            sync_accounts_command(account_manager).await?;
+        AccountManagerCommand::New { alias } => {
+            new_account_command(account_manager, alias).await?;
+        }
+        AccountManagerCommand::Select { identifier } => {
+            select_account_command(account_manager, identifier).await?;
         }
         AccountManagerCommand::SetNode { url } => {
+            // TODO make a function
             account_manager
                 .set_client_options(ClientOptions::new().with_node(&url)?.with_node_sync_disabled())
                 .await?;
         }
-        AccountManagerCommand::New { alias } => {
-            new_account_command(account_manager, alias).await?;
-        }
-        AccountManagerCommand::Get { identifier } => {
-            select_account_command(account_manager, identifier).await?;
+        AccountManagerCommand::Sync => {
+            sync_accounts_command(account_manager).await?;
         }
     }
 
