@@ -10,7 +10,7 @@ use iota_wallet::{
         AccountHandle, OutputsToCollect, SyncOptions,
     },
     iota_client::{
-        bee_message::output::{NftId, TokenId, TokenTag},
+        bee_block::output::{NftId, TokenId},
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
@@ -46,10 +46,9 @@ pub enum AccountCommand {
         immutable_metadata: Option<String>,
         metadata: Option<String>,
     },
-    /// Mint a native token: `mint-native-token 100 "tokentag" "0x..." (foundry metadata)`
+    /// Mint a native token: `mint-native-token 100 "0x..." (foundry metadata)`
     MintNativeToken {
         maximum_supply: String,
-        token_tag: Option<String>,
         foundry_metadata: Option<String>,
     },
     /// Send an amount to a bech32 encoded address: `send
@@ -124,26 +123,10 @@ pub async fn mint_native_token_command(
     // todo: enable this when there is support to mint additional tokens for an existing token
     // circulating_supply: String,
     maximum_supply: String,
-    token_tag: Option<String>,
     foundry_metadata: Option<String>,
 ) -> Result<()> {
-    let token_tag = token_tag.map(|token_tag| token_tag.as_bytes().to_vec());
-    let token_tag = if let Some(mut token_tag) = token_tag {
-        if token_tag.len() > 12 {
-            return Err(anyhow::anyhow!("Token tag is too long in bytes {}/12", token_tag.len()));
-        } else {
-            // Fill remaining bytes with zeros
-            token_tag.resize(12, 0u8);
-            let bytes: [u8; 12] = token_tag.try_into().expect("Invalid token tag byte length");
-            TokenTag::new(bytes)
-        }
-    } else {
-        TokenTag::new([0u8; 12])
-    };
-
     let native_token_options = NativeTokenOptions {
         account_address: None,
-        token_tag,
         circulating_supply: U256::from_dec_str(&maximum_supply)?,
         maximum_supply: U256::from_dec_str(&maximum_supply)?,
         foundry_metadata: foundry_metadata.map(|s| prefix_hex::decode(&s)).transpose()?,
