@@ -97,9 +97,11 @@ async fn run() -> Result<(), Error> {
 }
 
 fn logger_init() -> Result<(), Error> {
+    let target_exclusions = ["rustls"];
     let stdout = LoggerOutputConfigBuilder::default()
         .name("stdout")
         .level_filter(LevelFilter::Debug)
+        .target_exclusions(&target_exclusions)
         .color_enabled(true);
     let config = LoggerConfigBuilder::default().with_output(stdout).finish();
 
