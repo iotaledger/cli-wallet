@@ -294,10 +294,10 @@ fn print_transaction(transaction: &Transaction) {
 }
 
 pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<(), Error> {
-    println!("ADDRESS {:?}", address.address().to_bech32());
-    println!("--- Index: {}", address.key_index());
+    let mut log = format!("Address {}: {}\n", address.key_index(), address.address().to_bech32());
+
     if *address.internal() {
-        println!("--- Change address: {}", address.internal());
+        log = format!("{}Change address: {}", log, address.internal())
     }
 
     let addresses_with_balance = account_handle.list_addresses_with_unspent_outputs().await?;
@@ -305,9 +305,11 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
     if let Ok(index) = addresses_with_balance.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
         (a.key_index(), a.internal())
     }) {
-        println!("--- Address balance: {}", addresses_with_balance[index].amount());
-        println!("--- Address outputs: {:#?}", addresses_with_balance[index].output_ids());
+        log = format!("{log}Balance: {}\n", addresses_with_balance[index].amount());
+        log = format!("{log}Outputs: {:#?}", addresses_with_balance[index].output_ids());
     }
+
+    log::info!("{log}");
 
     Ok(())
 }
