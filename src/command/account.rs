@@ -316,7 +316,7 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
 pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
     log::info!("Consolidating outputs.");
 
-    account_handle.consolidate_outputs().await?;
+    account_handle.consolidate_outputs(true).await?;
 
     Ok(())
 }
