@@ -6,14 +6,14 @@
 
 mod account;
 mod account_manager;
-mod commands;
-mod helpers;
+mod command;
+mod error;
+mod helper;
 
 use std::env::var_os;
 
-use anyhow::Result;
 use clap::Parser;
-use fern_logger::{Error as LoggerError, LoggerConfigBuilder, LoggerOutputConfigBuilder};
+use fern_logger::{LoggerConfigBuilder, LoggerOutputConfigBuilder};
 use iota_wallet::{
     account_manager::AccountManager,
     secret::{stronghold::StrongholdSecretManager, SecretManager},
@@ -23,11 +23,12 @@ use log::LevelFilter;
 
 use self::{
     account_manager::match_account_manager_command,
-    commands::account_manager::AccountManagerCli,
-    helpers::{get_password, help_command, pick_account},
+    command::account_manager::AccountManagerCli,
+    error::Error,
+    helper::{get_password, help_command, pick_account},
 };
 
-async fn run() -> Result<()> {
+async fn run() -> Result<(), Error> {
     // Print help overview and exit before showing the password prompt
     help_command();
 
@@ -36,7 +37,7 @@ async fn run() -> Result<()> {
         .unwrap_or_else(|| "./stardust-cli-wallet-db".to_string());
 
     let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
-    let password = get_password(stronghold_path);
+    let password = get_password(stronghold_path)?;
     let secret_manager = SecretManager::Stronghold(
         StrongholdSecretManager::builder()
             .password(&password)
@@ -63,7 +64,7 @@ async fn run() -> Result<()> {
         1 => {
             // Show the account selector
             if let Some(index) = pick_account(account_manager.get_accounts().await?).await {
-                account::account_prompt(account_manager.get_account(index as u32).await?).await;
+                account::account_prompt(account_manager.get_account(index as u32).await?).await?;
             }
         }
         2 => {
@@ -73,7 +74,7 @@ async fn run() -> Result<()> {
             iter.next();
             if let Some(identifier) = iter.next() {
                 if let Ok(account_handle) = account_manager.get_account(identifier).await {
-                    account::account_prompt(account_handle).await;
+                    account::account_prompt(account_handle).await?;
                 }
             }
         }
@@ -88,17 +89,19 @@ async fn run() -> Result<()> {
         loop {
             // Show the account selector
             if let Some(index) = pick_account(accounts.clone()).await {
-                account::account_prompt(account_manager.get_account(index as u32).await?).await;
+                account::account_prompt(account_manager.get_account(index as u32).await?).await?;
             }
         }
     }
     Ok(())
 }
 
-fn logger_init() -> Result<(), LoggerError> {
+fn logger_init() -> Result<(), Error> {
+    let target_exclusions = ["rustls"];
     let stdout = LoggerOutputConfigBuilder::default()
         .name("stdout")
         .level_filter(LevelFilter::Debug)
+        .target_exclusions(&target_exclusions)
         .color_enabled(true);
     let config = LoggerConfigBuilder::default().with_output(stdout).finish();
 
@@ -110,11 +113,11 @@ fn logger_init() -> Result<(), LoggerError> {
 #[tokio::main]
 async fn main() {
     if let Err(e) = logger_init() {
-        println!("Logger error: {e}");
+        println!("{e}");
         return;
     }
 
     if let Err(e) = run().await {
-        println!("Error: {e}");
+        log::error!("{e}");
     }
 }

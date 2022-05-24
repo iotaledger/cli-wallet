@@ -1,38 +1,25 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use iota_wallet::{account_manager::AccountManager, ClientOptions};
+use iota_wallet::account_manager::AccountManager;
 
 use crate::{
-    commands::account_manager::{
-        init_command, new_account_command, select_account_command, sync_accounts_command, AccountManagerCli,
-        AccountManagerCommands,
+    command::account_manager::{
+        init_command, new_command, select_command, set_node_command, sync_command, AccountManagerCli,
+        AccountManagerCommand,
     },
-    Result,
+    error::Error,
 };
 
 pub async fn match_account_manager_command(
     account_manager: &AccountManager,
     account_manager_cli: AccountManagerCli,
-) -> Result<()> {
+) -> Result<(), Error> {
     match account_manager_cli.command {
-        AccountManagerCommands::Init(mnemonic_url) => {
-            init_command(account_manager, mnemonic_url).await?;
-        }
-        AccountManagerCommands::Sync => {
-            sync_accounts_command(account_manager).await?;
-        }
-        AccountManagerCommands::SetNode { url } => {
-            account_manager
-                .set_client_options(ClientOptions::new().with_node(&url)?.with_node_sync_disabled())
-                .await?;
-        }
-        AccountManagerCommands::New { alias } => {
-            new_account_command(account_manager, alias).await?;
-        }
-        AccountManagerCommands::Get { identifier } => {
-            select_account_command(account_manager, identifier).await?;
-        }
+        AccountManagerCommand::Init(mnemonic_url) => init_command(account_manager, mnemonic_url).await,
+        AccountManagerCommand::New { alias } => new_command(account_manager, alias).await,
+        AccountManagerCommand::Select { identifier } => select_command(account_manager, identifier).await,
+        AccountManagerCommand::SetNode { url } => set_node_command(account_manager, url).await,
+        AccountManagerCommand::Sync => sync_command(account_manager).await,
     }
-    Ok(())
 }

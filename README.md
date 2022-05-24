@@ -101,9 +101,9 @@ Lists the account's addresses.
 
 Lists the account's transactions.
 
-#### mint-native-token SUPPLY [TOKENTAG] [FOUNDRY METADATA]
+#### mint-native-token SUPPLY [FOUNDRY METADATA]
 
-Mint a native token: `mint-native-token 100 "tokentag" "0x..."`
+Mint a native token: `mint-native-token 100 "0x..."`
 
 #### mint-nft [ADDRESS, IMMUTABLEMETADATA, METADATA]
 
