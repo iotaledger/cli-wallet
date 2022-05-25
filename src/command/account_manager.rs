@@ -54,7 +54,7 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
     };
     log::info!("IMPORTANT: write this mnemonic phrase in a safe place.");
     log::info!(
-        "It is the only way to recover your account if you ever forget your password/lose the .stronghold file."
+        "It is the only way to recover your account if you ever forget your password and/or lose the .stronghold file."
     );
     log::info!("{mnemonic}");
 
