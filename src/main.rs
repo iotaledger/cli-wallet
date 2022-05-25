@@ -10,89 +10,26 @@ mod command;
 mod error;
 mod helper;
 
-use std::env::var_os;
-
-use clap::Parser;
 use fern_logger::{LoggerConfigBuilder, LoggerOutputConfigBuilder};
-use iota_wallet::{
-    account_manager::AccountManager,
-    secret::{stronghold::StrongholdSecretManager, SecretManager},
-    ClientOptions,
-};
 use log::LevelFilter;
 
-use self::{
-    account_manager::match_account_manager_command,
-    command::account_manager::AccountManagerCli,
-    error::Error,
-    helper::{get_password, help_command, pick_account},
-};
+use self::{account_manager::new_account_manager, error::Error, helper::pick_account};
 
 async fn run() -> Result<(), Error> {
-    // Print help overview and exit before showing the password prompt
-    help_command();
+    let (account_manager, account) = new_account_manager().await?;
 
-    let storage_path = var_os("WALLET_DATABASE_PATH")
-        .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
-        .unwrap_or_else(|| "./stardust-cli-wallet-db".to_string());
-
-    let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
-    let password = get_password(stronghold_path)?;
-    let secret_manager = SecretManager::Stronghold(
-        StrongholdSecretManager::builder()
-            .password(&password)
-            .snapshot_path(stronghold_path.to_path_buf())
-            .build(),
-    );
-
-    let account_manager = AccountManager::builder()
-        .with_secret_manager(secret_manager)
-        .with_client_options(
-            ClientOptions::new()
-                .with_node("http://localhost:14265")?
-                .with_node_sync_disabled(),
-        )
-        .with_storage_path(&storage_path)
-        .finish()
-        .await?;
-
-    if let Ok(account_manager_cli) = AccountManagerCli::try_parse() {
-        match_account_manager_command(&account_manager, account_manager_cli).await?;
-    }
-
-    match std::env::args().len() {
-        1 => {
-            // Show the account selector
-            if let Some(index) = pick_account(account_manager.get_accounts().await?).await {
-                account::account_prompt(account_manager.get_account(index as u32).await?).await?;
-            }
-        }
-        2 => {
-            // If only one argument from the user is provided, try to use it as identifier
-            let mut iter = std::env::args();
-            // The first element is traditionally the path of the executable
-            iter.next();
-            if let Some(identifier) = iter.next() {
-                if let Ok(account_handle) = account_manager.get_account(identifier).await {
-                    account::account_prompt(account_handle).await?;
-                }
-            }
-        }
-        _ => {}
-    }
-
-    // This will print the help message if parsing fails
-    AccountManagerCli::parse();
-
-    let accounts = account_manager.get_accounts().await?;
-    if !accounts.is_empty() {
-        loop {
-            // Show the account selector
-            if let Some(index) = pick_account(accounts.clone()).await {
-                account::account_prompt(account_manager.get_account(index as u32).await?).await?;
-            }
+    match account {
+        Some(account) => account::account_prompt(account_manager.get_account(account).await?).await?,
+        None => {
+            account::account_prompt(
+                account_manager
+                    .get_account(pick_account(&account_manager).await?)
+                    .await?,
+            )
+            .await?;
         }
     }
+
     Ok(())
 }
 
@@ -117,7 +54,8 @@ async fn main() {
         return;
     }
 
-    if let Err(e) = run().await {
-        log::error!("{e}");
+    match run().await {
+        Ok(_) | Err(Error::Help) => {}
+        Err(e) => log::error!("{e}"),
     }
 }

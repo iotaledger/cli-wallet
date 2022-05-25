@@ -1,6 +1,6 @@
 [package]
-name = "stardust-cli-wallet"
-version = "0.1.0-alpha"
+name = "cli-wallet"
+version = "1.0.0-alpha.1"
 authors = [ "IOTA Stiftung" ]
 edition = "2021"
 homepage = "https://iota.org"

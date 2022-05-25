@@ -13,6 +13,8 @@ pub enum Error {
     Block(#[from] BlockError),
     #[error("client error: {0}")]
     Client(#[from] ClientError),
+    #[error("help command")]
+    Help,
     #[error("io error: {0}")]
     Io(#[from] std::io::Error),
     #[error("logger error: {0}")]
