@@ -9,7 +9,7 @@ module.exports = {
                 path: path.resolve(__dirname, 'docs'),
                 routeBasePath: 'cli-wallet',
                 sidebarPath: path.resolve(__dirname, 'sidebars.js'),
-                editUrl: 'https://github.com/iotaledger/cli-wallet/edit/production/documentation',
+                editUrl: 'https://github.com/iotaledger/cli-wallet/edit/develop/documentation',
             }
         ],
     ],
