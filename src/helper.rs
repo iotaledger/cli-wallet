@@ -29,7 +29,7 @@ pub async fn pick_account(accounts: Vec<AccountHandle>) -> Option<usize> {
     }
 
     Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select an account to manipulate")
+        .with_prompt("Select an account:")
         .items(&items)
         .default(0)
         .interact_on_opt(&Term::stderr())
