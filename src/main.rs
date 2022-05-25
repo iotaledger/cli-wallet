@@ -16,34 +16,17 @@ use log::LevelFilter;
 use self::{account_manager::new_account_manager, error::Error, helper::pick_account};
 
 async fn run() -> Result<(), Error> {
-    let account_manager = new_account_manager().await?;
+    let (account_manager, account) = new_account_manager().await?;
 
-    match std::env::args().len() {
-        1 => {
+    match account {
+        Some(account) => {
+            if let Ok(account_handle) = account_manager.get_account(account).await {
+                account::account_prompt(account_handle).await?;
+            }
+        }
+        None => {
             // Show the account selector
             if let Some(index) = pick_account(account_manager.get_accounts().await?).await {
-                account::account_prompt(account_manager.get_account(index as u32).await?).await?;
-            }
-        }
-        2 => {
-            // If only one argument from the user is provided, try to use it as identifier
-            let mut iter = std::env::args();
-            // The first element is traditionally the path of the executable
-            iter.next();
-            if let Some(identifier) = iter.next() {
-                if let Ok(account_handle) = account_manager.get_account(identifier).await {
-                    account::account_prompt(account_handle).await?;
-                }
-            }
-        }
-        _ => {}
-    }
-
-    let accounts = account_manager.get_accounts().await?;
-    if !accounts.is_empty() {
-        loop {
-            // Show the account selector
-            if let Some(index) = pick_account(accounts.clone()).await {
                 account::account_prompt(account_manager.get_account(index as u32).await?).await?;
             }
         }

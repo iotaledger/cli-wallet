@@ -17,6 +17,7 @@ use crate::{account::account_prompt, error::Error};
 pub struct AccountManagerCli {
     #[clap(subcommand)]
     pub command: Option<AccountManagerCommand>,
+    pub account: Option<String>,
 }
 
 #[derive(Debug, Subcommand)]

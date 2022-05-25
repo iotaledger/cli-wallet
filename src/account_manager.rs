@@ -19,7 +19,7 @@ use crate::{
     helper::get_password,
 };
 
-pub async fn new_account_manager() -> Result<AccountManager, Error> {
+pub async fn new_account_manager() -> Result<(AccountManager, Option<String>), Error> {
     let storage_path = var_os("WALLET_DATABASE_PATH")
         .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
         .unwrap_or_else(|| "./stardust-cli-wallet-db".to_string());
@@ -55,7 +55,7 @@ pub async fn new_account_manager() -> Result<AccountManager, Error> {
                 }?;
             }
 
-            Ok(account_manager)
+            Ok((account_manager, account_manager_cli.account))
         }
         Err(e) => {
             println!("{e}");
