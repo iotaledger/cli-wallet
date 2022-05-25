@@ -297,7 +297,7 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
     let mut log = format!("Address {}: {}\n", address.key_index(), address.address().to_bech32());
 
     if *address.internal() {
-        log = format!("{}Change address: {}", log, address.internal())
+        log = format!("{log}Change address");
     }
 
     let addresses_with_balance = account_handle.list_addresses_with_unspent_outputs().await?;
