@@ -19,11 +19,7 @@ async fn run() -> Result<(), Error> {
     let (account_manager, account) = new_account_manager().await?;
 
     match account {
-        Some(account) => {
-            if let Ok(account_handle) = account_manager.get_account(account).await {
-                account::account_prompt(account_handle).await?;
-            }
-        }
+        Some(account) => account::account_prompt(account_manager.get_account(account).await?).await?,
         None => {
             // Show the account selector
             if let Some(index) = pick_account(account_manager.get_accounts().await?).await {
