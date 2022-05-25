@@ -461,6 +461,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "cli-wallet"
+version = "1.0.0-alpha.1"
+dependencies = [
+ "clap",
+ "dialoguer",
+ "fern-logger",
+ "iota-crypto 0.11.0",
+ "iota-wallet",
+ "log",
+ "prefix-hex 0.4.0",
+ "thiserror",
+ "tokio",
+]
+
+[[package]]
 name = "colored"
 version = "1.9.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2280,21 +2295,6 @@ name = "spin"
 version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6e63cff320ae2c57904679ba7cb63280a3dc4613885beafb148ee7bf9aa9042d"
-
-[[package]]
-name = "stardust-cli-wallet"
-version = "0.1.0-alpha"
-dependencies = [
- "clap",
- "dialoguer",
- "fern-logger",
- "iota-crypto 0.11.0",
- "iota-wallet",
- "log",
- "prefix-hex 0.4.0",
- "thiserror",
- "tokio",
-]
 
 [[package]]
 name = "static_assertions"
