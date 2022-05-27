@@ -79,7 +79,7 @@ pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Res
 
     let account_handle = builder.finish().await?;
 
-    log::info!("Created account `{}`", account_handle.read().await.alias());
+    log::info!("Created account \"{}\"", account_handle.read().await.alias());
 
     account_prompt(account_handle).await?;
 

@@ -30,7 +30,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
         account.alias().clone()
     };
     let command: String = Input::new()
-        .with_prompt(format!("Account `{}` command (h for help)", alias))
+        .with_prompt(format!("Account \"{}\" command (h for help)", alias))
         .interact_text()?;
 
     match command.as_str() {
