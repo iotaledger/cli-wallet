@@ -1,3 +1,6 @@
+The Account Manager Interface is evaluated through the Command Line Interface of the `wallet` binary, once per
+execution.
+
 The account manager interface allows you to:
 - Initialise the wallet with a mnemonic;
 - Create new accounts;
@@ -8,9 +11,18 @@ The account manager interface allows you to:
 
 ## `help`
 
+Displays the binary usage and exit.
+
 ### Parameters
 
+No parameters.
+
 ### Example(s)
+
+Display the binary usage and exit.
+```sh
+./wallet help
+```
 
 ## `init`
 
