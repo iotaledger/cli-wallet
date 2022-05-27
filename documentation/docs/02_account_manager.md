@@ -30,10 +30,10 @@ The wallet can only be initialised once.
 
 ### Parameters
 
-| Name        | Optional  | Default                   |Example                                                                                                                                                   |
-| ----------- | --------- | ------------------------- |--------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `mnemonic`  | ✓         | Randomly generated        | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt"  |
-| `node`      | ✓         | "http://localhost:14265/" | "http://localhost:14265/"                                                                                                                                 |
+| Name        | Optional  | Default                   |Example                                                                                                                                                                              |
+| ----------- | --------- | ------------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mnemonic`  | ✓         | Randomly generated        | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC) |
+| `node`      | ✓         | "http://localhost:14265/" | "http://localhost:14265/"                                                                                                                                                           |
 
 ### Example(s)
 
@@ -43,6 +43,7 @@ Initialise the wallet with a randomly generated mnemonic and the default node.
 ```
 
 Initialise the wallet with a given mnemonic and the default node.
+DO NOT USE THIS MNEMONIC.
 ```sh
 ./wallet init --mnemonic "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt"
 ```
