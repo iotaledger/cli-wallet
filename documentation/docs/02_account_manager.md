@@ -54,6 +54,8 @@ Initialise the wallet with a a randomly generated mnemonic and a given node.
 
 ## `new`
 
+(init first)
+
 ### Parameters
 
 ### Example(s)

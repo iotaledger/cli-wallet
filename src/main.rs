@@ -21,12 +21,9 @@ async fn run() -> Result<(), Error> {
     match account {
         Some(account) => account::account_prompt(account_manager.get_account(account).await?).await?,
         None => {
-            account::account_prompt(
-                account_manager
-                    .get_account(pick_account(&account_manager).await?)
-                    .await?,
-            )
-            .await?;
+            if let Some(account) = pick_account(&account_manager).await? {
+                account::account_prompt(account_manager.get_account(account).await?).await?;
+            }
         }
     }
 

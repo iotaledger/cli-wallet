@@ -21,8 +21,13 @@ pub fn get_password(path: &Path) -> Result<String, Error> {
     Ok(prompt.interact()?)
 }
 
-pub async fn pick_account(manager: &AccountManager) -> Result<u32, Error> {
+pub async fn pick_account(manager: &AccountManager) -> Result<Option<u32>, Error> {
     let accounts = manager.get_accounts().await?;
+
+    if accounts.is_empty() {
+        return Ok(None);
+    }
+
     let mut items = Vec::new();
 
     for account_handle in accounts {
@@ -35,5 +40,5 @@ pub async fn pick_account(manager: &AccountManager) -> Result<u32, Error> {
         .default(0)
         .interact_on(&Term::stderr())?;
 
-    Ok(index as u32)
+    Ok(Some(index as u32))
 }
