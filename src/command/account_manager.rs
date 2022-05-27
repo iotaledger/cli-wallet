@@ -57,7 +57,8 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
     log::info!(
         "It is the only way to recover your account if you ever forget your password and/or lose the .stronghold file."
     );
-    log::info!("{mnemonic}");
+    // Specific target to easily exclude it from the archive logger output.
+    log::info!(target:"mnemonic", "{mnemonic}");
 
     if let SecretManager::Stronghold(secret_manager) = &mut *manager.get_secret_manager().write().await {
         secret_manager.store_mnemonic(mnemonic).await?;

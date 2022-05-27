@@ -13,16 +13,15 @@ use log::LevelFilter;
 use self::{account_manager::new_account_manager, error::Error, helper::pick_account};
 
 fn logger_init() -> Result<(), Error> {
-    let target_exclusions = ["rustls"];
     let stdout = LoggerOutputConfigBuilder::default()
         .name("stdout")
         .level_filter(LevelFilter::Debug)
-        .target_exclusions(&target_exclusions)
+        .target_exclusions(&["rustls"])
         .color_enabled(true);
     let archive = LoggerOutputConfigBuilder::default()
         .name("archive.log")
         .level_filter(LevelFilter::Debug)
-        .target_exclusions(&target_exclusions)
+        .target_exclusions(&["mnemonic", "rustls"])
         .color_enabled(false);
     let config = LoggerConfigBuilder::default()
         .with_output(stdout)
