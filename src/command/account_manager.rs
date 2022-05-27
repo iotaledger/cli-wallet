@@ -89,7 +89,7 @@ pub async fn select_command(manager: &AccountManager, identifier: String) -> Res
     if let Ok(account) = manager.get_account(identifier.clone()).await {
         account_prompt(account).await?
     } else {
-        log::error!("Account \"{identifier}\"not found.");
+        log::error!("Account \"{identifier}\" not found.");
     }
 
     Ok(())
