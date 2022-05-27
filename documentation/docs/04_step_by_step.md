@@ -1,8 +1,9 @@
 # Setup
 
 Initialise the wallet with a given node and a randomly generated mnemonic.
+<!-- TODO: replace with testnet URL -->
 ```sh
-$ ./wallet init --node https://api.alphanet.iotaledger.net
+$ ./wallet init --node [URL]
 > ...
 > INFO  Mnemonic stored successfully
 ```
@@ -26,9 +27,10 @@ $ ./wallet new savings
 # Send an amount
 
 Get some funds from the faucet.
+<!-- TODO: replace with testnet URL -->
 ```sh
 $ ./wallet main
-> Account "main" command (h for help): faucet https://faucet.alphanet.iotaledger.net/api/enqueue
+> Account "main" command (h for help): faucet [URL]
 > ...
 > Account "main" command (h for help): sync
 > INFO  Synced: AccountBalance ...
