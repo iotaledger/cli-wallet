@@ -24,21 +24,23 @@ pub fn get_password(path: &Path) -> Result<String, Error> {
 pub async fn pick_account(manager: &AccountManager) -> Result<Option<u32>, Error> {
     let accounts = manager.get_accounts().await?;
 
-    if accounts.is_empty() {
-        return Ok(None);
+    match accounts.len() {
+        0 => Ok(None),
+        1 => Ok(Some(0)),
+        _ => {
+            let mut items = Vec::new();
+
+            for account_handle in accounts {
+                items.push(account_handle.read().await.alias().clone());
+            }
+
+            let index = Select::with_theme(&ColorfulTheme::default())
+                .with_prompt("Select an account:")
+                .items(&items)
+                .default(0)
+                .interact_on(&Term::stderr())?;
+
+            Ok(Some(index as u32))
+        }
     }
-
-    let mut items = Vec::new();
-
-    for account_handle in accounts {
-        items.push(account_handle.read().await.alias().clone());
-    }
-
-    let index = Select::with_theme(&ColorfulTheme::default())
-        .with_prompt("Select an account:")
-        .items(&items)
-        .default(0)
-        .interact_on(&Term::stderr())?;
-
-    Ok(Some(index as u32))
 }
