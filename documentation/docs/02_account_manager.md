@@ -26,7 +26,11 @@ Display the binary usage and exit.
 
 ## `init`
 
+Initialises the wallet by creating a [stronghold](https://github.com/iotaledger/stronghold.rs) file from a provided or generated mnemonic.
+
 The wallet can only be initialised once.
+
+When just initialised, the wallet has no account yet, use the `new` command to create one.
 
 ### Parameters
 
@@ -48,7 +52,7 @@ DO NOT USE THIS MNEMONIC.
 ./wallet init --mnemonic "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt"
 ```
 
-Initialise the wallet with a a randomly generated mnemonic and a given node.
+Initialise the wallet with a randomly generated mnemonic and a given node.
 ```sh
 ./wallet init --node "http://localhost:14265/"
 ```
