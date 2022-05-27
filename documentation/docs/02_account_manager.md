@@ -65,12 +65,6 @@ $ ./wallet init --node "http://localhost:14265/"
 
 ### Example(s)
 
-## `select`
-
-### Parameters
-
-### Example(s)
-
 ## `set-node`
 
 ### Parameters

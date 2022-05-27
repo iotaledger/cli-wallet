@@ -26,8 +26,6 @@ pub enum AccountManagerCommand {
     Init(MnemonicAndUrl),
     /// Create a new account with an optional alias.
     New { alias: Option<String> },
-    /// Select an existing account with the alias or account index.
-    Select { identifier: String },
     /// Set the node to use.
     SetNode { url: String },
     /// Sync all accounts.
@@ -91,16 +89,6 @@ pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Res
     log::info!("Created account \"{}\"", account_handle.read().await.alias());
 
     account_prompt(account_handle).await?;
-
-    Ok(())
-}
-
-pub async fn select_command(manager: &AccountManager, identifier: String) -> Result<(), Error> {
-    if let Ok(account) = manager.get_account(identifier.clone()).await {
-        account_prompt(account).await?
-    } else {
-        log::error!("Account \"{identifier}\" not found.");
-    }
 
     Ok(())
 }

@@ -11,8 +11,7 @@ use iota_wallet::{
 
 use crate::{
     command::account_manager::{
-        init_command, new_command, select_command, set_node_command, sync_command, AccountManagerCli,
-        AccountManagerCommand,
+        init_command, new_command, set_node_command, sync_command, AccountManagerCli, AccountManagerCommand,
     },
     error::Error,
     helper::get_password,
@@ -48,9 +47,6 @@ pub async fn new_account_manager() -> Result<(AccountManager, Option<String>), E
                         // PANIC: this will never happen because of the if/else.
                         AccountManagerCommand::Init(_) => unreachable!(),
                         AccountManagerCommand::New { alias } => new_command(&account_manager, alias).await,
-                        AccountManagerCommand::Select { identifier } => {
-                            select_command(&account_manager, identifier).await
-                        }
                         AccountManagerCommand::SetNode { url } => set_node_command(&account_manager, url).await,
                         AccountManagerCommand::Sync => sync_command(&account_manager).await,
                     }?;
