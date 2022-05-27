@@ -42,12 +42,21 @@ pub struct MnemonicAndUrl {
     pub node: Option<String>,
 }
 
-pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl) -> Result<(), Error> {
-    if let Some(node) = mnemonic_url.node {
-        manager
-            .set_client_options(ClientOptions::new().with_node(&node)?)
-            .await?;
-    }
+pub async fn init_command(
+    secret_manager: SecretManager,
+    storage_path: String,
+    mnemonic_url: MnemonicAndUrl,
+) -> Result<AccountManager, Error> {
+    let account_manager = AccountManager::builder()
+        .with_secret_manager(secret_manager)
+        .with_client_options(
+            ClientOptions::new()
+                .with_node(mnemonic_url.node.as_deref().unwrap_or("http://localhost:14265"))?
+                .with_node_sync_disabled(),
+        )
+        .with_storage_path(&storage_path)
+        .finish()
+        .await?;
 
     let mnemonic = match mnemonic_url.mnemonic {
         Some(mnemonic) => mnemonic,
@@ -60,14 +69,14 @@ pub async fn init_command(manager: &AccountManager, mnemonic_url: MnemonicAndUrl
     // Specific target to easily exclude it from the archive logger output.
     log::info!(target:"mnemonic", "{mnemonic}");
 
-    if let SecretManager::Stronghold(secret_manager) = &mut *manager.get_secret_manager().write().await {
+    if let SecretManager::Stronghold(secret_manager) = &mut *account_manager.get_secret_manager().write().await {
         secret_manager.store_mnemonic(mnemonic).await?;
     } else {
         panic!("cli-wallet only supports Stronghold-backed secret managers at the moment.");
     }
     log::info!("Mnemonic stored successfully");
 
-    Ok(())
+    Ok(account_manager)
 }
 
 pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Result<(), Error> {
