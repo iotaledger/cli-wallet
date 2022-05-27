@@ -11,7 +11,7 @@ The account manager interface allows you to:
 
 ## `./wallet`
 
-Runs the wallet without a specified account:
+Starts the wallet without a specified account:
 - If the wallet has only one account, it will be used;
 - If the wallet has more than one account, a selector will be shown to decide which account to use.
 
@@ -19,20 +19,20 @@ The wallet needs to be initialised (`init` command) and with at least one accoun
 
 ### Example(s)
 
-Starts the wallet without specifying an account.
+Start the wallet without specifying an account.
 ```sh
 $ ./wallet
 ```
 
 ## `./wallet [account]`
 
-Runs the wallet with a specified account;
+Starts the wallet with a specified account;
 
 The wallet needs to be initialised (`init` command).
 
 ### Example(s)
 
-Starts the wallet with a provided account.
+Start the wallet with a provided account.
 ```sh
 $ ./wallet main
 ```
