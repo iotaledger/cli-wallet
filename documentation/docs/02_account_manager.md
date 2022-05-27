@@ -21,7 +21,7 @@ No parameters.
 
 Display the binary usage and exit.
 ```sh
-./wallet help
+$ ./wallet help
 ```
 
 ## `init`
@@ -43,18 +43,18 @@ When just initialised, the wallet has no account yet, use the `new` command to c
 
 Initialise the wallet with a randomly generated mnemonic and the default node.
 ```sh
-./wallet init
+$ ./wallet init
 ```
 
 Initialise the wallet with a given mnemonic and the default node.
 DO NOT USE THIS MNEMONIC.
 ```sh
-./wallet init --mnemonic "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt"
+$ ./wallet init --mnemonic "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt"
 ```
 
 Initialise the wallet with a randomly generated mnemonic and a given node.
 ```sh
-./wallet init --node "http://localhost:14265/"
+$ ./wallet init --node "http://localhost:14265/"
 ```
 
 ## `new`

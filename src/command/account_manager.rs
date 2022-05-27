@@ -64,7 +64,7 @@ pub async fn init_command(
     };
     log::info!("IMPORTANT: write this mnemonic phrase in a safe place.");
     log::info!(
-        "It is the only way to recover your account if you ever forget your password and/or lose the .stronghold file."
+        "It is the only way to recover your account if you ever forget your password and/or lose the stronghold file."
     );
     // Specific target to easily exclude it from the archive logger output.
     log::info!(target:"mnemonic", "{mnemonic}");
