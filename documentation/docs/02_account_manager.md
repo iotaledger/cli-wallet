@@ -9,13 +9,37 @@ The account manager interface allows you to:
 
 # Commands
 
-## `help`
+## `./wallet`
+
+Runs the wallet without a specified account:
+- If the wallet has only one account, it will be used;
+- If the wallet has more than one account, a selector will be shown to decide which account to use.
+
+The wallet needs to be initialised (`init` command) and with at least one account (`new` command).
+
+### Example(s)
+
+Starts the wallet without specifying an account.
+```sh
+$ ./wallet
+```
+
+## `./wallet [account]`
+
+Runs the wallet with a specified account;
+
+The wallet needs to be initialised (`init` command).
+
+### Example(s)
+
+Starts the wallet with a provided account.
+```sh
+$ ./wallet main
+```
+
+## `./wallet help`
 
 Displays the binary usage and exit.
-
-### Parameters
-
-No parameters.
 
 ### Example(s)
 
@@ -24,7 +48,7 @@ Display the binary usage and exit.
 $ ./wallet help
 ```
 
-## `init`
+## `./wallet init`
 
 Initialises the wallet by creating a [stronghold](https://github.com/iotaledger/stronghold.rs) file from a provided or generated mnemonic.
 
@@ -57,7 +81,7 @@ Initialise the wallet with a randomly generated mnemonic and a given node.
 $ ./wallet init --node "http://localhost:14265/"
 ```
 
-## `new`
+## `./wallet new`
 
 (init first)
 
@@ -65,13 +89,13 @@ $ ./wallet init --node "http://localhost:14265/"
 
 ### Example(s)
 
-## `set-node`
+## `./wallet set-node`
 
 ### Parameters
 
 ### Example(s)
 
-## `sync`
+## `./wallet sync`
 
 ### Parameters
 
