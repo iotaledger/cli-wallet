@@ -34,9 +34,9 @@ Get some funds from the faucet to the main account.
 <!-- TODO: replace with testnet URL -->
 ```sh
 $ ./wallet main
-> Account "main" command (h for help): faucet [URL]
+> Account "main": faucet [URL]
 > ...
-> Account "main" command (h for help): sync
+> Account "main": sync
 > ...
 > INFO  Synced: AccountBalance ...
 > CTRL-C
@@ -47,7 +47,7 @@ $ ./wallet main
 Get an address from the savings account.
 ```sh
 $ ./wallet savings
-> Account "savings" command (h for help): addresses
+> Account "savings": addresses
 > INFO  Address 0: [ADDR]
 > CTRL-C
 ```
@@ -55,7 +55,7 @@ $ ./wallet savings
 Send a regular amount from the main account to the savings address.
 ```sh
 $ ./wallet main
-> Account "main" command (h for help): send [ADDR] 1000000
+> Account "main": send [ADDR] 1000000
 > ...
 > INFO  Transaction created ...
 > CTRL-C
@@ -66,7 +66,7 @@ $ ./wallet main
 Generate a new address from the savings account.
 ```sh
 $ ./wallet savings
-> Account "savings" command (h for help): new-address
+> Account "savings": new-address
 > ...
 > INFO  Address 1: [ADDR]
 > CTRL-C
@@ -75,7 +75,7 @@ $ ./wallet savings
 Send a micro amount from the main account to the savings address.
 ```sh
 $ ./wallet main
-> Account "main" command (h for help): send-micro [ADDR] 1
+> Account "main": send-micro [ADDR] 1
 > ...
 > INFO  Transaction created ...
 > CTRL-C
@@ -84,7 +84,7 @@ $ ./wallet main
 Check the savings balance.
 ```sh
 $ ./wallet savings
-> Account "savings" command (h for help): balance
+> Account "savings": balance
 > ...
 > INFO  AccountBalance ...
 > CTRL-C
