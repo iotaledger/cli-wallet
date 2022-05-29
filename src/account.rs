@@ -7,9 +7,9 @@ use iota_wallet::account::AccountHandle;
 
 use crate::{
     command::account::{
-        balance_command, consolidate_command, faucet_command, generate_address_command, list_addresses_command,
-        list_transactions_command, mint_native_token_command, mint_nft_command, send_command, send_micro_command,
-        send_native_command, send_nft_command, sync_account_command, AccountCli, AccountCommand,
+        addresses_command, balance_command, consolidate_command, faucet_command, mint_native_token_command,
+        mint_nft_command, new_address_command, send_command, send_micro_command, send_native_token_command,
+        send_nft_command, sync_command, transactions_command, AccountCli, AccountCommand,
     },
     error::Error,
 };
@@ -54,15 +54,15 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 }
             };
             if let Err(err) = match account_cli.command {
-                AccountCommand::NewAddress => generate_address_command(&account_handle).await,
+                AccountCommand::NewAddress => new_address_command(&account_handle).await,
                 AccountCommand::Balance => balance_command(&account_handle).await,
                 AccountCommand::Consolidate => consolidate_command(&account_handle).await,
                 AccountCommand::Exit => {
                     return Ok(true);
                 }
                 AccountCommand::Faucet { url, address } => faucet_command(&account_handle, url, address).await,
-                AccountCommand::Addresses => list_addresses_command(&account_handle).await,
-                AccountCommand::Transactions => list_transactions_command(&account_handle).await,
+                AccountCommand::Addresses => addresses_command(&account_handle).await,
+                AccountCommand::Transactions => transactions_command(&account_handle).await,
                 AccountCommand::MintNativeToken {
                     maximum_supply,
                     foundry_metadata,
@@ -80,9 +80,9 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                     address,
                     token_id,
                     native_token_amount,
-                } => send_native_command(&account_handle, address, token_id, native_token_amount).await,
+                } => send_native_token_command(&account_handle, address, token_id, native_token_amount).await,
                 AccountCommand::SendNft { address, nft_id } => send_nft_command(&account_handle, address, nft_id).await,
-                AccountCommand::Sync => sync_account_command(&account_handle).await,
+                AccountCommand::Sync => sync_command(&account_handle).await,
             } {
                 log::error!("{}", err);
             }

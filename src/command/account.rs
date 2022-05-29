@@ -29,21 +29,24 @@ pub struct AccountCli {
 
 #[derive(Debug, Subcommand)]
 pub enum AccountCommand {
-    /// Generate a new address.
-    NewAddress,
+    /// List the account addresses.
+    Addresses,
     /// Print the account balance.
     Balance,
     /// Consolidate all basic outputs into one address.
     Consolidate,
+    /// Exit from the account prompt.
+    Exit,
     /// Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:14265/api/plugins/faucet/v1/enqueue`
     Faucet {
         url: Option<String>,
         address: Option<String>,
     },
-    /// List the account addresses.
-    Addresses,
-    /// List the account transactions.
-    Transactions,
+    /// Mint a native token: `mint-native-token 100 "0x..." (foundry metadata)`
+    MintNativeToken {
+        maximum_supply: String,
+        foundry_metadata: Option<String>,
+    },
     /// Mint an nft to an optional bech32 encoded address: `mint-nft
     /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r "immutable metadata" "metadata"`
     MintNft {
@@ -51,11 +54,8 @@ pub enum AccountCommand {
         immutable_metadata: Option<String>,
         metadata: Option<String>,
     },
-    /// Mint a native token: `mint-native-token 100 "0x..." (foundry metadata)`
-    MintNativeToken {
-        maximum_supply: String,
-        foundry_metadata: Option<String>,
-    },
+    /// Generate a new address.
+    NewAddress,
     /// Send an amount to a bech32 encoded address: `send
     /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r 1000000`
     Send { address: String, amount: u64 },
@@ -74,25 +74,12 @@ pub enum AccountCommand {
     SendNft { address: String, nft_id: String },
     /// Sync the account with the Tangle.
     Sync,
-    /// Exit from the account prompt.
-    Exit,
+    /// List the account transactions.
+    Transactions,
 }
 
-/// `list-transactions` command
-pub async fn list_transactions_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let transactions = account_handle.list_transactions().await?;
-
-    if transactions.is_empty() {
-        log::info!("No transactions found");
-    } else {
-        transactions.iter().for_each(print_transaction);
-    }
-
-    Ok(())
-}
-
-/// `list-addresses` command
-pub async fn list_addresses_command(account_handle: &AccountHandle) -> Result<(), Error> {
+/// `addresses` command
+pub async fn addresses_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let addresses = account_handle.list_addresses().await?;
 
     if addresses.is_empty() {
@@ -106,23 +93,42 @@ pub async fn list_addresses_command(account_handle: &AccountHandle) -> Result<()
     Ok(())
 }
 
-// `mint-nft` command
-pub async fn mint_nft_command(
-    account_handle: &AccountHandle,
-    address: Option<String>,
-    immutable_metadata: Option<String>,
-    metadata: Option<String>,
-) -> Result<(), Error> {
-    let immutable_metadata = immutable_metadata.map(|immutable_metadata| immutable_metadata.as_bytes().to_vec());
-    let metadata = metadata.map(|metadata| metadata.as_bytes().to_vec());
-    let nft_options = vec![NftOptions {
-        address,
-        immutable_metadata,
-        metadata,
-    }];
-    let transfer_result = account_handle.mint_nfts(nft_options, None).await?;
+// `balance` command
+pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    log::info!("{:?}", account_handle.balance().await?);
 
-    log::info!("Minting transaction sent: {transfer_result:?}");
+    Ok(())
+}
+
+// `consolidate` command
+pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    log::info!("Consolidating outputs.");
+
+    account_handle.consolidate_outputs(true).await?;
+
+    Ok(())
+}
+
+// `faucet` command
+pub async fn faucet_command(
+    account_handle: &AccountHandle,
+    url: Option<String>,
+    address: Option<String>,
+) -> Result<(), Error> {
+    let address = if let Some(address) = address {
+        address
+    } else {
+        match account_handle.list_addresses().await?.last() {
+            Some(address) => address.address().to_bech32(),
+            None => return Err(Error::NoAddressForFaucet),
+        }
+    };
+    let faucet_url = match &url {
+        Some(faucet_url) => faucet_url,
+        None => "http://localhost:14265/api/plugins/faucet/v1/enqueue",
+    };
+
+    log::info!("{}", request_funds_from_faucet(faucet_url, &address).await?);
 
     Ok(())
 }
@@ -152,32 +158,32 @@ pub async fn mint_native_token_command(
     Ok(())
 }
 
-// `sync` command
-pub async fn sync_account_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let sync = account_handle
-        .sync(Some(SyncOptions {
-            try_collect_outputs: OutputsToCollect::All,
-            ..Default::default()
-        }))
-        .await?;
+// `mint-nft` command
+pub async fn mint_nft_command(
+    account_handle: &AccountHandle,
+    address: Option<String>,
+    immutable_metadata: Option<String>,
+    metadata: Option<String>,
+) -> Result<(), Error> {
+    let immutable_metadata = immutable_metadata.map(|immutable_metadata| immutable_metadata.as_bytes().to_vec());
+    let metadata = metadata.map(|metadata| metadata.as_bytes().to_vec());
+    let nft_options = vec![NftOptions {
+        address,
+        immutable_metadata,
+        metadata,
+    }];
+    let transfer_result = account_handle.mint_nfts(nft_options, None).await?;
 
-    log::info!("Synced: {:?}", sync);
+    log::info!("Minting transaction sent: {transfer_result:?}");
 
     Ok(())
 }
 
-// `address` command
-pub async fn generate_address_command(account_handle: &AccountHandle) -> Result<(), Error> {
+// `new-address` command
+pub async fn new_address_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let address = account_handle.generate_addresses(1, None).await?;
 
     print_address(account_handle, &address[0]).await?;
-
-    Ok(())
-}
-
-// `balance` command
-pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    log::info!("{:?}", account_handle.balance().await?);
 
     Ok(())
 }
@@ -208,8 +214,8 @@ pub async fn send_micro_command(account_handle: &AccountHandle, address: String,
     Ok(())
 }
 
-// `send-native` command
-pub async fn send_native_command(
+// `send-native-token` command
+pub async fn send_native_token_command(
     account_handle: &AccountHandle,
     address: String,
     token_id: String,
@@ -243,26 +249,29 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
     Ok(())
 }
 
-// `faucet` command
-pub async fn faucet_command(
-    account_handle: &AccountHandle,
-    url: Option<String>,
-    address: Option<String>,
-) -> Result<(), Error> {
-    let address = if let Some(address) = address {
-        address
-    } else {
-        match account_handle.list_addresses().await?.last() {
-            Some(address) => address.address().to_bech32(),
-            None => return Err(Error::NoAddressForFaucet),
-        }
-    };
-    let faucet_url = match &url {
-        Some(faucet_url) => faucet_url,
-        None => "http://localhost:14265/api/plugins/faucet/v1/enqueue",
-    };
+// `sync` command
+pub async fn sync_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    let sync = account_handle
+        .sync(Some(SyncOptions {
+            try_collect_outputs: OutputsToCollect::All,
+            ..Default::default()
+        }))
+        .await?;
 
-    log::info!("{}", request_funds_from_faucet(faucet_url, &address).await?);
+    log::info!("Synced: {:?}", sync);
+
+    Ok(())
+}
+
+/// `transactions` command
+pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    let transactions = account_handle.list_transactions().await?;
+
+    if transactions.is_empty() {
+        log::info!("No transactions found");
+    } else {
+        transactions.iter().for_each(print_transaction);
+    }
 
     Ok(())
 }
@@ -310,15 +319,6 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
     }
 
     log::info!("{log}");
-
-    Ok(())
-}
-
-// `consolidate` command
-pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    log::info!("Consolidating outputs.");
-
-    account_handle.consolidate_outputs(true).await?;
 
     Ok(())
 }
