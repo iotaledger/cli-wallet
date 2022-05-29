@@ -124,6 +124,11 @@ $ ./wallet set-node http://localhost:14265/
 
 ### `./wallet sync`
 
-#### Parameters
+Synchronises all accounts.
 
 #### Example(s)
+
+Synchronise all accounts.
+```sh
+$ ./wallet sync
+```
