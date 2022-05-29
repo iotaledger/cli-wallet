@@ -9,120 +9,210 @@ It is responsible for the creation and management of account addresses and their
 
 ### `addresses`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": addresses
 ```
 
 ### `balance`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": balance
 ```
 
 ### `consolidate`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": consolidate
 ```
 
 ### `exit`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": exit
 ```
 
 ### `faucet`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": faucet
 ```
 
 ### `help`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": help
 ```
 
 ### `mint-native-token`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": mint-native-token
 ```
 
 ### `mint-nft`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": mint-nft
 ```
 
 ### `new-address`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": new-address
 ```
 
 ### `send`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": send
 ```
 
 ### `send-micro`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": send-micro
 ```
 
 ### `send-native-token`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": send-native-token
 ```
 
 ### `send-nft`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": send-nft
 ```
 
 ### `sync`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": sync
 ```
 
 ### `transactions`
 
+#### Parameters
+
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `` | ✓ | | |
+
 #### Example(s)
 
 ```sh
-> Account "main":
+> Account "main": transactions
 ```
