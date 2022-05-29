@@ -54,15 +54,15 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 }
             };
             if let Err(err) = match account_cli.command {
-                AccountCommand::Address => generate_address_command(&account_handle).await,
+                AccountCommand::NewAddress => generate_address_command(&account_handle).await,
                 AccountCommand::Balance => balance_command(&account_handle).await,
                 AccountCommand::Consolidate => consolidate_command(&account_handle).await,
                 AccountCommand::Exit => {
                     return Ok(true);
                 }
                 AccountCommand::Faucet { url, address } => faucet_command(&account_handle, url, address).await,
-                AccountCommand::ListAddresses => list_addresses_command(&account_handle).await,
-                AccountCommand::ListTransactions => list_transactions_command(&account_handle).await,
+                AccountCommand::Addresses => list_addresses_command(&account_handle).await,
+                AccountCommand::Transactions => list_transactions_command(&account_handle).await,
                 AccountCommand::MintNativeToken {
                     maximum_supply,
                     foundry_metadata,
@@ -76,7 +76,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::SendMicro { address, amount } => {
                     send_micro_command(&account_handle, address, amount).await
                 }
-                AccountCommand::SendNative {
+                AccountCommand::SendNativeToken {
                     address,
                     token_id,
                     native_token_amount,

@@ -47,7 +47,7 @@ $ ./wallet main
 Get an address from the savings account.
 ```sh
 $ ./wallet savings
-> Account "savings" command (h for help): list-addresses
+> Account "savings" command (h for help): addresses
 > INFO  Address 0: [ADDR]
 > CTRL-C
 ```
@@ -66,7 +66,7 @@ $ ./wallet main
 Generate a new address from the savings account.
 ```sh
 $ ./wallet savings
-> Account "savings" command (h for help): address
+> Account "savings" command (h for help): new-address
 > ...
 > INFO  Address 1: [ADDR]
 > CTRL-C

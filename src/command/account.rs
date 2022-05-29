@@ -30,7 +30,7 @@ pub struct AccountCli {
 #[derive(Debug, Subcommand)]
 pub enum AccountCommand {
     /// Generate a new address.
-    Address,
+    NewAddress,
     /// Print the account balance.
     Balance,
     /// Consolidate all basic outputs into one address.
@@ -41,9 +41,9 @@ pub enum AccountCommand {
         address: Option<String>,
     },
     /// List the account addresses.
-    ListAddresses,
+    Addresses,
     /// List the account transactions.
-    ListTransactions,
+    Transactions,
     /// Mint an nft to an optional bech32 encoded address: `mint-nft
     /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r "immutable metadata" "metadata"`
     MintNft {
@@ -65,7 +65,7 @@ pub enum AccountCommand {
     /// Send native tokens to a bech32 address: `send-native
     /// atoi1qzt0nhsf38nh6rs4p6zs5knqp6psgha9wsv74uajqgjmwc75ugupx3y7x0r
     /// 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
-    SendNative {
+    SendNativeToken {
         address: String,
         token_id: String,
         native_token_amount: String,
