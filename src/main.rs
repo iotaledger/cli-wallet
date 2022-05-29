@@ -16,10 +16,15 @@ use self::{
     helper::pick_account,
 };
 
-fn logger_init(_cli: &AccountManagerCli) -> Result<(), Error> {
+fn logger_init(cli: &AccountManagerCli) -> Result<(), Error> {
+    let stdout_level_filter = if let Some(log_level) = cli.log_level {
+        log_level
+    } else {
+        LevelFilter::Info
+    };
     let stdout = LoggerOutputConfigBuilder::default()
         .name("stdout")
-        .level_filter(LevelFilter::Debug)
+        .level_filter(stdout_level_filter)
         .target_exclusions(&["rustls"])
         .color_enabled(true);
     let archive = LoggerOutputConfigBuilder::default()

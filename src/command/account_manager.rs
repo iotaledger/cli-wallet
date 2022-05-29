@@ -8,6 +8,7 @@ use iota_wallet::{
     iota_client::{secret::SecretManager, utils::generate_mnemonic},
     ClientOptions,
 };
+use log::LevelFilter;
 
 use crate::{account::account_prompt, error::Error};
 
@@ -18,6 +19,8 @@ pub struct AccountManagerCli {
     #[clap(subcommand)]
     pub command: Option<AccountManagerCommand>,
     pub account: Option<String>,
+    #[clap(short, long)]
+    pub log_level: Option<LevelFilter>,
 }
 
 #[derive(Debug, Clone, Subcommand)]
