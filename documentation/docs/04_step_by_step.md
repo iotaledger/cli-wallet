@@ -56,6 +56,7 @@ Send a regular amount from the main account to the savings address.
 ```sh
 $ ./wallet main
 > Account "main" command (h for help): send [ADDR] 1000000
+> ...
 > INFO  Transaction created ...
 > CTRL-C
 ```
@@ -66,6 +67,7 @@ Generate a new address from the savings account.
 ```sh
 $ ./wallet savings
 > Account "savings" command (h for help): address
+> ...
 > INFO  Address 1: [ADDR]
 > CTRL-C
 ```
@@ -74,6 +76,16 @@ Send a micro amount from the main account to the savings address.
 ```sh
 $ ./wallet main
 > Account "main" command (h for help): send-micro [ADDR] 1
+> ...
 > INFO  Transaction created ...
+> CTRL-C
+```
+
+Check the savings balance.
+```sh
+$ ./wallet savings
+> Account "savings" command (h for help): balance
+> ...
+> INFO  AccountBalance ...
 > CTRL-C
 ```
