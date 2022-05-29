@@ -3,11 +3,7 @@
 The Account Manager Interface is evaluated through the Command Line Interface of the `wallet` binary, once per
 execution.
 
-The account manager interface allows you to:
-- Initialise the wallet with a mnemonic;
-- Create new accounts;
-- Select the account to use;
-- Synchronise the accounts;
+It is responsible for the creation and management of the wallet and its accounts.
 
 ## Commands
 
@@ -109,9 +105,22 @@ $ ./wallet new main
 
 ### `./wallet set-node`
 
+Sets the node to be used for all requests.
+
+The new node URL is persisted to the storage and all future requests will use it.
+
 #### Parameters
 
+| Name  | Optional  | Example                   |
+| ----- | --------- | ------------------------- |
+| `url` | ✘         | "http://localhost:14265/" |
+
 #### Example(s)
+
+Set the node to be used for all requests.
+```sh
+$ ./wallet set-node http://localhost:14265/
+```
 
 ### `./wallet sync`
 
