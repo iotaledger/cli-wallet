@@ -19,7 +19,7 @@ The wallet needs to be initialised (`init` command) and with at least one accoun
 
 ### Example(s)
 
-Start the wallet without specifying an account.
+Start the wallet without a specified account.
 ```sh
 $ ./wallet
 ```
@@ -32,7 +32,7 @@ The wallet needs to be initialised (`init` command).
 
 ### Example(s)
 
-Start the wallet with a provided account.
+Start the wallet with a specified account.
 ```sh
 $ ./wallet main
 ```
@@ -58,8 +58,8 @@ When just initialised, the wallet has no account yet, use the `new` command to c
 
 ### Parameters
 
-| Name        | Optional  | Default                   |Example                                                                                                                                                                              |
-| ----------- | --------- | ------------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Name        | Optional  | Default                   | Example                                                                                                                                                                             |
+| ----------- | --------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mnemonic`  | ✓         | Randomly generated        | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC) |
 | `node`      | ✓         | "http://localhost:14265/" | "http://localhost:14265/"                                                                                                                                                           |
 
@@ -83,11 +83,27 @@ $ ./wallet init --node "http://localhost:14265/"
 
 ## `./wallet new`
 
-(init first)
+Creates a new account.
+
+The wallet needs to be initialised (`init` command).
 
 ### Parameters
 
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `alias` | ✓         | Account index | "main"  |
+
 ### Example(s)
+
+Create a new account with the account index as alias.
+```sh
+$ ./wallet new
+```
+
+Create a new account with a provided alias.
+```sh
+$ ./wallet new main
+```
 
 ## `./wallet set-node`
 
