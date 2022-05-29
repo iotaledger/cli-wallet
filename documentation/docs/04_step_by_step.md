@@ -1,4 +1,8 @@
-# Setup
+# Step by step examples
+
+In these step by step examples, we present how to create a wallet and do some of the most common use cases.
+
+## Setup
 
 Initialise the wallet with a given node and a randomly generated mnemonic.
 <!-- TODO: replace with testnet URL -->
@@ -24,7 +28,7 @@ $ ./wallet new savings
 > CTRL-C
 ```
 
-# Send an amount
+## Send an amount
 
 Get some funds from the faucet.
 <!-- TODO: replace with testnet URL -->

@@ -1,3 +1,5 @@
+# Account Manager Interface
+
 The Account Manager Interface is evaluated through the Command Line Interface of the `wallet` binary, once per
 execution.
 
@@ -7,9 +9,9 @@ The account manager interface allows you to:
 - Select the account to use;
 - Synchronise the accounts;
 
-# Commands
+## Commands
 
-## `./wallet`
+### `./wallet`
 
 Starts the wallet without a specified account:
 - If the wallet has only one account, it will be used;
@@ -17,38 +19,38 @@ Starts the wallet without a specified account:
 
 The wallet needs to be initialised (`init` command) and with at least one account (`new` command).
 
-### Example(s)
+#### Example(s)
 
 Start the wallet without a specified account.
 ```sh
 $ ./wallet
 ```
 
-## `./wallet [account]`
+### `./wallet [account]`
 
 Starts the wallet with a specified account;
 
 The wallet needs to be initialised (`init` command).
 
-### Example(s)
+#### Example(s)
 
 Start the wallet with a specified account.
 ```sh
 $ ./wallet main
 ```
 
-## `./wallet help`
+### `./wallet help`
 
 Displays the binary usage and exit.
 
-### Example(s)
+#### Example(s)
 
 Display the binary usage and exit.
 ```sh
 $ ./wallet help
 ```
 
-## `./wallet init`
+### `./wallet init`
 
 Initialises the wallet by creating a [stronghold](https://github.com/iotaledger/stronghold.rs) file from a provided or generated mnemonic.
 
@@ -56,14 +58,14 @@ The wallet can only be initialised once.
 
 When just initialised, the wallet has no account yet, use the `new` command to create one.
 
-### Parameters
+#### Parameters
 
 | Name        | Optional  | Default                   | Example                                                                                                                                                                             |
 | ----------- | --------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mnemonic`  | ✓         | Randomly generated        | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC) |
 | `node`      | ✓         | "http://localhost:14265/" | "http://localhost:14265/"                                                                                                                                                           |
 
-### Example(s)
+#### Example(s)
 
 Initialise the wallet with a randomly generated mnemonic and the default node.
 ```sh
@@ -81,19 +83,19 @@ Initialise the wallet with a randomly generated mnemonic and a given node.
 $ ./wallet init --node "http://localhost:14265/"
 ```
 
-## `./wallet new`
+### `./wallet new`
 
 Creates a new account.
 
 The wallet needs to be initialised (`init` command).
 
-### Parameters
+#### Parameters
 
 | Name    | Optional  | Default       | Example |
 | ------- | --------- | ------------- | ------- |
 | `alias` | ✓         | Account index | "main"  |
 
-### Example(s)
+#### Example(s)
 
 Create a new account with the account index as alias.
 ```sh
@@ -105,14 +107,14 @@ Create a new account with a provided alias.
 $ ./wallet new main
 ```
 
-## `./wallet set-node`
+### `./wallet set-node`
 
-### Parameters
+#### Parameters
 
-### Example(s)
+#### Example(s)
 
-## `./wallet sync`
+### `./wallet sync`
 
-### Parameters
+#### Parameters
 
-### Example(s)
+#### Example(s)
