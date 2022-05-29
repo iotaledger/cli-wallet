@@ -30,7 +30,7 @@ pub async fn new_account_manager() -> Result<(AccountManager, Option<String>), E
                 StrongholdSecretManager::builder()
                     .password(&password)
                     .snapshot_path(stronghold_path.to_path_buf())
-                    .build(),
+                    .try_build()?,
             );
 
             let account_manager = if let Some(command) = account_manager_cli.command {
