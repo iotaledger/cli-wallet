@@ -2,6 +2,8 @@
 
 In these step by step examples, we present how to create a wallet and do some of the most common use cases.
 
+It is advised to do them all at least once in the given order to understand the workflow.
+
 ## Setup
 
 Initialise the wallet with a given node and a randomly generated mnemonic.
@@ -16,7 +18,7 @@ Create a main account.
 $ ./wallet new main
 > ...
 > INFO  Created account "main"
-> CTRL-C
+> Account "main": exit
 ```
 
 Create a savings account.
@@ -24,7 +26,7 @@ Create a savings account.
 $ ./wallet new savings
 > ...
 > INFO  Created account "savings"
-> CTRL-C
+> Account "savings": exit
 ```
 
 ## Send an amount
@@ -37,7 +39,7 @@ $ ./wallet main
 > Account "main": sync
 > ...
 > INFO  Synced: AccountBalance ...
-> CTRL-C
+> Account "main": exit
 ```
 
 ### Regular amount
@@ -47,7 +49,7 @@ Get an address from the savings account.
 $ ./wallet savings
 > Account "savings": addresses
 > INFO  Address 0: [ADDR]
-> CTRL-C
+> Account "savings": exit
 ```
 
 Send a regular amount from the main account to the savings address.
@@ -56,7 +58,7 @@ $ ./wallet main
 > Account "main": send [ADDR] 1000000
 > ...
 > INFO  Transaction created ...
-> CTRL-C
+> Account "main": exit
 ```
 
 ### Micro amount
@@ -67,7 +69,7 @@ $ ./wallet savings
 > Account "savings": new-address
 > ...
 > INFO  Address 1: [ADDR]
-> CTRL-C
+> Account "savings": exit
 ```
 
 Send a micro amount from the main account to the savings address.
@@ -76,7 +78,7 @@ $ ./wallet main
 > Account "main": send-micro [ADDR] 1
 > ...
 > INFO  Transaction created ...
-> CTRL-C
+> Account "main": exit
 ```
 
 Check the savings balance.
@@ -85,5 +87,5 @@ $ ./wallet savings
 > Account "savings": balance
 > ...
 > INFO  AccountBalance ...
-> CTRL-C
+> Account "savings": exit
 ```
