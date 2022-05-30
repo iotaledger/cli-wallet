@@ -106,7 +106,6 @@ jobs:
 
       # Computes SHA-256 checksum
       - name: SHA-256 checksum
-        uses: actions-rs/cargo@v1
         run: shasum -a 256 ./target/production/wallet
 
       - name: Import code signing assets (macOS)
