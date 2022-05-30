@@ -119,19 +119,34 @@ Mint a native token with a maximum supply and foundry metadata.
 
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name                  | Optional  | Default                           | Example                                                           |
+| --------------------- | --------- | --------------------------------- | ----------------------------------------------------------------- |
+| `address`             | ✓         | The latest address of the account | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `immutable_metadata`  | ✓         | None                              | "{ key: value }"                                                  |
+| `metadata`            | ✓         | None                              | "{ key: value }"                                                  |
 
-#### Example(s)
+#### Examples
 
+Mint a NFT to the latest address of the account.
 ```sh
 > Account "main": mint-nft
 ```
 
+Mint a NFT to a given address.
+```sh
+> Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"
+```
+
+Mint a NFT to a given address with immutable metadata and metadata.
+```sh
+> Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" "{ key: value }" "{ key: value }"
+```
+
 ### `new-address`
 
-#### Example(s)
+Generates a new address.
+
+#### Example
 
 ```sh
 > Account "main": new-address
@@ -204,6 +219,8 @@ Synchronises all accounts.
 ```
 
 ### `transactions`
+
+List all account transactions.
 
 #### Example
 
