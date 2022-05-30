@@ -79,8 +79,8 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::SendNativeToken {
                     address,
                     token_id,
-                    native_token_amount,
-                } => send_native_token_command(&account_handle, address, token_id, native_token_amount).await,
+                    amount,
+                } => send_native_token_command(&account_handle, address, token_id, amount).await,
                 AccountCommand::SendNft { address, nft_id } => send_nft_command(&account_handle, address, nft_id).await,
                 AccountCommand::Sync => sync_command(&account_handle).await,
             } {
