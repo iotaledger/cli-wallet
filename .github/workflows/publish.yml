@@ -22,9 +22,29 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: app-v${{ env.CRATE_VERSION }}
-          release_name: "Wallet CLI v${{ env.CRATE_VERSION }}"
-          body: "See the assets to download this version and install."
+          tag_name: v${{ env.CRATE_VERSION }}
+          release_name: "cli-wallet-${{ env.CRATE_VERSION }}"
+          body: """
+          # Changelog
+
+          <!---  ## Added -->
+
+          <!---  ## Changed -->
+
+          <!---  ## Deprecated -->
+
+          <!---  ## Removed -->
+
+          <!---  ## Fixed -->
+
+          # Checksums
+
+          |Asset|SHA-256 checksum|
+          |---|---|
+          |wallet-linux||
+          |wallet-macos||
+          |wallet-windows.exe||
+          """
           draft: true
           prerelease: false
 
@@ -61,7 +81,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install libudev-dev libusb-1.0-0-dev
-      
+
       - name: Install gon (macOS)
         # https://github.com/mitchellh/gon
         run: brew install mitchellh/gon/gon
@@ -83,8 +103,13 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release
-      
+          args: --profile production
+
+      # Computes SHA-256 checksum
+      - name: Build
+        uses: actions-rs/cargo@v1
+        run: shasum -a 256 ./target/production/wallet
+
       - name: Import code signing assets (macOS)
         # Based on https://github.com/Apple-Actions/import-codesign-certs/blob/master/src/security.ts
         run: |
@@ -112,7 +137,7 @@ jobs:
           AC_USERNAME: ${{ secrets.ASC_APPLE_ID }}
           AC_PASSWORD: ${{ secrets.ASC_PASSWORD }}
         if: matrix.os == 'macos-latest'
-      
+
       - name: Delete keychain (macOS)
         run: security delete-keychain signing.keychain
         # Run even if previous steps fail
@@ -126,6 +151,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release.outputs.RELEASE_UPLOAD_URL }}
-          asset_path: ${{ format('./target/release/wallet{0}', matrix.ext ) }}
+          asset_path: ${{ format('./target/production/wallet{0}', matrix.ext ) }}
           asset_name: ${{ format('wallet-{0}{1}', matrix.identifier, matrix.ext ) }}
           asset_content_type: application/octet-stream
