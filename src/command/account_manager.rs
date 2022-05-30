@@ -3,7 +3,6 @@
 
 use clap::{Args, Parser, Subcommand};
 use iota_wallet::{
-    account::{OutputsToCollect, SyncOptions},
     account_manager::AccountManager,
     iota_client::{secret::SecretManager, utils::generate_mnemonic},
     ClientOptions,
@@ -104,12 +103,7 @@ pub async fn set_node_command(manager: &AccountManager, url: String) -> Result<(
 }
 
 pub async fn sync_command(manager: &AccountManager) -> Result<(), Error> {
-    let total_balance = manager
-        .sync(Some(SyncOptions {
-            try_collect_outputs: OutputsToCollect::All,
-            ..Default::default()
-        }))
-        .await?;
+    let total_balance = manager.sync(None).await?;
 
     log::info!("Synchronized all accounts: {:?}", total_balance);
 

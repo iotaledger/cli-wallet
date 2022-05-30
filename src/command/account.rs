@@ -104,7 +104,7 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error
 pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
     log::info!("Consolidating outputs.");
 
-    account_handle.consolidate_outputs(true).await?;
+    account_handle.consolidate_outputs(true, None).await?;
 
     Ok(())
 }
