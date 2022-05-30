@@ -106,7 +106,7 @@ jobs:
 
       # Computes SHA-256 checksum
       - name: SHA-256 checksum
-        run: shasum -a 256 ./target/production/wallet
+        run: shasum -a 256 "./target/production/wallet${{ matrix.ext }}""
 
       - name: Import code signing assets (macOS)
         # Based on https://github.com/Apple-Actions/import-codesign-certs/blob/master/src/security.ts
