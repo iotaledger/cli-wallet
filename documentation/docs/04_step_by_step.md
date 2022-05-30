@@ -124,3 +124,49 @@ $ ./wallet main
 > INFO  Transaction created...
 > Account "main": exit
 ```
+
+## NFTs
+
+### Mint
+
+Mint a NFT.
+```sh
+$ ./wallet main
+> Account "main": mint-nft
+> ...
+> INFO  NFT minting transaction sent...
+> Account "main": exit
+```
+
+### Send
+
+Generate a new address from the savings account.
+```sh
+$ ./wallet savings
+> Account "savings": new-address
+> ...
+> INFO  Address 3: [ADDRESS]
+> Account "savings": exit
+```
+
+Send the NFT to the savings address.
+```sh
+$ ./wallet main
+> Account "main": sync
+> ...
+> INFO  Synced: AccountBalance ...NftId([NFT ID])...
+> Account "main": send-nft [ADDRESS] [NFT ID]
+> INFO  Transaction created...
+> Account "main": exit
+```
+
+## Transactions
+
+List the transactions of the main account.
+```sh
+$ ./wallet main
+> Account "main": transactions
+> ...
+> INFO  Transaction...
+> Account "main": exit
+```

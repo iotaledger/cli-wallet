@@ -281,7 +281,7 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
 // }
 
 fn print_transaction(transaction: &Transaction) {
-    log::info!("TRANSACTION {transaction:?}");
+    log::info!("{transaction:?}");
     // if let Some(MessagePayload::Transaction(tx)) = message.payload() {
     //     let TransactionEssence::Regular(essence) = tx.essence();
     //     println!("--- Value: {:?}", essence.value());
