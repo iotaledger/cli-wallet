@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 use iota_wallet::{
     account::{
         types::{AccountAddress, Transaction},
-        AccountHandle, OutputsToCollect, SyncOptions,
+        AccountHandle,
     },
     iota_client::{
         bee_block::output::{NftId, TokenId},
@@ -251,12 +251,7 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
 
 // `sync` command
 pub async fn sync_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let sync = account_handle
-        .sync(Some(SyncOptions {
-            try_collect_outputs: OutputsToCollect::All,
-            ..Default::default()
-        }))
-        .await?;
+    let sync = account_handle.sync(None).await?;
 
     log::info!("Synced: {sync:?}");
 
