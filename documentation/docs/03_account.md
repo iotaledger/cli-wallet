@@ -9,7 +9,9 @@ It is responsible for the creation and management of account addresses and their
 
 ### `addresses`
 
-#### Example(s)
+Lists all account addresses.
+
+#### Example
 
 ```sh
 > Account "main": addresses
@@ -17,7 +19,9 @@ It is responsible for the creation and management of account addresses and their
 
 ### `balance`
 
-#### Example(s)
+Prints the account balance.
+
+#### Example
 
 ```sh
 > Account "main": balance
@@ -25,7 +29,11 @@ It is responsible for the creation and management of account addresses and their
 
 ### `consolidate`
 
-#### Example(s)
+Tries to consolidate outputs into a single one.
+
+Note that only Basic Outputs with only an address unlock condition can be consolidated.
+
+#### Example
 
 ```sh
 > Account "main": consolidate
@@ -33,7 +41,9 @@ It is responsible for the creation and management of account addresses and their
 
 ### `exit`
 
-#### Example(s)
+Exits the `cli-wallet`.
+
+#### Example
 
 ```sh
 > Account "main": exit
@@ -41,21 +51,32 @@ It is responsible for the creation and management of account addresses and their
 
 ### `faucet`
 
+Requests funds from a faucet.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name      | Optional  | Default                                                 | Example                                                           |
+| --------- | --------- | ------------------------------------------------------- | ----------------------------------------------------------------- |
+| `url`     | ✓         | "http://localhost:14265/api/plugins/faucet/v1/enqueue"  | "http://localhost:14265/api/plugins/faucet/v1/enqueue"            |
+| `address` | ✓         | The latest address of the account                       | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
 
-#### Example(s)
+#### Examples
 
+Request funds from a given faucet to the latest account address.
 ```sh
-> Account "main": faucet
+> Account "main": faucet http://localhost:14265/api/plugins/faucet/v1/enqueue
+```
+
+Request funds from a given faucet to a given address.
+```sh
+> Account "main": faucet http://localhost:14265/api/plugins/faucet/v1/enqueue rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
 ```
 
 ### `help`
 
-#### Example(s)
+Displays the account interface usage.
+
+#### Example
 
 ```sh
 > Account "main": help
@@ -155,7 +176,9 @@ It is responsible for the creation and management of account addresses and their
 
 ### `sync`
 
-#### Example(s)
+Synchronises all accounts.
+
+#### Example
 
 ```sh
 > Account "main": sync
@@ -163,7 +186,7 @@ It is responsible for the creation and management of account addresses and their
 
 ### `transactions`
 
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": transactions
