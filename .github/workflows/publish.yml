@@ -24,27 +24,26 @@ jobs:
         with:
           tag_name: v${{ env.CRATE_VERSION }}
           release_name: "cli-wallet-${{ env.CRATE_VERSION }}"
-          body: """
-          # Changelog
+          body: |
+            # Changelog
 
-          <!---  ## Added -->
+            <!---  ## Added -->
 
-          <!---  ## Changed -->
+            <!---  ## Changed -->
 
-          <!---  ## Deprecated -->
+            <!---  ## Deprecated -->
 
-          <!---  ## Removed -->
+            <!---  ## Removed -->
 
-          <!---  ## Fixed -->
+            <!---  ## Fixed -->
 
-          # Checksums
+            # Checksums
 
-          |Asset|SHA-256 checksum|
-          |---|---|
-          |wallet-linux||
-          |wallet-macos||
-          |wallet-windows.exe||
-          """
+            |Asset|SHA-256 checksum|
+            |---|---|
+            |wallet-linux||
+            |wallet-macos||
+            |wallet-windows.exe||
           draft: true
           prerelease: false
 
