@@ -223,7 +223,7 @@ Sends a NFT to an address.
 
 ### `sync`
 
-Synchronises all accounts.
+Synchronises the account.
 
 #### Example
 
