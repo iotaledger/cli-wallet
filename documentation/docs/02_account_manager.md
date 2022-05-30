@@ -35,7 +35,7 @@ $ ./wallet main
 
 ### `./wallet help`
 
-Displays the binary usage and exit.
+Displays the account manager interface usage and exits.
 
 #### Example
 
@@ -58,7 +58,7 @@ When just initialised, the wallet has no account yet, use the `new` command to c
 | `mnemonic`  | ✓         | Randomly generated        | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC) |
 | `node`      | ✓         | "http://localhost:14265/" | "http://localhost:14265/"                                                                                                                                                           |
 
-#### Example(s)
+#### Examples
 
 Initialise the wallet with a randomly generated mnemonic and the default node.
 ```sh
@@ -88,7 +88,7 @@ The wallet needs to be initialised (`init` command).
 | ------- | --------- | ------------- | ------- |
 | `alias` | ✓         | Account index | "main"  |
 
-#### Example(s)
+#### Examples
 
 Create a new account with the account index as alias.
 ```sh

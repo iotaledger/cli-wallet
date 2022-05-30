@@ -3,14 +3,13 @@
 
 use clap::{Args, Parser, Subcommand};
 use iota_wallet::{
-    account::{OutputsToCollect, SyncOptions},
     account_manager::AccountManager,
     iota_client::{secret::SecretManager, utils::generate_mnemonic},
     ClientOptions,
 };
 use log::LevelFilter;
 
-use crate::{account::account_prompt, error::Error};
+use crate::error::Error;
 
 #[derive(Debug, Clone, Parser)]
 #[clap(version, long_about = None)]
@@ -80,7 +79,7 @@ pub async fn init_command(
     Ok(account_manager)
 }
 
-pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Result<(), Error> {
+pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Result<String, Error> {
     let mut builder = manager.create_account();
 
     if let Some(alias) = alias {
@@ -88,12 +87,11 @@ pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Res
     }
 
     let account_handle = builder.finish().await?;
+    let alias = account_handle.read().await.alias().to_string();
 
-    log::info!("Created account \"{}\"", account_handle.read().await.alias());
+    log::info!("Created account \"{alias}\"");
 
-    account_prompt(account_handle).await?;
-
-    Ok(())
+    Ok(alias)
 }
 
 pub async fn set_node_command(manager: &AccountManager, url: String) -> Result<(), Error> {
@@ -105,12 +103,7 @@ pub async fn set_node_command(manager: &AccountManager, url: String) -> Result<(
 }
 
 pub async fn sync_command(manager: &AccountManager) -> Result<(), Error> {
-    let total_balance = manager
-        .sync(Some(SyncOptions {
-            try_collect_outputs: OutputsToCollect::All,
-            ..Default::default()
-        }))
-        .await?;
+    let total_balance = manager.sync(None).await?;
 
     log::info!("Synchronized all accounts: {:?}", total_balance);
 

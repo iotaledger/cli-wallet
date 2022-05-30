@@ -2,12 +2,13 @@
 
 In these step by step examples, we present how to create a wallet and do some of the most common use cases.
 
+It is advised to do them all at least once in the given order to understand the workflow.
+
 ## Setup
 
 Initialise the wallet with a given node and a randomly generated mnemonic.
-<!-- TODO: replace with testnet URL -->
 ```sh
-$ ./wallet init --node [URL]
+$ ./wallet init --node [NODE API URL]
 > ...
 > INFO  Mnemonic stored successfully
 ```
@@ -17,7 +18,7 @@ Create a main account.
 $ ./wallet new main
 > ...
 > INFO  Created account "main"
-> CTRL-C
+> Account "main": exit
 ```
 
 Create a savings account.
@@ -25,60 +26,59 @@ Create a savings account.
 $ ./wallet new savings
 > ...
 > INFO  Created account "savings"
-> CTRL-C
+> Account "savings": exit
 ```
 
-## Send an amount
+## Tokens
 
 Get some funds from the faucet to the main account.
-<!-- TODO: replace with testnet URL -->
 ```sh
 $ ./wallet main
-> Account "main": faucet [URL]
+> Account "main": faucet [FAUCET ENQUEUE API URL]
 > ...
 > Account "main": sync
 > ...
 > INFO  Synced: AccountBalance ...
-> CTRL-C
+> Account "main": exit
 ```
 
-### Regular amount
+### Send a regular amount
 
 Get an address from the savings account.
 ```sh
 $ ./wallet savings
 > Account "savings": addresses
-> INFO  Address 0: [ADDR]
-> CTRL-C
+> INFO  Address 0: [ADDRESS]
+> Account "savings": exit
 ```
 
 Send a regular amount from the main account to the savings address.
 ```sh
 $ ./wallet main
-> Account "main": send [ADDR] 1000000
+> Account "main": send [ADDRESS] 1000000
 > ...
 > INFO  Transaction created ...
-> CTRL-C
+> Account "main": exit
 ```
 
-### Micro amount
+### Send a micro amount
 
 Generate a new address from the savings account.
 ```sh
 $ ./wallet savings
 > Account "savings": new-address
 > ...
-> INFO  Address 1: [ADDR]
-> CTRL-C
+> INFO  Address 1: [ADDRESS]
+> Account "savings": exit
 ```
 
 Send a micro amount from the main account to the savings address.
 ```sh
 $ ./wallet main
-> Account "main": send-micro [ADDR] 1
+> Account "main": send-micro [ADDRESS] 1
 > ...
 > INFO  Transaction created ...
-> CTRL-C
+> Account "main": exit
 ```
 
 Check the savings balance.
@@ -87,5 +87,86 @@ $ ./wallet savings
 > Account "savings": balance
 > ...
 > INFO  AccountBalance ...
-> CTRL-C
+> Account "savings": exit
+```
+
+## Native tokens
+
+### Mint
+
+Mint native tokens, with foundry metadata, from the main account.
+```sh
+$ ./wallet main
+> Account "main": mint-native-token 1000 0xabcdef
+> ...
+> INFO  Native token minting transaction sent...
+> Account "main": exit
+```
+
+### Send
+
+Generate a new address from the savings account.
+```sh
+$ ./wallet savings
+> Account "savings": new-address
+> ...
+> INFO  Address 2: [ADDRESS]
+> Account "savings": exit
+```
+
+Send native tokens to the savings address.
+```sh
+$ ./wallet main
+> Account "main": sync
+> ...
+> INFO  Synced: AccountBalance ...TokenId([TOKEN ID])...
+> Account "main": send-native-token [ADDRESS] [TOKEN ID] 100
+> INFO  Transaction created...
+> Account "main": exit
+```
+
+## NFTs
+
+### Mint
+
+Mint a NFT.
+```sh
+$ ./wallet main
+> Account "main": mint-nft
+> ...
+> INFO  NFT minting transaction sent...
+> Account "main": exit
+```
+
+### Send
+
+Generate a new address from the savings account.
+```sh
+$ ./wallet savings
+> Account "savings": new-address
+> ...
+> INFO  Address 3: [ADDRESS]
+> Account "savings": exit
+```
+
+Send the NFT to the savings address.
+```sh
+$ ./wallet main
+> Account "main": sync
+> ...
+> INFO  Synced: AccountBalance ...NftId([NFT ID])...
+> Account "main": send-nft [ADDRESS] [NFT ID]
+> INFO  Transaction created...
+> Account "main": exit
+```
+
+## Transactions
+
+List the transactions of the main account.
+```sh
+$ ./wallet main
+> Account "main": transactions
+> ...
+> INFO  Transaction...
+> Account "main": exit
 ```

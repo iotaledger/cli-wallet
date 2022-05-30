@@ -9,13 +9,9 @@ It is responsible for the creation and management of account addresses and their
 
 ### `addresses`
 
-#### Parameters
+Lists all account addresses.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": addresses
@@ -23,27 +19,31 @@ It is responsible for the creation and management of account addresses and their
 
 ### `balance`
 
-#### Parameters
+Prints the account balance.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": balance
 ```
 
+### `clear`
+
+Clears the terminal.
+
+#### Example
+
+```sh
+> Account "main": clear
+```
+
 ### `consolidate`
 
-#### Parameters
+Tries to consolidate outputs into a single one.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+Note that only Basic Outputs with only an address unlock condition can be consolidated.
 
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": consolidate
@@ -51,13 +51,9 @@ It is responsible for the creation and management of account addresses and their
 
 ### `exit`
 
-#### Parameters
+Exits the `cli-wallet`.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": exit
@@ -65,27 +61,32 @@ It is responsible for the creation and management of account addresses and their
 
 ### `faucet`
 
+Requests funds from a faucet.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name      | Optional  | Default                                                 | Example                                                           |
+| --------- | --------- | ------------------------------------------------------- | ----------------------------------------------------------------- |
+| `url`     | ✓         | "http://localhost:14265/api/plugins/faucet/v1/enqueue"  | "http://localhost:14265/api/plugins/faucet/v1/enqueue"            |
+| `address` | ✓         | The latest address of the account                       | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
 
-#### Example(s)
+#### Examples
 
+Request funds from a given faucet to the latest account address.
 ```sh
-> Account "main": faucet
+> Account "main": faucet http://localhost:14265/api/plugins/faucet/v1/enqueue
+```
+
+Request funds from a given faucet to a given address.
+```sh
+> Account "main": faucet http://localhost:14265/api/plugins/faucet/v1/enqueue rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
 ```
 
 ### `help`
 
-#### Parameters
+Displays the account interface usage.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": help
@@ -93,41 +94,59 @@ It is responsible for the creation and management of account addresses and their
 
 ### `mint-native-token`
 
+Mints a native token.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name                | Optional  | Default | Example     |
+| ------------------- | --------- | ------- | ----------- |
+| `maximum_supply`    | ✘         | N/A     | 1000        |
+| `foundry_metadata`  | ✓         | None    | "0xabcdef"  |
 
-#### Example(s)
+#### Examples
 
+Mint a native token with a maximum supply.
 ```sh
-> Account "main": mint-native-token
+> Account "main": mint-native-token 1000
+```
+
+Mint a native token with a maximum supply and foundry metadata.
+```sh
+> Account "main": mint-native-token 1000 0xabcdef
 ```
 
 ### `mint-nft`
 
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name                  | Optional  | Default                           | Example                                                           |
+| --------------------- | --------- | --------------------------------- | ----------------------------------------------------------------- |
+| `address`             | ✓         | The first address of the account  | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `immutable_metadata`  | ✓         | None                              | "{ key: value }"                                                  |
+| `metadata`            | ✓         | None                              | "{ key: value }"                                                  |
 
-#### Example(s)
+#### Examples
 
+Mint a NFT to the latest address of the account.
 ```sh
 > Account "main": mint-nft
 ```
 
+Mint a NFT to a given address.
+```sh
+> Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"
+```
+
+Mint a NFT to a given address with immutable metadata and metadata.
+```sh
+> Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" "{ key: value }" "{ key: value }"
+```
+
 ### `new-address`
 
-#### Parameters
+Generates a new address.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": new-address
@@ -135,69 +154,78 @@ It is responsible for the creation and management of account addresses and their
 
 ### `send`
 
+Sends an amount to an address.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name      | Optional  | Default | Example                                                           |
+| --------- | --------- | ------- | ----------------------------------------------------------------- |
+| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `amount`  | ✘         | N/A     | 1000000                                                           |
 
-#### Example(s)
+#### Example
 
 ```sh
-> Account "main": send
+> Account "main": send rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1000000
 ```
 
 ### `send-micro`
 
+Sends a micro amount to an address with StorageDepositReturn and Expiration Unlock Conditions.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name      | Optional  | Default | Example                                                           |
+| --------- | --------- | ------- | ----------------------------------------------------------------- |
+| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `amount`  | ✘         | N/A     | 1                                                                 |
 
-#### Example(s)
+#### Example
 
 ```sh
-> Account "main": send-micro
+> Account "main": send-micro rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1
 ```
 
 ### `send-native-token`
 
+Sends native tokens to an address with StorageDepositReturn and Expiration Unlock Condition.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name        | Optional  | Default | Example                                                                           |
+| ----------- | --------- | ------- | --------------------------------------------------------------------------------- |
+| `address`   | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"                 |
+| `token_id`  | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000"  |
+| `amount`    | ✘         | N/A     | 100                                                                               |
 
-#### Example(s)
+#### Example
 
 ```sh
-> Account "main": send-native-token
+> Account "main": send-native-token rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
 ```
 
 ### `send-nft`
 
+Sends a NFT to an address.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name      | Optional  | Default | Example                                                               |
+| --------- | --------- | ------- | --------------------------------------------------------------------- |
+| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"     |
+| `nft_id`  | ✘         | N/A     | "0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c"  |
 
-#### Example(s)
+#### Example
 
 ```sh
-> Account "main": send-nft
+> Account "main": send-nft rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
 ```
 
 ### `sync`
 
-#### Parameters
+Synchronises the account.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": sync
@@ -205,13 +233,9 @@ It is responsible for the creation and management of account addresses and their
 
 ### `transactions`
 
-#### Parameters
+List all account transactions.
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
-#### Example(s)
+#### Example
 
 ```sh
 > Account "main": transactions
