@@ -94,16 +94,25 @@ Displays the account interface usage.
 
 ### `mint-native-token`
 
+Mints a native token.
+
 #### Parameters
 
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
+| Name                | Optional  | Default | Example     |
+| ------------------- | --------- | ------- | ----------- |
+| `maximum_supply`    | ✘         | N/A     | 1000        |
+| `foundry_metadata`  | ✓         | None    | "0xabcdef"  |
 
-#### Example(s)
+#### Examples
 
+Mint a native token with a maximum supply.
 ```sh
-> Account "main": mint-native-token
+> Account "main": mint-native-token 1000
+```
+
+Mint a native token with a maximum supply and foundry metadata.
+```sh
+> Account "main": mint-native-token 1000 0xabcdef
 ```
 
 ### `mint-nft`
