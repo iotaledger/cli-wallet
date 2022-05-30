@@ -121,7 +121,7 @@ Mint a native token with a maximum supply and foundry metadata.
 
 | Name                  | Optional  | Default                           | Example                                                           |
 | --------------------- | --------- | --------------------------------- | ----------------------------------------------------------------- |
-| `address`             | ✓         | The latest address of the account | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `address`             | ✓         | The first address of the account  | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
 | `immutable_metadata`  | ✓         | None                              | "{ key: value }"                                                  |
 | `metadata`            | ✓         | None                              | "{ key: value }"                                                  |
 
@@ -171,7 +171,7 @@ Sends an amount to an address.
 
 ### `send-micro`
 
-Sends a micro amount to an address.
+Sends a micro amount to an address with StorageDepositReturn and Expiration Unlock Conditions.
 
 #### Parameters
 
@@ -188,7 +188,7 @@ Sends a micro amount to an address.
 
 ### `send-native-token`
 
-Sends native tokens to an address.
+Sends native tokens to an address with StorageDepositReturn and Expiration Unlock Condition.
 
 #### Parameters
 
