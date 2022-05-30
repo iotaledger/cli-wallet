@@ -29,7 +29,7 @@ $ ./wallet new savings
 > Account "savings": exit
 ```
 
-## Send an amount
+## Tokens
 
 Get some funds from the faucet to the main account.
 ```sh
@@ -42,7 +42,7 @@ $ ./wallet main
 > Account "main": exit
 ```
 
-### Regular amount
+### Send a regular amount
 
 Get an address from the savings account.
 ```sh
@@ -61,7 +61,7 @@ $ ./wallet main
 > Account "main": exit
 ```
 
-### Micro amount
+### Send a micro amount
 
 Generate a new address from the savings account.
 ```sh
