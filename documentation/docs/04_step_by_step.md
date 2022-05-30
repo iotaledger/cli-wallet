@@ -48,14 +48,14 @@ Get an address from the savings account.
 ```sh
 $ ./wallet savings
 > Account "savings": addresses
-> INFO  Address 0: [ADDR]
+> INFO  Address 0: [ADDRESS]
 > Account "savings": exit
 ```
 
 Send a regular amount from the main account to the savings address.
 ```sh
 $ ./wallet main
-> Account "main": send [ADDR] 1000000
+> Account "main": send [ADDRESS] 1000000
 > ...
 > INFO  Transaction created ...
 > Account "main": exit
@@ -68,14 +68,14 @@ Generate a new address from the savings account.
 $ ./wallet savings
 > Account "savings": new-address
 > ...
-> INFO  Address 1: [ADDR]
+> INFO  Address 1: [ADDRESS]
 > Account "savings": exit
 ```
 
 Send a micro amount from the main account to the savings address.
 ```sh
 $ ./wallet main
-> Account "main": send-micro [ADDR] 1
+> Account "main": send-micro [ADDRESS] 1
 > ...
 > INFO  Transaction created ...
 > Account "main": exit
@@ -88,4 +88,39 @@ $ ./wallet savings
 > ...
 > INFO  AccountBalance ...
 > Account "savings": exit
+```
+
+## Native tokens
+
+### Mint
+
+Mint native tokens, with foundry metadata, from the main account.
+```sh
+$ ./wallet main
+> Account "main": mint-native-token 1000 0xabcdef
+> ...
+> INFO  Native token minting transaction sent...
+> Account "main": exit
+```
+
+### Send
+
+Generate a new address from the savings account.
+```sh
+$ ./wallet savings
+> Account "savings": new-address
+> ...
+> INFO  Address 2: [ADDRESS]
+> Account "savings": exit
+```
+
+Send native tokens to the savings address.
+```sh
+$ ./wallet main
+> Account "main": sync
+> ...
+> INFO  Synced: AccountBalance ...TokenId([TOKEN ID])...
+> Account "main": send-native-token [ADDRESS] [TOKEN ID] 100
+> INFO  Transaction created...
+> Account "main": exit
 ```
