@@ -8,19 +8,22 @@ use iota_wallet::{
     iota_client::{secret::SecretManager, utils::generate_mnemonic},
     ClientOptions,
 };
+use log::LevelFilter;
 
 use crate::{account::account_prompt, error::Error};
 
-#[derive(Debug, Parser)]
+#[derive(Debug, Clone, Parser)]
 #[clap(version, long_about = None)]
 #[clap(propagate_version = true)]
 pub struct AccountManagerCli {
     #[clap(subcommand)]
     pub command: Option<AccountManagerCommand>,
     pub account: Option<String>,
+    #[clap(short, long)]
+    pub log_level: Option<LevelFilter>,
 }
 
-#[derive(Debug, Subcommand)]
+#[derive(Debug, Clone, Subcommand)]
 pub enum AccountManagerCommand {
     /// Initialize the wallet with a mnemonic and node url, if nothing is provided, a new mnemonic will be generated and "http://localhost:14265" used.
     Init(MnemonicAndUrl),
@@ -32,7 +35,7 @@ pub enum AccountManagerCommand {
     Sync,
 }
 
-#[derive(Debug, Args)]
+#[derive(Debug, Clone, Args)]
 pub struct MnemonicAndUrl {
     #[clap(short, long)]
     pub mnemonic: Option<String>,

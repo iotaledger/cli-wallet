@@ -7,15 +7,24 @@ mod command;
 mod error;
 mod helper;
 
+use clap::Parser;
 use fern_logger::{LoggerConfigBuilder, LoggerOutputConfigBuilder};
 use log::LevelFilter;
 
-use self::{account_manager::new_account_manager, error::Error, helper::pick_account};
+use self::{
+    account_manager::new_account_manager, command::account_manager::AccountManagerCli, error::Error,
+    helper::pick_account,
+};
 
-fn logger_init() -> Result<(), Error> {
+fn logger_init(cli: &AccountManagerCli) -> Result<(), Error> {
+    let stdout_level_filter = if let Some(log_level) = cli.log_level {
+        log_level
+    } else {
+        LevelFilter::Info
+    };
     let stdout = LoggerOutputConfigBuilder::default()
         .name("stdout")
-        .level_filter(LevelFilter::Debug)
+        .level_filter(stdout_level_filter)
         .target_exclusions(&["rustls"])
         .color_enabled(true);
     let archive = LoggerOutputConfigBuilder::default()
@@ -33,10 +42,10 @@ fn logger_init() -> Result<(), Error> {
     Ok(())
 }
 
-async fn run() -> Result<(), Error> {
-    let (account_manager, account) = new_account_manager().await?;
+async fn run(cli: AccountManagerCli) -> Result<(), Error> {
+    let account_manager = new_account_manager(cli.clone()).await?;
 
-    match account {
+    match cli.account {
         Some(account) => account::account_prompt(account_manager.get_account(account).await?).await?,
         None => {
             if let Some(account) = pick_account(&account_manager).await? {
@@ -50,13 +59,20 @@ async fn run() -> Result<(), Error> {
 
 #[tokio::main]
 async fn main() {
-    if let Err(e) = logger_init() {
+    let cli = match AccountManagerCli::try_parse() {
+        Ok(cli) => cli,
+        Err(e) => {
+            println!("{e}");
+            return;
+        }
+    };
+
+    if let Err(e) = logger_init(&cli) {
         println!("{e}");
         return;
     }
 
-    match run().await {
-        Ok(_) | Err(Error::Help) => {}
-        Err(e) => log::error!("{e}"),
+    if let Err(e) = run(cli).await {
+        log::error!("{e}");
     }
 }

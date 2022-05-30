@@ -1,15 +1,13 @@
+# Account Manager Interface
+
 The Account Manager Interface is evaluated through the Command Line Interface of the `wallet` binary, once per
 execution.
 
-The account manager interface allows you to:
-- Initialise the wallet with a mnemonic;
-- Create new accounts;
-- Select the account to use;
-- Synchronise the accounts;
+It is responsible for the creation and management of the wallet and its accounts.
 
-# Commands
+## Commands
 
-## `./wallet`
+### `./wallet`
 
 Starts the wallet without a specified account:
 - If the wallet has only one account, it will be used;
@@ -17,38 +15,35 @@ Starts the wallet without a specified account:
 
 The wallet needs to be initialised (`init` command) and with at least one account (`new` command).
 
-### Example(s)
+#### Example
 
-Start the wallet without specifying an account.
 ```sh
 $ ./wallet
 ```
 
-## `./wallet [account]`
+### `./wallet [account]`
 
 Starts the wallet with a specified account;
 
 The wallet needs to be initialised (`init` command).
 
-### Example(s)
+#### Example
 
-Start the wallet with a provided account.
 ```sh
 $ ./wallet main
 ```
 
-## `./wallet help`
+### `./wallet help`
 
 Displays the binary usage and exit.
 
-### Example(s)
+#### Example
 
-Display the binary usage and exit.
 ```sh
 $ ./wallet help
 ```
 
-## `./wallet init`
+### `./wallet init`
 
 Initialises the wallet by creating a [stronghold](https://github.com/iotaledger/stronghold.rs) file from a provided or generated mnemonic.
 
@@ -56,14 +51,14 @@ The wallet can only be initialised once.
 
 When just initialised, the wallet has no account yet, use the `new` command to create one.
 
-### Parameters
+#### Parameters
 
-| Name        | Optional  | Default                   |Example                                                                                                                                                                              |
-| ----------- | --------- | ------------------------- |------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Name        | Optional  | Default                   | Example                                                                                                                                                                             |
+| ----------- | --------- | ------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `mnemonic`  | ✓         | Randomly generated        | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC) |
 | `node`      | ✓         | "http://localhost:14265/" | "http://localhost:14265/"                                                                                                                                                           |
 
-### Example(s)
+#### Example(s)
 
 Initialise the wallet with a randomly generated mnemonic and the default node.
 ```sh
@@ -81,22 +76,54 @@ Initialise the wallet with a randomly generated mnemonic and a given node.
 $ ./wallet init --node "http://localhost:14265/"
 ```
 
-## `./wallet new`
+### `./wallet new`
 
-(init first)
+Creates a new account.
 
-### Parameters
+The wallet needs to be initialised (`init` command).
 
-### Example(s)
+#### Parameters
 
-## `./wallet set-node`
+| Name    | Optional  | Default       | Example |
+| ------- | --------- | ------------- | ------- |
+| `alias` | ✓         | Account index | "main"  |
 
-### Parameters
+#### Example(s)
 
-### Example(s)
+Create a new account with the account index as alias.
+```sh
+$ ./wallet new
+```
 
-## `./wallet sync`
+Create a new account with a provided alias.
+```sh
+$ ./wallet new main
+```
 
-### Parameters
+### `./wallet set-node`
 
-### Example(s)
+Sets the node to be used for all requests.
+
+The new node URL is persisted to the storage and all future requests will use it.
+
+#### Parameters
+
+| Name  | Optional  | Example                   |
+| ----- | --------- | ------------------------- |
+| `url` | ✘         | "http://localhost:14265/" |
+
+#### Example
+
+```sh
+$ ./wallet set-node http://localhost:14265/
+```
+
+### `./wallet sync`
+
+Synchronises all accounts.
+
+#### Example
+
+```sh
+$ ./wallet sync
+```

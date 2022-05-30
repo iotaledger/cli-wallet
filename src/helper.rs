@@ -11,7 +11,7 @@ use crate::error::Error;
 pub fn get_password(path: &Path) -> Result<String, Error> {
     let mut prompt = Password::new();
 
-    prompt.with_prompt("What's the stronghold password?");
+    prompt.with_prompt("Stronghold password");
 
     // Check if the stronghold exists already
     if !path.exists() {
