@@ -15,9 +15,8 @@ Starts the wallet without a specified account:
 
 The wallet needs to be initialised (`init` command) and with at least one account (`new` command).
 
-#### Example(s)
+#### Example
 
-Start the wallet without a specified account.
 ```sh
 $ ./wallet
 ```
@@ -28,9 +27,8 @@ Starts the wallet with a specified account;
 
 The wallet needs to be initialised (`init` command).
 
-#### Example(s)
+#### Example
 
-Start the wallet with a specified account.
 ```sh
 $ ./wallet main
 ```
@@ -39,9 +37,8 @@ $ ./wallet main
 
 Displays the binary usage and exit.
 
-#### Example(s)
+#### Example
 
-Display the binary usage and exit.
 ```sh
 $ ./wallet help
 ```
@@ -115,9 +112,8 @@ The new node URL is persisted to the storage and all future requests will use it
 | ----- | --------- | ------------------------- |
 | `url` | ✘         | "http://localhost:14265/" |
 
-#### Example(s)
+#### Example
 
-Set the node to be used for all requests.
 ```sh
 $ ./wallet set-node http://localhost:14265/
 ```
@@ -126,9 +122,8 @@ $ ./wallet set-node http://localhost:14265/
 
 Synchronises all accounts.
 
-#### Example(s)
+#### Example
 
-Synchronise all accounts.
 ```sh
 $ ./wallet sync
 ```
