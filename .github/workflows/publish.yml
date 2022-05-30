@@ -106,7 +106,7 @@ jobs:
           args: --profile production
 
       # Computes SHA-256 checksum
-      - name: Build
+      - name: SHA-256 checksum
         uses: actions-rs/cargo@v1
         run: shasum -a 256 ./target/production/wallet
 
