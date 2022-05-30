@@ -1,5 +1,5 @@
 {
-  "source": ["./target/release/wallet"],
+  "source": ["./target/production/wallet"],
   "bundle_id": "org.iota.cli-wallet",
   "apple_id": {
     "password": "@env:AC_PASSWORD"
