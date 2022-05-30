@@ -9,12 +9,6 @@ It is responsible for the creation and management of account addresses and their
 
 ### `addresses`
 
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
 #### Example(s)
 
 ```sh
@@ -22,12 +16,6 @@ It is responsible for the creation and management of account addresses and their
 ```
 
 ### `balance`
-
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
 
 #### Example(s)
 
@@ -37,12 +25,6 @@ It is responsible for the creation and management of account addresses and their
 
 ### `consolidate`
 
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
 #### Example(s)
 
 ```sh
@@ -50,12 +32,6 @@ It is responsible for the creation and management of account addresses and their
 ```
 
 ### `exit`
-
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
 
 #### Example(s)
 
@@ -78,12 +54,6 @@ It is responsible for the creation and management of account addresses and their
 ```
 
 ### `help`
-
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
 
 #### Example(s)
 
@@ -120,12 +90,6 @@ It is responsible for the creation and management of account addresses and their
 ```
 
 ### `new-address`
-
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
 
 #### Example(s)
 
@@ -191,12 +155,6 @@ It is responsible for the creation and management of account addresses and their
 
 ### `sync`
 
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
-
 #### Example(s)
 
 ```sh
@@ -204,12 +162,6 @@ It is responsible for the creation and management of account addresses and their
 ```
 
 ### `transactions`
-
-#### Parameters
-
-| Name    | Optional  | Default       | Example |
-| ------- | --------- | ------------- | ------- |
-| `` | ✓ | | |
 
 #### Example(s)
 
