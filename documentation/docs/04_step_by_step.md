@@ -5,9 +5,8 @@ In these step by step examples, we present how to create a wallet and do some of
 ## Setup
 
 Initialise the wallet with a given node and a randomly generated mnemonic.
-<!-- TODO: replace with testnet URL -->
 ```sh
-$ ./wallet init --node [URL]
+$ ./wallet init --node [NODE API URL]
 > ...
 > INFO  Mnemonic stored successfully
 ```
@@ -31,10 +30,9 @@ $ ./wallet new savings
 ## Send an amount
 
 Get some funds from the faucet to the main account.
-<!-- TODO: replace with testnet URL -->
 ```sh
 $ ./wallet main
-> Account "main": faucet [URL]
+> Account "main": faucet [FAUCET ENQUEUE API URL]
 > ...
 > Account "main": sync
 > ...
