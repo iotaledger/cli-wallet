@@ -27,6 +27,16 @@ Prints the account balance.
 > Account "main": balance
 ```
 
+### `clear`
+
+Clears the terminal.
+
+#### Example
+
+```sh
+> Account "main": clear
+```
+
 ### `consolidate`
 
 Tries to consolidate outputs into a single one.
