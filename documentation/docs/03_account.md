@@ -27,6 +27,16 @@ Prints the account balance.
 > Account "main": balance
 ```
 
+### `claim`
+
+Tries to claim outputs with storage deposit return, expiration or timelock unlock conditions.
+
+#### Example
+
+```sh
+> Account "main": claim
+```
+
 ### `clear`
 
 Clears the terminal.

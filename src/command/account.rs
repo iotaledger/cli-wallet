@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 use iota_wallet::{
     account::{
         types::{AccountAddress, Transaction},
-        AccountHandle,
+        AccountHandle, OutputsToCollect,
     },
     iota_client::{
         bee_block::output::{NftId, TokenId},
@@ -33,6 +33,8 @@ pub enum AccountCommand {
     Addresses,
     /// Print the account balance.
     Balance,
+    /// Claim outputs with storage deposit return, expiration or timelock unlock conditions.
+    Claim,
     /// Consolidate all basic outputs into one address.
     Consolidate,
     /// Exit from the account prompt.
@@ -100,11 +102,28 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error
     Ok(())
 }
 
+// `claim` command
+pub async fn claim_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    log::info!("Claiming outputs.");
+
+    let claiming_txs = account_handle.try_collect_outputs(OutputsToCollect::All).await?;
+
+    for claim_tx in claiming_txs {
+        log::info!("Claim transaction sent: {claim_tx:?}");
+    }
+
+    Ok(())
+}
+
 // `consolidate` command
 pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
     log::info!("Consolidating outputs.");
 
-    account_handle.consolidate_outputs(true, None).await?;
+    let consolidation_txs = account_handle.consolidate_outputs(true, None).await?;
+
+    for consolidation_tx in consolidation_txs {
+        log::info!("Consolidation transaction sent: {consolidation_tx:?}");
+    }
 
     Ok(())
 }
