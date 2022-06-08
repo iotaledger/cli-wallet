@@ -129,7 +129,7 @@ $ ./wallet main
 
 ### Mint
 
-Mint a NFT.
+Mint an NFT.
 ```sh
 $ ./wallet main
 > Account "main": mint-nft

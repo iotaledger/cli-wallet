@@ -10,7 +10,7 @@ use iota_wallet::{
         AccountHandle, OutputsToCollect,
     },
     iota_client::{
-        bee_block::output::{NftId, TokenId},
+        bee_block::output::{AliasId, FoundryId, NftId, TokenId},
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
@@ -33,10 +33,18 @@ pub enum AccountCommand {
     Addresses,
     /// Print the account balance.
     Balance,
+    /// Burn a native token: `burn-native-token "0x..." 100`
+    BurnNativeToken { token_id: String, amount: String },
+    /// Burn an NFT: `burn-nft "0x..."`
+    BurnNft { nft_id: String },
     /// Claim outputs with storage deposit return, expiration or timelock unlock conditions.
     Claim,
     /// Consolidate all basic outputs into one address.
     Consolidate,
+    /// Destroy an alias: `destroy-alias "0x..."`
+    DestroyAlias { alias_id: String },
+    /// Destroy a foundry: `destroy-foundry "0x..."`
+    DestroyFoundry { foundry_id: String },
     /// Exit from the account prompt.
     Exit,
     /// Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:8091/api/enqueue`
@@ -44,12 +52,14 @@ pub enum AccountCommand {
         url: Option<String>,
         address: Option<String>,
     },
+    /// Melt a native token: `melt-native-token "0x..." 100`
+    MeltNativeToken { token_id: String, amount: String },
     /// Mint a native token: `mint-native-token 100 "0x..." (foundry metadata)`
     MintNativeToken {
         maximum_supply: String,
         foundry_metadata: Option<String>,
     },
-    /// Mint an nft to an optional bech32 encoded address: `mint-nft
+    /// Mint an NFT to an optional bech32 encoded address: `mint-nft
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 "immutable metadata" "metadata"`
     MintNft {
         address: Option<String>,
@@ -72,7 +82,7 @@ pub enum AccountCommand {
         token_id: String,
         amount: String,
     },
-    /// Send an nft to a bech32 encoded address
+    /// Send an NFT to a bech32 encoded address
     SendNft { address: String, nft_id: String },
     /// Sync the account with the Tangle.
     Sync,
@@ -91,6 +101,40 @@ pub async fn addresses_command(account_handle: &AccountHandle) -> Result<(), Err
             print_address(account_handle, &address).await?;
         }
     }
+
+    Ok(())
+}
+
+// `burn-native-token` command
+pub async fn burn_native_token_command(
+    account_handle: &AccountHandle,
+    token_id: String,
+    amount: String,
+) -> Result<(), Error> {
+    log::info!("Burning native token {amount} {token_id}.");
+
+    let transaction_result = account_handle
+        .burn_native_token(
+            (
+                TokenId::from_str(&token_id)?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+            ),
+            None,
+        )
+        .await?;
+
+    log::info!("{transaction_result:?}",);
+
+    Ok(())
+}
+
+// `burn-nft` command
+pub async fn burn_nft_command(account_handle: &AccountHandle, nft_id: String) -> Result<(), Error> {
+    log::info!("Burning nft {nft_id}.");
+
+    let transaction_result = account_handle.burn_nft(NftId::from_str(&nft_id)?, None).await?;
+
+    log::info!("{transaction_result:?}");
 
     Ok(())
 }
@@ -128,6 +172,32 @@ pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), E
     Ok(())
 }
 
+// `destroy-alias` command
+pub async fn destroy_alias_command(account_handle: &AccountHandle, alias_id: String) -> Result<(), Error> {
+    log::info!("Destroying alias {alias_id}.");
+
+    let transaction_result = account_handle
+        .destroy_alias(AliasId::from_str(&alias_id)?, None)
+        .await?;
+
+    log::info!("{transaction_result:?}");
+
+    Ok(())
+}
+
+// `destroy-foundry` command
+pub async fn destroy_foundry_command(account_handle: &AccountHandle, foundry_id: String) -> Result<(), Error> {
+    log::info!("Destroying foundry {foundry_id}.");
+
+    let transaction_result = account_handle
+        .destroy_foundry(FoundryId::from_str(&foundry_id)?, None)
+        .await?;
+
+    log::info!("{transaction_result:?}");
+
+    Ok(())
+}
+
 // `faucet` command
 pub async fn faucet_command(
     account_handle: &AccountHandle,
@@ -152,6 +222,27 @@ pub async fn faucet_command(
     Ok(())
 }
 
+// `melt-native-token` command
+pub async fn melt_native_token_command(
+    account_handle: &AccountHandle,
+    token_id: String,
+    amount: String,
+) -> Result<(), Error> {
+    let transaction_result = account_handle
+        .melt_native_token(
+            (
+                TokenId::from_str(&token_id)?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+            ),
+            None,
+        )
+        .await?;
+
+    log::info!("Native token melting transaction sent: {transaction_result:?}");
+
+    Ok(())
+}
+
 // `mint-native-token` command
 pub async fn mint_native_token_command(
     account_handle: &AccountHandle,
@@ -170,9 +261,9 @@ pub async fn mint_native_token_command(
             .map_err(|e| Error::Miscellanous(e.to_string()))?,
     };
 
-    let transfer_result = account_handle.mint_native_token(native_token_options, None).await?;
+    let transaction_result = account_handle.mint_native_token(native_token_options, None).await?;
 
-    log::info!("Native token minting transaction sent: {transfer_result:?}");
+    log::info!("Native token minting transaction sent: {transaction_result:?}");
 
     Ok(())
 }
@@ -191,9 +282,9 @@ pub async fn mint_nft_command(
         immutable_metadata,
         metadata,
     }];
-    let transfer_result = account_handle.mint_nfts(nft_options, None).await?;
+    let transaction_result = account_handle.mint_nfts(nft_options, None).await?;
 
-    log::info!("NFT minting transaction sent: {transfer_result:?}");
+    log::info!("NFT minting transaction sent: {transaction_result:?}");
 
     Ok(())
 }
@@ -210,9 +301,9 @@ pub async fn new_address_command(account_handle: &AccountHandle) -> Result<(), E
 // `send` command
 pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<(), Error> {
     let outputs = vec![AddressWithAmount { address, amount }];
-    let transfer_result = account_handle.send_amount(outputs, None).await?;
+    let transaction_result = account_handle.send_amount(outputs, None).await?;
 
-    log::info!("Transaction created: {transfer_result:?}");
+    log::info!("Transaction created: {transaction_result:?}");
 
     Ok(())
 }
@@ -226,9 +317,9 @@ pub async fn send_micro_command(account_handle: &AccountHandle, address: String,
         expiration: None,
     }];
 
-    let transfer_result = account_handle.send_micro_transaction(outputs, None).await?;
+    let transaction_result = account_handle.send_micro_transaction(outputs, None).await?;
 
-    log::info!("Micro transaction created: {transfer_result:?}");
+    log::info!("Micro transaction created: {transaction_result:?}");
 
     Ok(())
 }
@@ -248,9 +339,9 @@ pub async fn send_native_token_command(
         )],
         ..Default::default()
     }];
-    let transfer_result = account_handle.send_native_tokens(outputs, None).await?;
+    let transaction_result = account_handle.send_native_tokens(outputs, None).await?;
 
-    log::info!("Transaction created: {transfer_result:?}");
+    log::info!("Transaction created: {transaction_result:?}");
 
     Ok(())
 }
@@ -261,9 +352,9 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
         address,
         nft_id: NftId::from_str(&nft_id)?,
     }];
-    let transfer_result = account_handle.send_nft(outputs, None).await?;
+    let transaction_result = account_handle.send_nft(outputs, None).await?;
 
-    log::info!("Transaction created: {transfer_result:?}");
+    log::info!("Transaction created: {transaction_result:?}");
 
     Ok(())
 }

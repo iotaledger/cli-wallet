@@ -69,62 +69,301 @@ Synchronizes all accounts with the Tangle.
 
 ### Account prompt commands
 
-#### help [COMMAND]
+### `addresses`
 
-Prints the CLI help information. If a command is specified, the command's help will be printed.
+Lists all account addresses.
 
-#### exit
+#### Example
 
-Exits the account prompt.
+```sh
+> Account "main": addresses
+```
 
-#### sync
+### `balance`
 
-Synchronizes the account with the Tangle and returns the balance.
+Prints the account balance.
 
-#### address
+#### Example
 
-Generates a new unused address.
+```sh
+> Account "main": balance
+```
 
-#### balance
+### `burn-native-token`
 
-Gets the account balance.
+Burns a native token.
 
-#### faucet [URL]
+#### Parameters
 
-Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:8091/api/enqueue`.
+| Name       | Optional  | Default | Example    |
+| ---------- | --------- | ------- | ---------- |
+| `token_id` | ✘         | N/A     | "0xabcdef" |
+| `amount`   | ✘         | N/A     | 100        |
 
-#### list-addresses
+### `burn-nft`
 
-Lists the account's addresses.
+Burns an NFT.
 
-#### list-transactions
+#### Parameters
 
-Lists the account's transactions.
+| Name     | Optional  | Default | Example    |
+| -------- | --------- | ------- | ---------- |
+| `nft_id` | ✘         | N/A     | "0xabcdef" |
 
-#### mint-native-token SUPPLY [FOUNDRY METADATA]
+### `claim`
 
-Mint a native token: `mint-native-token 100 "0x..."`
+Tries to claim outputs with storage deposit return, expiration or timelock unlock conditions.
 
-#### mint-nft [ADDRESS, IMMUTABLEMETADATA, METADATA]
+#### Example
 
-Mint an nft to an optional bech32 encoded address: `mint-nft atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e "immutable-metadata" "metadata"`
+```sh
+> Account "main": claim
+```
 
-#### send ADDRESS AMOUNT
+### `clear`
 
-Send funds from the account to the given Bech32 address.
-Example: `send atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 1000000`
+Clears the terminal.
 
-#### send-micro ADDRESS AMOUNT
+#### Example
 
-Send an amount below the storage deposit minimum to a bech32 address: `send-micro atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 10`
+```sh
+> Account "main": clear
+```
 
-#### send-native ADDRESS TOKEN_ID AMOUNT
+### `consolidate`
 
-Send native tokens to a bech32 address: `send-native atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
+Tries to consolidate outputs into a single one.
 
-#### send-nft ADDRESS NFT_ID
+Note that only Basic Outputs with only an address unlock condition can be consolidated.
 
-Send an nft to a bech32 encoded address: `send-nft atoi1qpszqzadsym6wpppd6z037dvlejmjuke7s24hm95s9fg9vpua7vluehe53e 0x0f9d4ddb128e97af0eb05b960e84e6e6659868da`
+#### Example
+
+```sh
+> Account "main": consolidate
+```
+
+### `destroy-alias`
+
+Destroys an alias.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example    |
+| ---------- | --------- | ------- | ---------- |
+| `alias_id` | ✘         | N/A     | "0xabcdef" |
+
+### `destroy-foundry`
+
+Destroys a foundry.
+
+#### Parameters
+
+| Name         | Optional  | Default | Example    |
+| ------------ | --------- | ------- | ---------- |
+| `foundry_id` | ✘         | N/A     | "0xabcdef" |
+
+### `exit`
+
+Exits the `cli-wallet`.
+
+#### Example
+
+```sh
+> Account "main": exit
+```
+
+### `faucet`
+
+Requests funds from a faucet.
+
+#### Parameters
+
+| Name      | Optional  | Default                                                 | Example                                                           |
+| --------- | --------- | ------------------------------------------------------- | ----------------------------------------------------------------- |
+| `url`     | ✓         | "http://localhost:8091/api/enqueue"  | "http://localhost:8091/api/enqueue"            |
+| `address` | ✓         | The latest address of the account                       | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+
+#### Examples
+
+Request funds from a given faucet to the latest account address.
+```sh
+> Account "main": faucet http://localhost:8091/api/enqueue
+```
+
+Request funds from a given faucet to a given address.
+```sh
+> Account "main": faucet http://localhost:8091/api/enqueue rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
+```
+
+### `help`
+
+Displays the account interface usage.
+
+#### Example
+
+```sh
+> Account "main": help
+```
+
+### `melt-native-token`
+
+Melt a native token.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example    |
+| ---------- | --------- | ------- | ---------- |
+| `token_id` | ✘         | N/A     | "0xabcdef" |
+| `amount`   | ✘         | N/A     | 100        |
+
+### `mint-native-token`
+
+Mints a native token.
+
+#### Parameters
+
+| Name                | Optional  | Default | Example     |
+| ------------------- | --------- | ------- | ----------- |
+| `maximum_supply`    | ✘         | N/A     | 1000        |
+| `foundry_metadata`  | ✓         | None    | "0xabcdef"  |
+
+#### Examples
+
+Mint a native token with a maximum supply.
+```sh
+> Account "main": mint-native-token 1000
+```
+
+Mint a native token with a maximum supply and foundry metadata.
+```sh
+> Account "main": mint-native-token 1000 0xabcdef
+```
+
+### `mint-nft`
+
+#### Parameters
+
+| Name                  | Optional  | Default                           | Example                                                           |
+| --------------------- | --------- | --------------------------------- | ----------------------------------------------------------------- |
+| `address`             | ✓         | The first address of the account  | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `immutable_metadata`  | ✓         | None                              | "{ key: value }"                                                  |
+| `metadata`            | ✓         | None                              | "{ key: value }"                                                  |
+
+#### Examples
+
+Mint an NFT to the latest address of the account.
+```sh
+> Account "main": mint-nft
+```
+
+Mint an NFT to a given address.
+```sh
+> Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"
+```
+
+Mint an NFT to a given address with immutable metadata and metadata.
+```sh
+> Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" "{ key: value }" "{ key: value }"
+```
+
+### `new-address`
+
+Generates a new address.
+
+#### Example
+
+```sh
+> Account "main": new-address
+```
+
+### `send`
+
+Sends an amount to an address.
+
+#### Parameters
+
+| Name      | Optional  | Default | Example                                                           |
+| --------- | --------- | ------- | ----------------------------------------------------------------- |
+| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `amount`  | ✘         | N/A     | 1000000                                                           |
+
+#### Example
+
+```sh
+> Account "main": send rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1000000
+```
+
+### `send-micro`
+
+Sends a micro amount to an address with StorageDepositReturn and Expiration Unlock Conditions.
+
+#### Parameters
+
+| Name      | Optional  | Default | Example                                                           |
+| --------- | --------- | ------- | ----------------------------------------------------------------- |
+| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| `amount`  | ✘         | N/A     | 1                                                                 |
+
+#### Example
+
+```sh
+> Account "main": send-micro rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1
+```
+
+### `send-native-token`
+
+Sends native tokens to an address with StorageDepositReturn and Expiration Unlock Condition.
+
+#### Parameters
+
+| Name        | Optional  | Default | Example                                                                           |
+| ----------- | --------- | ------- | --------------------------------------------------------------------------------- |
+| `address`   | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"                 |
+| `token_id`  | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000"  |
+| `amount`    | ✘         | N/A     | 100                                                                               |
+
+#### Example
+
+```sh
+> Account "main": send-native-token rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
+```
+
+### `send-nft`
+
+Sends an NFT to an address.
+
+#### Parameters
+
+| Name      | Optional  | Default | Example                                                               |
+| --------- | --------- | ------- | --------------------------------------------------------------------- |
+| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"     |
+| `nft_id`  | ✘         | N/A     | "0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c"  |
+
+#### Example
+
+```sh
+> Account "main": send-nft rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
+```
+
+### `sync`
+
+Synchronises the account.
+
+#### Example
+
+```sh
+> Account "main": sync
+```
+
+### `transactions`
+
+List all account transactions.
+
+#### Example
+
+```sh
+> Account "main": transactions
+```
 
 ## Caveats
 
