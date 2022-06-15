@@ -30,7 +30,7 @@ fn logger_init(cli: &AccountManagerCli) -> Result<(), Error> {
     let archive = LoggerOutputConfigBuilder::default()
         .name("archive.log")
         .level_filter(LevelFilter::Debug)
-        .target_exclusions(&["mnemonic", "rustls"])
+        .target_exclusions(&["rustls"])
         .color_enabled(false);
     let config = LoggerConfigBuilder::default()
         .with_output(stdout)
