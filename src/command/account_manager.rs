@@ -1,6 +1,9 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+use std::fs::File;
+use std::io::prelude::*;
+
 use clap::{Args, Parser, Subcommand};
 use iota_wallet::{
     account_manager::AccountManager,
@@ -62,12 +65,13 @@ pub async fn init_command(
         Some(mnemonic) => mnemonic,
         None => generate_mnemonic()?,
     };
-    log::info!("IMPORTANT: write this mnemonic phrase in a safe place.");
+    log::info!("IMPORTANT: mnemonic has been written to \"mnemonic.txt\", handle it safely.");
     log::info!(
         "It is the only way to recover your account if you ever forget your password and/or lose the stronghold file."
     );
-    // Specific target to easily exclude it from the archive logger output.
-    log::info!(target:"mnemonic", "{mnemonic}");
+
+    let mut file = File::create("mnemonic.txt")?;
+    file.write_all(mnemonic.as_bytes())?;
 
     if let SecretManager::Stronghold(secret_manager) = &mut *account_manager.get_secret_manager().write().await {
         secret_manager.store_mnemonic(mnemonic).await?;
