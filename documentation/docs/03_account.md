@@ -75,21 +75,21 @@ Requests funds from a faucet.
 
 #### Parameters
 
-| Name      | Optional  | Default                                                 | Example                                                           |
-| --------- | --------- | ------------------------------------------------------- | ----------------------------------------------------------------- |
-| `url`     | ✓         | "http://localhost:14265/api/plugins/faucet/v1/enqueue"  | "http://localhost:14265/api/plugins/faucet/v1/enqueue"            |
-| `address` | ✓         | The latest address of the account                       | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| Name      | Optional  | Default                              | Example                                                           |
+| --------- | --------- | ------------------------------------ | ----------------------------------------------------------------- |
+| `url`     | ✓         | "http://localhost:8091/api/enqueue"  | "http://localhost:8091/api/enqueue"                               |
+| `address` | ✓         | The latest address of the account    | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
 
 #### Examples
 
 Request funds from a given faucet to the latest account address.
 ```sh
-> Account "main": faucet http://localhost:14265/api/plugins/faucet/v1/enqueue
+> Account "main": faucet http://localhost:8091/api/enqueue
 ```
 
 Request funds from a given faucet to a given address.
 ```sh
-> Account "main": faucet http://localhost:14265/api/plugins/faucet/v1/enqueue rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
+> Account "main": faucet http://localhost:8091/api/enqueue rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
 ```
 
 ### `help`

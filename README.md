@@ -91,7 +91,7 @@ Gets the account balance.
 
 #### faucet [URL]
 
-Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:14265/api/plugins/faucet/v1/enqueue`.
+Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:8091/api/enqueue`.
 
 #### list-addresses
 
