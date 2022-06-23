@@ -27,6 +27,41 @@ Prints the account balance.
 > Account "main": balance
 ```
 
+### `burn-native-token`
+
+Burns a native token.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example                                                                          |
+| ---------- | --------- | ------- | -------------------------------------------------------------------------------- |
+| `token_id` | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000" |
+| `amount`   | ✘         | N/A     | 100                                                                              |
+
+#### Example
+
+Burn the provided amount of a native token.
+```sh
+> Account "main": burn-native-token 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
+```
+
+### `burn-nft`
+
+Burns an NFT.
+
+#### Parameters
+
+| Name     | Optional  | Default | Example                                                              |
+| -------- | --------- | ------- | -------------------------------------------------------------------- |
+| `nft_id` | ✘         | N/A     | "0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c" |
+
+#### Example
+
+Burn a provided NFT.
+```sh
+> Account "main": burn-nft 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
+```
+
 ### `claim`
 
 Tries to claim outputs with storage deposit return, expiration or timelock unlock conditions.
@@ -57,6 +92,38 @@ Note that only Basic Outputs with only an address unlock condition can be consol
 
 ```sh
 > Account "main": consolidate
+```
+
+### `destroy-alias`
+
+Destroys an alias.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example                                                              |
+| ---------- | --------- | ------- | -------------------------------------------------------------------- |
+| `alias_id` | ✘         | N/A     | "0xb2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd" |
+
+#### Example
+
+```sh
+> Account "main": destroy-alias 0xb2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd
+```
+
+### `destroy-foundry`
+
+Destroys a foundry.
+
+#### Parameters
+
+| Name         | Optional  | Default | Example                                                                          |
+| ------------ | --------- | ------- | -------------------------------------------------------------------------------- |
+| `foundry_id` | ✘         | N/A     | "0x08b2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd0100000000" |
+
+#### Example
+
+```sh
+> Account "main": destroy-foundry 0x08b2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd0100000000
 ```
 
 ### `exit`
@@ -102,6 +169,24 @@ Displays the account interface usage.
 > Account "main": help
 ```
 
+### `melt-native-token`
+
+Melt a native token.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example                                                                          |
+| ---------- | --------- | ------- | -------------------------------------------------------------------------------- |
+| `token_id` | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000" |
+| `amount`   | ✘         | N/A     | 100                                                                              |
+
+#### Example
+
+Melt the provided amount of a native token.
+```sh
+> Account "main": melt-native-token 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
+```
+
 ### `mint-native-token`
 
 Mints a native token.
@@ -137,17 +222,17 @@ Mint a native token with a maximum supply and foundry metadata.
 
 #### Examples
 
-Mint a NFT to the latest address of the account.
+Mint an NFT to the latest address of the account.
 ```sh
 > Account "main": mint-nft
 ```
 
-Mint a NFT to a given address.
+Mint an NFT to a given address.
 ```sh
 > Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"
 ```
 
-Mint a NFT to a given address with immutable metadata and metadata.
+Mint an NFT to a given address with immutable metadata and metadata.
 ```sh
 > Account "main": mint-nft "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" "{ key: value }" "{ key: value }"
 ```
@@ -216,7 +301,7 @@ Sends native tokens to an address with StorageDepositReturn and Expiration Unloc
 
 ### `send-nft`
 
-Sends a NFT to an address.
+Sends an NFT to an address.
 
 #### Parameters
 
