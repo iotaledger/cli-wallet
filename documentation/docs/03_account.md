@@ -59,7 +59,7 @@ Burns an NFT.
 
 Burn a provided NFT.
 ```sh
-> Account "main": burnt-nft 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
+> Account "main": burn-nft 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
 ```
 
 ### `claim`
