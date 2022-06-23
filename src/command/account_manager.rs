@@ -1,8 +1,7 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::fs::File;
-use std::io::prelude::*;
+use std::{fs::File, io::prelude::*};
 
 use clap::{Args, Parser, Subcommand};
 use iota_wallet::{

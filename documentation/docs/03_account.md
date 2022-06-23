@@ -38,6 +38,13 @@ Burns a native token.
 | `token_id` | ✘         | N/A     | "0xabcdef" |
 | `amount`   | ✘         | N/A     | 100        |
 
+#### Examples
+
+Burn the provided amount of a native token.
+```sh
+> Account "main": burn-native-token 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
+```
+
 ### `burn-nft`
 
 Burns an NFT.
@@ -47,6 +54,13 @@ Burns an NFT.
 | Name     | Optional  | Default | Example    |
 | -------- | --------- | ------- | ---------- |
 | `nft_id` | ✘         | N/A     | "0xabcdef" |
+
+#### Examples
+
+Burn a provided NFT.
+```sh
+> Account "main": burnt-nft 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
+```
 
 ### `claim`
 
@@ -153,6 +167,13 @@ Melt a native token.
 | ---------- | --------- | ------- | ---------- |
 | `token_id` | ✘         | N/A     | "0xabcdef" |
 | `amount`   | ✘         | N/A     | 100        |
+
+#### Examples
+
+Melt the provided amount of a native token.
+```sh
+> Account "main": melt-native-token 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
+```
 
 ### `mint-native-token`
 

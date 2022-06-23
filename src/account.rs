@@ -55,7 +55,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 }
             };
             if let Err(err) = match account_cli.command {
-                AccountCommand::NewAddress => new_address_command(&account_handle).await,
+                AccountCommand::Addresses => addresses_command(&account_handle).await,
                 AccountCommand::Balance => balance_command(&account_handle).await,
                 AccountCommand::BurnNativeToken { token_id, amount } => {
                     burn_native_token_command(&account_handle, token_id, amount).await
@@ -71,8 +71,6 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                     return Ok(true);
                 }
                 AccountCommand::Faucet { url, address } => faucet_command(&account_handle, url, address).await,
-                AccountCommand::Addresses => addresses_command(&account_handle).await,
-                AccountCommand::Transactions => transactions_command(&account_handle).await,
                 AccountCommand::MeltNativeToken { token_id, amount } => {
                     melt_native_token_command(&account_handle, token_id, amount).await
                 }
@@ -85,6 +83,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                     immutable_metadata,
                     metadata,
                 } => mint_nft_command(&account_handle, address, immutable_metadata, metadata).await,
+                AccountCommand::NewAddress => new_address_command(&account_handle).await,
                 AccountCommand::Send { address, amount } => send_command(&account_handle, address, amount).await,
                 AccountCommand::SendMicro { address, amount } => {
                     send_micro_command(&account_handle, address, amount).await
@@ -96,6 +95,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 } => send_native_token_command(&account_handle, address, token_id, amount).await,
                 AccountCommand::SendNft { address, nft_id } => send_nft_command(&account_handle, address, nft_id).await,
                 AccountCommand::Sync => sync_command(&account_handle).await,
+                AccountCommand::Transactions => transactions_command(&account_handle).await,
             } {
                 log::error!("{}", err);
             }
