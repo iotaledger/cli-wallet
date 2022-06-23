@@ -123,7 +123,7 @@ Destroys a foundry.
 #### Example
 
 ```sh
-> Account "main": destroy-alias 0x08b2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd0100000000
+> Account "main": destroy-foundry 0x08b2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd0100000000
 ```
 
 ### `exit`
