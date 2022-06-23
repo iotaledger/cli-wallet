@@ -16,7 +16,7 @@ clap = { version = "3.2.5", default-features = false, features = [ "derive", "st
 dialoguer = { version = "0.10.1", default-features = false, features = [ "password" ] }
 fern-logger = { version = "0.5.0", default-features = false }
 iota-crypto = { version = "0.12.1", default-features = false, features = [ "std", "random", "sha", "pbkdf", "hmac", "bip39", "bip39-en", "chacha", "blake2b", "slip10" ] }
-iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "fab00de15f890d1eb5ea27d8ea7de032b5559698", default-features = false, features = [ "storage", "stronghold" ] }
+iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "7bf05046536fcb64e59a3290a76a4cb36f43db37", default-features = false, features = [ "storage", "stronghold" ] }
 log = { version = "0.4.17", default-features = false }
 prefix-hex = { version = "0.4.0", default-features = false, features = [ "std" ] }
 thiserror = { version = "1.0.31", default-features = false }
