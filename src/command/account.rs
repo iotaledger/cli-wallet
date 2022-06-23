@@ -111,7 +111,7 @@ pub async fn burn_native_token_command(
     token_id: String,
     amount: String,
 ) -> Result<(), Error> {
-    log::info!("Burning native token {amount} {token_id}.");
+    log::info!("Burning native token {token_id} {amount}.");
 
     let transaction_result = account_handle
         .burn_native_token(
