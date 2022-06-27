@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 use iota_wallet::{
     account::{
         types::{AccountAddress, Transaction},
-        AccountHandle, OutputsToCollect,
+        AccountHandle, OutputsToClaim,
     },
     iota_client::{
         bee_block::output::{AliasId, FoundryId, NftId, TokenId},
@@ -150,7 +150,7 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error
 pub async fn claim_command(account_handle: &AccountHandle) -> Result<(), Error> {
     log::info!("Claiming outputs.");
 
-    let claiming_txs = account_handle.try_collect_outputs(OutputsToCollect::All).await?;
+    let claiming_txs = account_handle.try_claim_outputs(OutputsToClaim::All).await?;
 
     for claim_tx in claiming_txs {
         log::info!("Claim transaction sent: {claim_tx:?}");
