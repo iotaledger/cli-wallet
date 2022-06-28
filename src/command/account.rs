@@ -5,12 +5,9 @@ use std::str::FromStr;
 
 use clap::{Parser, Subcommand};
 use iota_wallet::{
-    account::{
-        types::{AccountAddress, Transaction},
-        AccountHandle, OutputsToClaim,
-    },
+    account::{types::AccountAddress, AccountHandle, OutputsToClaim},
     iota_client::{
-        bee_block::output::{AliasId, FoundryId, NftId, TokenId},
+        bee_block::output::{AliasId, FoundryId, NftId, OutputId, TokenId},
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
@@ -88,6 +85,12 @@ pub enum AccountCommand {
     Sync,
     /// List the account transactions.
     Transactions,
+    /// Display an output.
+    Output { output_id: String },
+    /// List all outputs.
+    Outputs,
+    /// List the unspent outputs.
+    UnspentOutputs,
 }
 
 /// `addresses` command
@@ -375,7 +378,50 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
     if transactions.is_empty() {
         log::info!("No transactions found");
     } else {
-        transactions.iter().for_each(print_transaction);
+        // Format to not take too much space with pretty printing but still have a clear separation between transactions
+        let txs = transactions.iter().map(|tx| format!("{tx:?}")).collect::<Vec<String>>();
+        log::info!("{txs:#?}");
+    }
+
+    Ok(())
+}
+
+/// `output` command
+pub async fn output_command(account_handle: &AccountHandle, output_id: String) -> Result<(), Error> {
+    let output = account_handle.get_output(&OutputId::from_str(&output_id)?).await;
+
+    if let Some(output) = output {
+        log::info!("{output:#?}");
+    } else {
+        log::info!("Output not found");
+    }
+
+    Ok(())
+}
+
+/// `outputs` command
+pub async fn outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    let outputs = account_handle.list_outputs().await?;
+
+    if outputs.is_empty() {
+        log::info!("No outputs found");
+    } else {
+        let output_ids: Vec<OutputId> = outputs.iter().map(|o| o.output_id).collect();
+        log::info!("Outputs: {output_ids:#?}");
+    }
+
+    Ok(())
+}
+
+/// `unspent-outputs` command
+pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    let outputs = account_handle.list_unspent_outputs().await?;
+
+    if outputs.is_empty() {
+        log::info!("No outputs found");
+    } else {
+        let output_ids: Vec<OutputId> = outputs.iter().map(|o| o.output_id).collect();
+        log::info!("Unspent outputs: {output_ids:#?}");
     }
 
     Ok(())
@@ -389,23 +435,6 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
 //     }
 //     Ok(())
 // }
-
-fn print_transaction(transaction: &Transaction) {
-    log::info!("{transaction:?}");
-    // if let Some(MessagePayload::Transaction(tx)) = message.payload() {
-    //     let TransactionEssence::Regular(essence) = tx.essence();
-    //     println!("--- Value: {:?}", essence.value());
-    // }
-    // println!("--- Timestamp: {:?}", message.timestamp());
-    // println!(
-    //     "--- Broadcasted: {}, confirmed: {}",
-    //     message.broadcasted(),
-    //     match message.confirmed() {
-    //         Some(c) => c.to_string(),
-    //         None => "unknown".to_string(),
-    //     }
-    // );
-}
 
 pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<(), Error> {
     let mut log = format!("Address {}: {}", address.key_index(), address.address().to_bech32());
