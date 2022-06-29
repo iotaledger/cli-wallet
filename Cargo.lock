@@ -1361,7 +1361,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/wallet.rs?rev=ef85e8a50c5eb33c8f2d0561d979b7f58b9b5e78#ef85e8a50c5eb33c8f2d0561d979b7f58b9b5e78"
+source = "git+https://github.com/iotaledger/wallet.rs?rev=75b1f9e9dd150d2547d3fe61b2af60310ab6473d#75b1f9e9dd150d2547d3fe61b2af60310ab6473d"
 dependencies = [
  "async-trait",
  "backtrace",
