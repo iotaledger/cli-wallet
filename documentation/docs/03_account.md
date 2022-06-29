@@ -171,7 +171,7 @@ Displays the account interface usage.
 
 ### `melt-native-token`
 
-Melt a native token.
+Melts a native token.
 
 #### Parameters
 
@@ -212,6 +212,8 @@ Mint a native token with a maximum supply and foundry metadata.
 
 ### `mint-nft`
 
+Mints an NFT.
+
 #### Parameters
 
 | Name                  | Optional  | Default                           | Example                                                           |
@@ -249,7 +251,7 @@ Generates a new address.
 
 ### `output`
 
-Display an output that is stored in the account.
+Displays an output that is stored in the account.
 
 #### Parameters
 
@@ -265,7 +267,7 @@ Display an output that is stored in the account.
 
 ### `outputs`
 
-Display all outputs that are stored in the account.
+Displays all outputs that are stored in the account.
 
 #### Example
 
@@ -354,7 +356,7 @@ Synchronises the account.
 
 ### `transactions`
 
-List all account transactions.
+Lists all account transactions.
 
 #### Example
 
@@ -364,7 +366,7 @@ List all account transactions.
 
 ### `unspent-outputs`
 
-Display all unspent outputs that are stored in the account.
+Displays all unspent outputs that are stored in the account.
 
 #### Example
 
