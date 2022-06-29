@@ -6,7 +6,7 @@ use std::{fs::File, io::prelude::*};
 use clap::{Args, Parser, Subcommand};
 use iota_wallet::{
     account_manager::AccountManager,
-    iota_client::{secret::SecretManager, utils::generate_mnemonic},
+    iota_client::{constants::SHIMMER_COIN_TYPE, secret::SecretManager, utils::generate_mnemonic},
     ClientOptions,
 };
 use log::LevelFilter;
@@ -57,6 +57,7 @@ pub async fn init_command(
                 .with_node_sync_disabled(),
         )
         .with_storage_path(&storage_path)
+        .with_coin_type(SHIMMER_COIN_TYPE)
         .finish()
         .await?;
 
