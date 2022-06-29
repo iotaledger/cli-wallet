@@ -65,6 +65,10 @@ pub enum AccountCommand {
     },
     /// Generate a new address.
     NewAddress,
+    /// Display an output.
+    Output { output_id: String },
+    /// List all outputs.
+    Outputs,
     /// Send an amount to a bech32 encoded address: `send
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1000000`
     Send { address: String, amount: u64 },
@@ -85,10 +89,6 @@ pub enum AccountCommand {
     Sync,
     /// List the account transactions.
     Transactions,
-    /// Display an output.
-    Output { output_id: String },
-    /// List all outputs.
-    Outputs,
     /// List the unspent outputs.
     UnspentOutputs,
 }
@@ -301,6 +301,33 @@ pub async fn new_address_command(account_handle: &AccountHandle) -> Result<(), E
     Ok(())
 }
 
+/// `output` command
+pub async fn output_command(account_handle: &AccountHandle, output_id: String) -> Result<(), Error> {
+    let output = account_handle.get_output(&OutputId::from_str(&output_id)?).await;
+
+    if let Some(output) = output {
+        log::info!("{output:#?}");
+    } else {
+        log::info!("Output not found");
+    }
+
+    Ok(())
+}
+
+/// `outputs` command
+pub async fn outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    let outputs = account_handle.list_outputs().await?;
+
+    if outputs.is_empty() {
+        log::info!("No outputs found");
+    } else {
+        let output_ids: Vec<OutputId> = outputs.iter().map(|o| o.output_id).collect();
+        log::info!("Outputs: {output_ids:#?}");
+    }
+
+    Ok(())
+}
+
 // `send` command
 pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<(), Error> {
     let outputs = vec![AddressWithAmount { address, amount }];
@@ -381,33 +408,6 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
         // Format to not take too much space with pretty printing but still have a clear separation between transactions
         let txs = transactions.iter().map(|tx| format!("{tx:?}")).collect::<Vec<String>>();
         log::info!("{txs:#?}");
-    }
-
-    Ok(())
-}
-
-/// `output` command
-pub async fn output_command(account_handle: &AccountHandle, output_id: String) -> Result<(), Error> {
-    let output = account_handle.get_output(&OutputId::from_str(&output_id)?).await;
-
-    if let Some(output) = output {
-        log::info!("{output:#?}");
-    } else {
-        log::info!("Output not found");
-    }
-
-    Ok(())
-}
-
-/// `outputs` command
-pub async fn outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let outputs = account_handle.list_outputs().await?;
-
-    if outputs.is_empty() {
-        log::info!("No outputs found");
-    } else {
-        let output_ids: Vec<OutputId> = outputs.iter().map(|o| o.output_id).collect();
-        log::info!("Outputs: {output_ids:#?}");
     }
 
     Ok(())

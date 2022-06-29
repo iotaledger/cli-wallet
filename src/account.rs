@@ -85,6 +85,8 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                     metadata,
                 } => mint_nft_command(&account_handle, address, immutable_metadata, metadata).await,
                 AccountCommand::NewAddress => new_address_command(&account_handle).await,
+                AccountCommand::Output { output_id } => output_command(&account_handle, output_id).await,
+                AccountCommand::Outputs => outputs_command(&account_handle).await,
                 AccountCommand::Send { address, amount } => send_command(&account_handle, address, amount).await,
                 AccountCommand::SendMicro { address, amount } => {
                     send_micro_command(&account_handle, address, amount).await
@@ -97,8 +99,6 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::SendNft { address, nft_id } => send_nft_command(&account_handle, address, nft_id).await,
                 AccountCommand::Sync => sync_command(&account_handle).await,
                 AccountCommand::Transactions => transactions_command(&account_handle).await,
-                AccountCommand::Output { output_id } => output_command(&account_handle, output_id).await,
-                AccountCommand::Outputs => outputs_command(&account_handle).await,
                 AccountCommand::UnspentOutputs => unspent_outputs_command(&account_handle).await,
             } {
                 log::error!("{}", err);
