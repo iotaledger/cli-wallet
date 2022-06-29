@@ -247,6 +247,32 @@ Generates a new address.
 > Account "main": new-address
 ```
 
+### `output`
+
+Display an output that is stored in the account.
+
+#### Parameters
+
+| Name        | Optional  | Default | Example                                                                  |
+| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
+| `output_id` | ✘         | N/A     | "0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100" |
+
+#### Example
+
+```sh
+> Account "main": output 0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100
+```
+
+### `outputs`
+
+Display all outputs that are stored in the account.
+
+#### Example
+
+```sh
+> Account "main": outputs
+```
+
 ### `send`
 
 Sends an amount to an address.
@@ -334,32 +360,6 @@ List all account transactions.
 
 ```sh
 > Account "main": transactions
-```
-
-### `output`
-
-Display an output that is stored in the account.
-
-#### Parameters
-
-| Name        | Optional  | Default | Example                                                                  |
-| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
-| `output_id` | ✘         | N/A     | "0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100" |
-
-#### Example
-
-```sh
-> Account "main": output 0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100
-```
-
-### `outputs`
-
-Display all outputs that are stored in the account.
-
-#### Example
-
-```sh
-> Account "main": outputs
 ```
 
 ### `unspent-outputs`
