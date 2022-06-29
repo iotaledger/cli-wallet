@@ -171,7 +171,7 @@ Displays the account interface usage.
 
 ### `melt-native-token`
 
-Melt a native token.
+Melts a native token.
 
 #### Parameters
 
@@ -212,6 +212,8 @@ Mint a native token with a maximum supply and foundry metadata.
 
 ### `mint-nft`
 
+Mints an NFT.
+
 #### Parameters
 
 | Name                  | Optional  | Default                           | Example                                                           |
@@ -245,6 +247,32 @@ Generates a new address.
 
 ```sh
 > Account "main": new-address
+```
+
+### `output`
+
+Displays an output that is stored in the account.
+
+#### Parameters
+
+| Name        | Optional  | Default | Example                                                                  |
+| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
+| `output_id` | ✘         | N/A     | "0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100" |
+
+#### Example
+
+```sh
+> Account "main": output 0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100
+```
+
+### `outputs`
+
+Displays all outputs that are stored in the account.
+
+#### Example
+
+```sh
+> Account "main": outputs
 ```
 
 ### `send`
@@ -328,10 +356,20 @@ Synchronises the account.
 
 ### `transactions`
 
-List all account transactions.
+Lists all account transactions.
 
 #### Example
 
 ```sh
 > Account "main": transactions
+```
+
+### `unspent-outputs`
+
+Displays all unspent outputs that are stored in the account.
+
+#### Example
+
+```sh
+> Account "main": unspent-outputs
 ```

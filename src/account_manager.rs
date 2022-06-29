@@ -17,9 +17,10 @@ use crate::{
 };
 
 pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManager, Option<String>), Error> {
-    let storage_path = var_os("WALLET_DATABASE_PATH")
-        .map(|os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"))
-        .unwrap_or_else(|| "./stardust-cli-wallet-db".to_string());
+    let storage_path = var_os("WALLET_DATABASE_PATH").map_or_else(
+        || "./stardust-cli-wallet-db".to_string(),
+        |os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"),
+    );
     let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
 
     let password = get_password(stronghold_path)?;
