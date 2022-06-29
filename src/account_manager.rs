@@ -5,7 +5,6 @@ use std::env::var_os;
 
 use iota_wallet::{
     account_manager::AccountManager,
-    iota_client::constants::SHIMMER_COIN_TYPE,
     secret::{stronghold::StrongholdSecretManager, SecretManager},
 };
 
@@ -38,7 +37,6 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
             let account_manager = AccountManager::builder()
                 .with_secret_manager(secret_manager)
                 .with_storage_path(&storage_path)
-                .with_coin_type(SHIMMER_COIN_TYPE)
                 .finish()
                 .await?;
             let mut account = None;
@@ -58,7 +56,6 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
             AccountManager::builder()
                 .with_secret_manager(secret_manager)
                 .with_storage_path(&storage_path)
-                .with_coin_type(SHIMMER_COIN_TYPE)
                 .finish()
                 .await?,
             None,
