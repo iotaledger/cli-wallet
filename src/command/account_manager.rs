@@ -3,14 +3,10 @@
 
 use std::{fs::File, io::prelude::*};
 
-use clap::{ArgEnum, Args, Parser, Subcommand};
+use clap::{Args, Parser, Subcommand};
 use iota_wallet::{
     account_manager::AccountManager,
-    iota_client::{
-        constants::{IOTA_COIN_TYPE, SHIMMER_COIN_TYPE},
-        secret::SecretManager,
-        utils::generate_mnemonic,
-    },
+    iota_client::{constants::SHIMMER_COIN_TYPE, secret::SecretManager, utils::generate_mnemonic},
     ClientOptions,
 };
 use log::LevelFilter;
@@ -46,15 +42,8 @@ pub struct InitParameters {
     pub mnemonic: Option<String>,
     #[clap(short, long)]
     pub node: Option<String>,
-    #[clap(short, long, arg_enum, value_parser)]
-    pub coin_type: Option<CoinType>,
-}
-
-#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
-#[repr(u32)]
-pub enum CoinType {
-    Iota = IOTA_COIN_TYPE,
-    Shimmer = SHIMMER_COIN_TYPE,
+    #[clap(short, long)]
+    pub coin_type: Option<u32>,
 }
 
 pub async fn init_command(
@@ -70,7 +59,7 @@ pub async fn init_command(
                 .with_node_sync_disabled(),
         )
         .with_storage_path(&storage_path)
-        .with_coin_type(parameters.coin_type.unwrap_or(CoinType::Shimmer) as u32)
+        .with_coin_type(parameters.coin_type.unwrap_or(SHIMMER_COIN_TYPE))
         .finish()
         .await?;
 

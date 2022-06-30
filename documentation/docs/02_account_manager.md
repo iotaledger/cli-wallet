@@ -53,11 +53,11 @@ When just initialised, the wallet has no account yet, use the `new` command to c
 
 #### Parameters
 
-| Name        | Optional    | Default                       | Example                                                                                                                                                                              |
-| ----------- | ----------- |------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `mnemonic`  | ✓           | Randomly generated            | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC)  |
-| `node`      | ✓           | "http://localhost:14265/"     | "http://localhost:14265/"                                                                                                                                                            |
-| `coin-type` | ✓           | "shimmer"                     | "iota"                                                                                                                                                                               |
+| Name        | Optional    | Default                      | Example                                                                                                                                                                              |
+| ----------- | ----------- |----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `mnemonic`  | ✓           | Randomly generated           | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC)  |
+| `node`      | ✓           | "http://localhost:14265/"    | "http://localhost:14265/"                                                                                                                                                            |
+| `coin-type` | ✓           | 4219                         | 4218                                                                                                                                                                                 |
 
 #### Examples
 
@@ -79,7 +79,7 @@ $ ./wallet init --node "http://localhost:14265/"
 
 Initialise the wallet with a given coin type.
 ```sh
-$ ./wallet init --coin-type "iota"
+$ ./wallet init --coin-type 4219
 ```
 
 ### `./wallet new`
