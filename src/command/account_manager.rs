@@ -51,9 +51,10 @@ pub struct InitParameters {
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
+#[repr(u32)]
 pub enum CoinType {
-    Iota,
-    Shimmer,
+    Iota = IOTA_COIN_TYPE,
+    Shimmer = SHIMMER_COIN_TYPE,
 }
 
 pub async fn init_command(
@@ -69,10 +70,7 @@ pub async fn init_command(
                 .with_node_sync_disabled(),
         )
         .with_storage_path(&storage_path)
-        .with_coin_type(match parameters.coin_type {
-            Some(CoinType::Iota) => IOTA_COIN_TYPE,
-            Some(CoinType::Shimmer) | None => SHIMMER_COIN_TYPE,
-        })
+        .with_coin_type(parameters.coin_type.unwrap_or(CoinType::Shimmer) as u32)
         .finish()
         .await?;
 
