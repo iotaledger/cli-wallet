@@ -3,10 +3,14 @@
 
 use std::{fs::File, io::prelude::*};
 
-use clap::{Args, Parser, Subcommand};
+use clap::{ArgEnum, Args, Parser, Subcommand};
 use iota_wallet::{
     account_manager::AccountManager,
-    iota_client::{constants::SHIMMER_COIN_TYPE, secret::SecretManager, utils::generate_mnemonic},
+    iota_client::{
+        constants::{IOTA_COIN_TYPE, SHIMMER_COIN_TYPE},
+        secret::SecretManager,
+        utils::generate_mnemonic,
+    },
     ClientOptions,
 };
 use log::LevelFilter;
@@ -26,8 +30,8 @@ pub struct AccountManagerCli {
 
 #[derive(Debug, Clone, Subcommand)]
 pub enum AccountManagerCommand {
-    /// Initialize the wallet with a mnemonic and node url, if nothing is provided, a new mnemonic will be generated and "http://localhost:14265" used.
-    Init(MnemonicAndUrl),
+    /// Parameters for the init command.
+    Init(InitParameters),
     /// Create a new account with an optional alias.
     New { alias: Option<String> },
     /// Set the node to use.
@@ -37,31 +41,42 @@ pub enum AccountManagerCommand {
 }
 
 #[derive(Debug, Clone, Args)]
-pub struct MnemonicAndUrl {
+pub struct InitParameters {
     #[clap(short, long)]
     pub mnemonic: Option<String>,
     #[clap(short, long)]
     pub node: Option<String>,
+    #[clap(short, long, arg_enum, value_parser)]
+    pub coin_type: Option<CoinType>,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq, Eq, PartialOrd, Ord, ArgEnum)]
+pub enum CoinType {
+    Iota,
+    Shimmer,
 }
 
 pub async fn init_command(
     secret_manager: SecretManager,
     storage_path: String,
-    mnemonic_url: MnemonicAndUrl,
+    parameters: InitParameters,
 ) -> Result<AccountManager, Error> {
     let account_manager = AccountManager::builder()
         .with_secret_manager(secret_manager)
         .with_client_options(
             ClientOptions::new()
-                .with_node(mnemonic_url.node.as_deref().unwrap_or("http://localhost:14265"))?
+                .with_node(parameters.node.as_deref().unwrap_or("http://localhost:14265"))?
                 .with_node_sync_disabled(),
         )
         .with_storage_path(&storage_path)
-        .with_coin_type(SHIMMER_COIN_TYPE)
+        .with_coin_type(match parameters.coin_type {
+            Some(CoinType::Iota) => IOTA_COIN_TYPE,
+            Some(CoinType::Shimmer) | None => SHIMMER_COIN_TYPE,
+        })
         .finish()
         .await?;
 
-    let mnemonic = match mnemonic_url.mnemonic {
+    let mnemonic = match parameters.mnemonic {
         Some(mnemonic) => mnemonic,
         None => generate_mnemonic()?,
     };
