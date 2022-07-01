@@ -50,7 +50,7 @@ jobs:
   create-and-upload-assets:
     needs: create-release
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 30
+    timeout-minutes: 90
 
     strategy:
       fail-fast: false
