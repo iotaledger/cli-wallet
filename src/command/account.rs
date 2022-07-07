@@ -427,15 +427,6 @@ pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(
     Ok(())
 }
 
-// `set-alias` command
-// pub async fn set_alias_command(account_handle: &AccountHandle) -> Result<()> {
-//     if let Some(matches) = matches.subcommand_matches("set-alias") {
-//         let alias = matches.value_of("alias")?;
-//         account_handle.set_alias(alias).await?;
-//     }
-//     Ok(())
-// }
-
 pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<(), Error> {
     let mut log = format!("Address {}: {}", address.key_index(), address.address().to_bech32());
 
@@ -443,13 +434,12 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
         log = format!("{log}\nChange address");
     }
 
-    let addresses_with_balance = account_handle.list_addresses_with_unspent_outputs().await?;
+    let addresses = account_handle.list_addresses_with_unspent_outputs().await?;
 
-    if let Ok(index) = addresses_with_balance.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
+    if let Ok(index) = addresses.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
         (a.key_index(), a.internal())
     }) {
-        log = format!("{log}\nBalance: {}", addresses_with_balance[index].amount());
-        log = format!("{log}\nOutputs: {:#?}", addresses_with_balance[index].output_ids());
+        log = format!("{log}\nOutputs: {:#?}", addresses[index].output_ids());
     }
 
     log::info!("{log}");

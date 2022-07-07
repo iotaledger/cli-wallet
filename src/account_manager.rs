@@ -27,8 +27,7 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
     let secret_manager = SecretManager::Stronghold(
         StrongholdSecretManager::builder()
             .password(&password)
-            .snapshot_path(stronghold_path.to_path_buf())
-            .try_build()?,
+            .try_build(stronghold_path.to_path_buf())?,
     );
 
     let (account_manager, account) = if let Some(command) = cli.command {
