@@ -66,10 +66,22 @@ Burn a provided NFT.
 
 Tries to claim outputs with storage deposit return, expiration or timelock unlock conditions.
 
-#### Example
+#### Parameters
 
+| Name        | Optional  | Default | Example                                                                  |
+| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
+| `output_id` | ✓         | N/A     | "0xd5dff9ee869dfa7796d5132b220cb5c00146c36abba27d3562e2d726decb50850000" |
+
+#### Examples
+
+Try to claim all outputs with storage deposit return, expiration or timelock unlock conditions.
 ```sh
 > Account "main": claim
+```
+
+Try to claim a specific output.
+```sh
+> Account "main": claim 0xd5dff9ee869dfa7796d5132b220cb5c00146c36abba27d3562e2d726decb50850000
 ```
 
 ### `clear`

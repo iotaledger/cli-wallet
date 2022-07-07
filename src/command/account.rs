@@ -35,7 +35,7 @@ pub enum AccountCommand {
     /// Burn an NFT: `burn-nft "0x..."`
     BurnNft { nft_id: String },
     /// Claim outputs with storage deposit return, expiration or timelock unlock conditions.
-    Claim,
+    Claim { output_id: Option<String> },
     /// Consolidate all basic outputs into one address.
     Consolidate,
     /// Destroy an alias: `destroy-alias "0x..."`
@@ -150,13 +150,21 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error
 }
 
 // `claim` command
-pub async fn claim_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    log::info!("Claiming outputs.");
+pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<String>) -> Result<(), Error> {
+    let claiming_txs = if let Some(output_id) = output_id {
+        log::info!("Claiming output {output_id}");
 
-    let claiming_txs = account_handle.try_claim_outputs(OutputsToClaim::All).await?;
+        account_handle
+            .claim_outputs(vec![OutputId::from_str(&output_id)?])
+            .await?
+    } else {
+        log::info!("Claiming outputs.");
 
-    for claim_tx in claiming_txs {
-        log::info!("Claim transaction sent: {claim_tx:?}");
+        account_handle.try_claim_outputs(OutputsToClaim::All).await?
+    };
+
+    for claiming_tx in claiming_txs {
+        log::info!("Claim transaction sent: {claiming_tx:?}");
     }
 
     Ok(())
