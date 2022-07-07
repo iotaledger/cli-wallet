@@ -62,7 +62,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                     burn_native_token_command(&account_handle, token_id, amount).await
                 }
                 AccountCommand::BurnNft { nft_id } => burn_nft_command(&account_handle, nft_id).await,
-                AccountCommand::Claim => claim_command(&account_handle).await,
+                AccountCommand::Claim { id } => claim_command(&account_handle, id).await,
                 AccountCommand::Consolidate => consolidate_command(&account_handle).await,
                 AccountCommand::DestroyAlias { alias_id } => destroy_alias_command(&account_handle, alias_id).await,
                 AccountCommand::DestroyFoundry { foundry_id } => {
