@@ -10,7 +10,8 @@ use iota_wallet::{
 
 use crate::{
     command::account_manager::{
-        init_command, new_command, set_node_command, sync_command, AccountManagerCli, AccountManagerCommand,
+        change_password_command, init_command, new_command, set_node_command, sync_command, AccountManagerCli,
+        AccountManagerCommand,
     },
     error::Error,
     helper::get_password,
@@ -23,7 +24,7 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
     );
     let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
 
-    let password = get_password(stronghold_path)?;
+    let password = get_password("Stronghold password", !stronghold_path.exists())?;
     let secret_manager = SecretManager::Stronghold(
         StrongholdSecretManager::builder()
             .password(&password)
@@ -42,6 +43,7 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
             let mut account = None;
 
             match command {
+                AccountManagerCommand::ChangePassword => change_password_command(&account_manager).await?,
                 // PANIC: this will never happen because of the if/else.
                 AccountManagerCommand::Init(_) => unreachable!(),
                 AccountManagerCommand::New { alias } => account = Some(new_command(&account_manager, alias).await?),

@@ -11,7 +11,7 @@ use iota_wallet::{
 };
 use log::LevelFilter;
 
-use crate::error::Error;
+use crate::{error::Error, helper::get_password};
 
 #[derive(Debug, Clone, Parser)]
 #[clap(version, long_about = None)]
@@ -26,12 +26,17 @@ pub struct AccountManagerCli {
 
 #[derive(Debug, Clone, Subcommand)]
 pub enum AccountManagerCommand {
+    ChangePassword,
     /// Parameters for the init command.
     Init(InitParameters),
     /// Create a new account with an optional alias.
-    New { alias: Option<String> },
+    New {
+        alias: Option<String>,
+    },
     /// Set the node to use.
-    SetNode { url: String },
+    SetNode {
+        url: String,
+    },
     /// Sync all accounts.
     Sync,
 }
@@ -44,6 +49,15 @@ pub struct InitParameters {
     pub node: Option<String>,
     #[clap(short, long)]
     pub coin_type: Option<u32>,
+}
+
+pub async fn change_password_command(manager: &AccountManager) -> Result<(), Error> {
+    let current = get_password("Stronghold current password", false)?;
+    let new = get_password("Stronghold new password", false)?;
+
+    manager.change_stronghold_password(&current, &new).await?;
+
+    Ok(())
 }
 
 pub async fn init_command(
