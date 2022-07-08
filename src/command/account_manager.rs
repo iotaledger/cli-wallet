@@ -51,8 +51,7 @@ pub struct InitParameters {
     pub coin_type: Option<u32>,
 }
 
-pub async fn change_password_command(manager: &AccountManager) -> Result<(), Error> {
-    let current = get_password("Stronghold current password", false)?;
+pub async fn change_password_command(manager: &AccountManager, current: &str) -> Result<(), Error> {
     let new = get_password("Stronghold new password", true)?;
 
     manager.change_stronghold_password(&current, &new).await?;

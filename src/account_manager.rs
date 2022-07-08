@@ -43,7 +43,7 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
             let mut account = None;
 
             match command {
-                AccountManagerCommand::ChangePassword => change_password_command(&account_manager).await?,
+                AccountManagerCommand::ChangePassword => change_password_command(&account_manager, &password).await?,
                 // PANIC: this will never happen because of the if/else.
                 AccountManagerCommand::Init(_) => unreachable!(),
                 AccountManagerCommand::New { alias } => account = Some(new_command(&account_manager, alias).await?),
