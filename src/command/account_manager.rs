@@ -53,7 +53,7 @@ pub struct InitParameters {
 
 pub async fn change_password_command(manager: &AccountManager) -> Result<(), Error> {
     let current = get_password("Stronghold current password", false)?;
-    let new = get_password("Stronghold new password", false)?;
+    let new = get_password("Stronghold new password", true)?;
 
     manager.change_stronghold_password(&current, &new).await?;
 
