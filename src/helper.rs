@@ -1,24 +1,21 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use std::path::Path;
-
 use dialoguer::{console::Term, theme::ColorfulTheme, Password, Select};
 use iota_wallet::account_manager::AccountManager;
 
 use crate::error::Error;
 
-pub fn get_password(path: &Path) -> Result<String, Error> {
-    let mut prompt = Password::new();
+pub fn get_password(prompt: &str, confirmation: bool) -> Result<String, Error> {
+    let mut password = Password::new();
 
-    prompt.with_prompt("Stronghold password");
+    password.with_prompt(prompt);
 
-    // Check if the stronghold exists already
-    if !path.exists() {
-        prompt.with_confirmation("Confirm password", "Password mismatch");
+    if confirmation {
+        password.with_confirmation("Confirm password", "Password mismatch");
     }
 
-    Ok(prompt.interact()?)
+    Ok(password.interact()?)
 }
 
 pub async fn pick_account(manager: &AccountManager) -> Result<Option<u32>, Error> {
