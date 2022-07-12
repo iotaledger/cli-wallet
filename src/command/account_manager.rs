@@ -57,9 +57,8 @@ pub struct InitParameters {
     pub coin_type: Option<u32>,
 }
 
-pub async fn backup_command(manager: &AccountManager, path: String) -> Result<(), Error> {
-    let password = get_password("Backup password", true)?;
-    manager.backup(path.into(), password).await?;
+pub async fn backup_command(manager: &AccountManager, path: String, password: &str) -> Result<(), Error> {
+    manager.backup(path.into(), password.into()).await?;
 
     Ok(())
 }
@@ -126,9 +125,8 @@ pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Res
     Ok(alias)
 }
 
-pub async fn restore_command(manager: &AccountManager, path: String) -> Result<(), Error> {
-    let password = get_password("Backup password", false)?;
-    manager.restore_backup(path.into(), password).await?;
+pub async fn restore_command(manager: &AccountManager, path: String, password: &str) -> Result<(), Error> {
+    manager.restore_backup(path.into(), password.into()).await?;
 
     Ok(())
 }
