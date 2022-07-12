@@ -26,6 +26,9 @@ pub struct AccountManagerCli {
 
 #[derive(Debug, Clone, Subcommand)]
 pub enum AccountManagerCommand {
+    Backup {
+        path: String,
+    },
     ChangePassword,
     /// Parameters for the init command.
     Init(InitParameters),
@@ -49,6 +52,13 @@ pub struct InitParameters {
     pub node: Option<String>,
     #[clap(short, long)]
     pub coin_type: Option<u32>,
+}
+
+pub async fn backup_command(manager: &AccountManager, path: String) -> Result<(), Error> {
+    let password = get_password("Backup password", true)?;
+    manager.backup(path.into(), password).await?;
+
+    Ok(())
 }
 
 pub async fn change_password_command(manager: &AccountManager, current: &str) -> Result<(), Error> {
