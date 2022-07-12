@@ -48,7 +48,7 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
                 // PANIC: this will never happen because of the if/else.
                 AccountManagerCommand::Init(_) => unreachable!(),
                 AccountManagerCommand::New { alias } => account = Some(new_command(&account_manager, alias).await?),
-                AccountManagerCommand::Restore { path } => restore_command(&account_manager, path,&password).await?,
+                AccountManagerCommand::Restore { path } => restore_command(&account_manager, path, &password).await?,
                 AccountManagerCommand::SetNode { url } => set_node_command(&account_manager, url).await?,
                 AccountManagerCommand::Sync => sync_command(&account_manager).await?,
             };

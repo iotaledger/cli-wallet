@@ -26,23 +26,18 @@ pub struct AccountManagerCli {
 
 #[derive(Debug, Clone, Subcommand)]
 pub enum AccountManagerCommand {
-    Backup {
-        path: String,
-    },
+    /// Create a stronghold backup file.
+    Backup { path: String },
+    /// Change the stronghold password.
     ChangePassword,
     /// Parameters for the init command.
     Init(InitParameters),
     /// Create a new account with an optional alias.
-    New {
-        alias: Option<String>,
-    },
-    Restore {
-        path: String,
-    },
+    New { alias: Option<String> },
+    /// Restore accounts from a stronghold backup file.
+    Restore { path: String },
     /// Set the node to use.
-    SetNode {
-        url: String,
-    },
+    SetNode { url: String },
     /// Sync all accounts.
     Sync,
 }
