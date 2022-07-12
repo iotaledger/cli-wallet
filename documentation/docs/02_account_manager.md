@@ -33,6 +33,34 @@ The wallet needs to be initialised (`init` command).
 $ ./wallet main
 ```
 
+### `./wallet backup`
+
+Creates a stronghold backup file.
+
+#### Parameters
+
+| Name    | Optional  | Example              |
+| ------- | --------- | -------------------- |
+| `path`  | ✘         | "backup.stronghold"  |
+
+#### Example
+
+Create a stronghold backup file.
+```sh
+$ ./wallet backup backup.stronghold
+```
+
+### `./wallet change-password`
+
+Changes the stronghold password.
+
+#### Example
+
+Change the stronghold password.
+```sh
+$ ./wallet change-password
+```
+
 ### `./wallet help`
 
 Displays the account manager interface usage and exits.
@@ -105,6 +133,23 @@ $ ./wallet new
 Create a new account with a provided alias.
 ```sh
 $ ./wallet new main
+```
+
+### `./wallet restore`
+
+Restores accounts from a stronghold backup file.
+
+#### Parameters
+
+| Name    | Optional  | Example              |
+| ------- | --------- | -------------------- |
+| `path`  | ✘         | "backup.stronghold"  |
+
+#### Example
+
+Restore accounts from a stronghold backup file.
+```sh
+$ ./wallet restore backup.stronghold
 ```
 
 ### `./wallet set-node`

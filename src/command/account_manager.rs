@@ -26,17 +26,18 @@ pub struct AccountManagerCli {
 
 #[derive(Debug, Clone, Subcommand)]
 pub enum AccountManagerCommand {
+    /// Create a stronghold backup file.
+    Backup { path: String },
+    /// Change the stronghold password.
     ChangePassword,
     /// Parameters for the init command.
     Init(InitParameters),
     /// Create a new account with an optional alias.
-    New {
-        alias: Option<String>,
-    },
+    New { alias: Option<String> },
+    /// Restore accounts from a stronghold backup file.
+    Restore { path: String },
     /// Set the node to use.
-    SetNode {
-        url: String,
-    },
+    SetNode { url: String },
     /// Sync all accounts.
     Sync,
 }
@@ -49,6 +50,12 @@ pub struct InitParameters {
     pub node: Option<String>,
     #[clap(short, long)]
     pub coin_type: Option<u32>,
+}
+
+pub async fn backup_command(manager: &AccountManager, path: String, password: &str) -> Result<(), Error> {
+    manager.backup(path.into(), password.into()).await?;
+
+    Ok(())
 }
 
 pub async fn change_password_command(manager: &AccountManager, current: &str) -> Result<(), Error> {
@@ -111,6 +118,12 @@ pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Res
     log::info!("Created account \"{alias}\"");
 
     Ok(alias)
+}
+
+pub async fn restore_command(manager: &AccountManager, path: String, password: &str) -> Result<(), Error> {
+    manager.restore_backup(path.into(), password.into()).await?;
+
+    Ok(())
 }
 
 pub async fn set_node_command(manager: &AccountManager, url: String) -> Result<(), Error> {
