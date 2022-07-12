@@ -36,6 +36,9 @@ pub enum AccountManagerCommand {
     New {
         alias: Option<String>,
     },
+    Restore {
+        path: String,
+    },
     /// Set the node to use.
     SetNode {
         url: String,
@@ -121,6 +124,13 @@ pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Res
     log::info!("Created account \"{alias}\"");
 
     Ok(alias)
+}
+
+pub async fn restore_command(manager: &AccountManager, path: String) -> Result<(), Error> {
+    let password = get_password("Backup password", false)?;
+    manager.restore_backup(path.into(), password).await?;
+
+    Ok(())
 }
 
 pub async fn set_node_command(manager: &AccountManager, url: String) -> Result<(), Error> {
