@@ -7,7 +7,7 @@ use clap::{Parser, Subcommand};
 use iota_wallet::{
     account::{types::AccountAddress, AccountHandle, OutputsToClaim},
     iota_client::{
-        bee_block::output::{AliasId, FoundryId, NftId, OutputId, TokenId},
+        block::output::{AliasId, FoundryId, NftId, OutputId, TokenId},
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,

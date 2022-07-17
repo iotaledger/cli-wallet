@@ -4,7 +4,7 @@
 use fern_logger::Error as LoggerError;
 use iota_wallet::{
     error::Error as WalletError,
-    iota_client::{bee_block::Error as BlockError, error::Error as ClientError},
+    iota_client::{block::Error as BlockError, error::Error as ClientError},
 };
 
 #[derive(Debug, thiserror::Error)]
