@@ -61,7 +61,7 @@ pub async fn backup_command(manager: &AccountManager, path: String, password: &s
 pub async fn change_password_command(manager: &AccountManager, current: &str) -> Result<(), Error> {
     let new = get_password("Stronghold new password", true)?;
 
-    manager.change_stronghold_password(&current, &new).await?;
+    manager.change_stronghold_password(current, &new).await?;
 
     Ok(())
 }
