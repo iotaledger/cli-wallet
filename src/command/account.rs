@@ -30,17 +30,17 @@ pub enum AccountCommand {
     Addresses,
     /// Print the account balance.
     Balance,
-    /// Burn a native token: `burn-native-token "0x..." 100`
+    /// Burn a native token: `burn-native-token 0x... 100`
     BurnNativeToken { token_id: String, amount: String },
-    /// Burn an NFT: `burn-nft "0x..."`
+    /// Burn an NFT: `burn-nft 0x...`
     BurnNft { nft_id: String },
     /// Claim outputs with storage deposit return, expiration or timelock unlock conditions.
     Claim { output_id: Option<String> },
     /// Consolidate all basic outputs into one address.
     Consolidate,
-    /// Destroy an alias: `destroy-alias "0x..."`
+    /// Destroy an alias: `destroy-alias 0x...`
     DestroyAlias { alias_id: String },
-    /// Destroy a foundry: `destroy-foundry "0x..."`
+    /// Destroy a foundry: `destroy-foundry 0x...`
     DestroyFoundry { foundry_id: String },
     /// Exit from the account prompt.
     Exit,
@@ -49,9 +49,9 @@ pub enum AccountCommand {
         url: Option<String>,
         address: Option<String>,
     },
-    /// Melt a native token: `melt-native-token "0x..." 100`
+    /// Melt a native token: `melt-native-token 0x... 100`
     MeltNativeToken { token_id: String, amount: String },
-    /// Mint a native token: `mint-native-token 100 "0x..." (foundry metadata)`
+    /// Mint a native token: `mint-native-token 100 0x... (foundry metadata)`
     MintNativeToken {
         maximum_supply: String,
         foundry_metadata: Option<String>,
