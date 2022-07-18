@@ -480,7 +480,7 @@ dependencies = [
 
 [[package]]
 name = "cli-wallet"
-version = "1.0.0-alpha.8"
+version = "1.0.0-beta.1"
 dependencies = [
  "clap",
  "dialoguer",
