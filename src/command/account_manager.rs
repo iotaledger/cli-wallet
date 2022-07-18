@@ -74,9 +74,7 @@ pub async fn init_command(
     let account_manager = AccountManager::builder()
         .with_secret_manager(secret_manager)
         .with_client_options(
-            ClientOptions::new()
-                .with_node(parameters.node.as_deref().unwrap_or("http://localhost:14265"))?
-                .with_node_sync_disabled(),
+            ClientOptions::new().with_node(parameters.node.as_deref().unwrap_or("http://localhost:14265"))?,
         )
         .with_storage_path(&storage_path)
         .with_coin_type(parameters.coin_type.unwrap_or(SHIMMER_COIN_TYPE))
@@ -128,7 +126,7 @@ pub async fn restore_command(manager: &AccountManager, path: String, password: &
 
 pub async fn set_node_command(manager: &AccountManager, url: String) -> Result<(), Error> {
     manager
-        .set_client_options(ClientOptions::new().with_node(&url)?.with_node_sync_disabled())
+        .set_client_options(ClientOptions::new().with_node(&url)?)
         .await?;
 
     Ok(())
