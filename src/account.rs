@@ -33,7 +33,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
     };
     let command: String = Input::new()
         .with_prompt(format!("Account \"{}\"", alias))
-        .interact_text()?;
+        .interact()?;
 
     match command.as_str() {
         "h" => {
