@@ -104,10 +104,6 @@ jobs:
           command: build
           args: --profile production
 
-      # Computes SHA-256 checksum
-      - name: SHA-256 checksum
-        run: shasum -a 256 "./target/production/wallet${{ matrix.ext }}"
-
       - name: Import code signing assets (macOS)
         # Based on https://github.com/Apple-Actions/import-codesign-certs/blob/master/src/security.ts
         run: |
@@ -140,6 +136,10 @@ jobs:
         run: security delete-keychain signing.keychain
         # Run even if previous steps fail
         if: ${{ matrix.os == 'macos-latest' && always() }}
+
+      # Computes SHA-256 checksum
+      - name: SHA-256 checksum
+        run: shasum -a 256 "./target/production/wallet${{ matrix.ext }}"
 
       # upload binary to the GH release
       - name: upload release asset
