@@ -182,8 +182,9 @@ checksum = "c5738be7561b0eeb501ef1d5c5db3f24e01ceb55fededd9b00039aada34966ad"
 
 [[package]]
 name = "bee-api-types"
-version = "1.0.0-alpha.1"
-source = "git+https://github.com/iotaledger/bee?rev=ff52b003a2c3845e2987d23487a696af106c053c#ff52b003a2c3845e2987d23487a696af106c053c"
+version = "1.0.0-beta.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a3df8dc5e56178ad5d138bcbb1c830a6948a0beaa853d3b1b4d02b1e914606e6"
 dependencies = [
  "axum",
  "bee-block",
@@ -194,8 +195,9 @@ dependencies = [
 
 [[package]]
 name = "bee-block"
-version = "0.1.0"
-source = "git+https://github.com/iotaledger/bee?rev=ff52b003a2c3845e2987d23487a696af106c053c#ff52b003a2c3845e2987d23487a696af106c053c"
+version = "1.0.0-beta.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "561813c7a9f01ab55042f5dbbfc4672b1a91711814c3d226c2b7729a20fa8521"
 dependencies = [
  "bech32",
  "bee-pow",
@@ -203,7 +205,7 @@ dependencies = [
  "bitflags",
  "bytemuck",
  "derive_more",
- "hashbrown 0.12.1",
+ "hashbrown 0.12.3",
  "hex",
  "iota-crypto 0.13.0",
  "iterator-sorted",
@@ -218,8 +220,9 @@ dependencies = [
 
 [[package]]
 name = "bee-ledger-types"
-version = "1.0.0-alpha.1"
-source = "git+https://github.com/iotaledger/bee?rev=ff52b003a2c3845e2987d23487a696af106c053c#ff52b003a2c3845e2987d23487a696af106c053c"
+version = "1.0.0-beta.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f71691001d120a2dc1223b1330fedf84fe3e09c121eb18940d9aec2954c08343"
 dependencies = [
  "bee-block",
  "packable",
@@ -346,9 +349,9 @@ checksum = "87c5fdd0166095e1d463fc6cc01aa8ce547ad77a4e84d42eb6762b084e28067e"
 
 [[package]]
 name = "bytemuck"
-version = "1.9.1"
+version = "1.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cdead85bdec19c194affaeeb670c0e41fe23de31459efd1c174d049269cf02cc"
+checksum = "c53dfa917ec274df8ed3c572698f381a24eef2efba9492d797301b72b6db408a"
 
 [[package]]
 name = "byteorder"
@@ -480,12 +483,11 @@ dependencies = [
 
 [[package]]
 name = "cli-wallet"
-version = "1.0.0-beta.4"
+version = "1.0.0-beta.5"
 dependencies = [
  "clap",
  "dialoguer",
  "fern-logger",
- "iota-crypto 0.13.0",
  "iota-wallet",
  "log",
  "prefix-hex",
@@ -1004,9 +1006,9 @@ checksum = "ab5ef0d4909ef3724cc8cce6ccc8572c5c817592e9285f5464f8e86f8bd3726e"
 
 [[package]]
 name = "hashbrown"
-version = "0.12.1"
+version = "0.12.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "db0d4cf898abf0081f964436dc980e96670a0f36863e4b83aaacdb65c9d7ccc3"
+checksum = "8a9ee70c43aaf417c914396645a0fa852624801b24ebb7ae78fe8272889ac888"
 dependencies = [
  "ahash",
 ]
@@ -1194,8 +1196,8 @@ dependencies = [
 
 [[package]]
 name = "iota-client"
-version = "1.1.1"
-source = "git+https://github.com/iotaledger/iota.rs?rev=bf5b2e3f303919d3c6244f98ec7447da94c073f5#bf5b2e3f303919d3c6244f98ec7447da94c073f5"
+version = "2.0.0-beta.1"
+source = "git+https://github.com/iotaledger/iota.rs?rev=0d2a37a4899ef046f16e7e132e3ac2c0c2216224#0d2a37a4899ef046f16e7e132e3ac2c0c2216224"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -1206,13 +1208,13 @@ dependencies = [
  "derive_builder",
  "futures",
  "gloo-timers",
- "hex",
  "instant",
  "iota-crypto 0.13.0",
  "iota_stronghold",
  "log",
  "num_cpus",
  "packable",
+ "prefix-hex",
  "primitive-types",
  "reqwest",
  "serde",
@@ -1283,17 +1285,17 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/wallet.rs?rev=ee8b934e2126bc101ab1e064424181455e51d1ea#ee8b934e2126bc101ab1e064424181455e51d1ea"
+source = "git+https://github.com/iotaledger/wallet.rs?rev=bbebd26198732e768cf58ff407fbe3cdcf01c5e4#bbebd26198732e768cf58ff407fbe3cdcf01c5e4"
 dependencies = [
  "async-trait",
  "backtrace",
  "futures",
  "getset",
- "hex",
  "iota-client",
  "iota-crypto 0.13.0",
  "log",
  "packable",
+ "prefix-hex",
  "primitive-types",
  "rocksdb",
  "serde",
@@ -1976,9 +1978,9 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.139"
+version = "1.0.140"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0171ebb889e45aa68b44aee0859b3eede84c6f5f5c228e6f140c0b2a0a46cad6"
+checksum = "fc855a42c7967b7c369eb5860f7164ef1f6f81c20c7cc1141f2a604e18723b03"
 dependencies = [
  "serde_derive",
 ]
@@ -1994,9 +1996,9 @@ dependencies = [
 
 [[package]]
 name = "serde_derive"
-version = "1.0.139"
+version = "1.0.140"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "dc1d3230c1de7932af58ad8ffbe1d784bd55efd5a9d84ac24f69c72d83543dfb"
+checksum = "6f2122636b9fe3b81f1cb25099fcf2d3f542cdb1d45940d56c713158884a05da"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2751,9 +2753,9 @@ dependencies = [
 
 [[package]]
 name = "zeroize"
-version = "1.5.6"
+version = "1.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "20b578acffd8516a6c3f2a1bdefc1ec37e547bb4e0fb8b6b01a4cafc886b4442"
+checksum = "c394b5bd0c6f669e7275d9c20aa90ae064cb22e75a1cad54e1b34088034b149f"
 dependencies = [
  "zeroize_derive",
 ]
