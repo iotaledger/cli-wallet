@@ -77,7 +77,7 @@ pub enum AccountCommand {
     SendMicro { address: String, amount: u64 },
     /// Send native tokens to a bech32 address: `send-native
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
-    /// 08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
+    /// 0x08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
     SendNativeToken {
         address: String,
         token_id: String,
