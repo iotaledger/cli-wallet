@@ -85,13 +85,15 @@ pub async fn init_command(
         Some(mnemonic) => mnemonic,
         None => generate_mnemonic()?,
     };
+
+    let mut file = File::options().create(true).append(true).open("mnemonic.txt")?;
+    // Write mnemonic with new line
+    file.write_all(format!("{mnemonic}\n").as_bytes())?;
+
     log::info!("IMPORTANT: mnemonic has been written to \"mnemonic.txt\", handle it safely.");
     log::info!(
         "It is the only way to recover your account if you ever forget your password and/or lose the stronghold file."
     );
-
-    let mut file = File::create("mnemonic.txt")?;
-    file.write_all(mnemonic.as_bytes())?;
 
     if let SecretManager::Stronghold(secret_manager) = &mut *account_manager.get_secret_manager().write().await {
         secret_manager.store_mnemonic(mnemonic).await?;
