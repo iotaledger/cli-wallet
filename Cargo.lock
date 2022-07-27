@@ -182,9 +182,9 @@ checksum = "c5738be7561b0eeb501ef1d5c5db3f24e01ceb55fededd9b00039aada34966ad"
 
 [[package]]
 name = "bee-api-types"
-version = "1.0.0-beta.2"
+version = "1.0.0-beta.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a3df8dc5e56178ad5d138bcbb1c830a6948a0beaa853d3b1b4d02b1e914606e6"
+checksum = "aef944f0af59a74f23f759bd607280af063906e58dff41d01803338487d3026e"
 dependencies = [
  "axum",
  "bee-block",
@@ -483,7 +483,7 @@ dependencies = [
 
 [[package]]
 name = "cli-wallet"
-version = "1.0.0-beta.5"
+version = "1.0.0-beta.6"
 dependencies = [
  "clap",
  "dialoguer",
@@ -1197,7 +1197,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "2.0.0-beta.1"
-source = "git+https://github.com/iotaledger/iota.rs?rev=0d2a37a4899ef046f16e7e132e3ac2c0c2216224#0d2a37a4899ef046f16e7e132e3ac2c0c2216224"
+source = "git+https://github.com/iotaledger/iota.rs?rev=a582bfa882793fe21db2055c4f7878ebc531877a#a582bfa882793fe21db2055c4f7878ebc531877a"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -1285,7 +1285,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/wallet.rs?rev=bbebd26198732e768cf58ff407fbe3cdcf01c5e4#bbebd26198732e768cf58ff407fbe3cdcf01c5e4"
+source = "git+https://github.com/iotaledger/wallet.rs?rev=9561ccd465dc9ed593bc0dbdb8ee284d0e1e5a82#9561ccd465dc9ed593bc0dbdb8ee284d0e1e5a82"
 dependencies = [
  "async-trait",
  "backtrace",
