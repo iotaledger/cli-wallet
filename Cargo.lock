@@ -483,7 +483,7 @@ dependencies = [
 
 [[package]]
 name = "cli-wallet"
-version = "1.0.0-beta.6"
+version = "1.0.0-beta.7"
 dependencies = [
  "clap",
  "dialoguer",
@@ -1285,7 +1285,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/wallet.rs?rev=9561ccd465dc9ed593bc0dbdb8ee284d0e1e5a82#9561ccd465dc9ed593bc0dbdb8ee284d0e1e5a82"
+source = "git+https://github.com/iotaledger/wallet.rs?rev=5f95003e3fa8473bf7fde5a2645528d51e87a625#5f95003e3fa8473bf7fde5a2645528d51e87a625"
 dependencies = [
  "async-trait",
  "backtrace",

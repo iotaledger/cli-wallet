@@ -325,13 +325,16 @@ Sends a micro amount to an address with StorageDepositReturn and Expiration Unlo
 
 Sends native tokens to an address with StorageDepositReturn and Expiration Unlock Condition.
 
+To send the native tokens together with the required storage deposit and without StorageDepositReturn and Expiration, provide `true` for `gift_storage_deposit`.
+
 #### Parameters
 
-| Name        | Optional  | Default | Example                                                                           |
-| ----------- | --------- | ------- | --------------------------------------------------------------------------------- |
-| `address`   | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"                 |
-| `token_id`  | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000"  |
-| `amount`    | ✘         | N/A     | 100                                                                               |
+| Name                   | Optional  | Default | Example                                                                           |
+| ---------------------- | --------- | ------- | --------------------------------------------------------------------------------- |
+| `address`              | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"                 |
+| `token_id`             | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000"  |
+| `amount`               | ✘         | N/A     | 100                                                                               |
+| `gift_storage_deposit` | ✓         | false   | true                                                                              |
 
 #### Example
 
