@@ -338,8 +338,16 @@ To send the native tokens together with the required storage deposit and without
 
 #### Example
 
+Sending with storage deposit return and expiration:
+
 ```sh
 > Account "main": send-native-token rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
+```
+
+Sending without storage deposit return and expiration, gifting the required storage deposit:
+
+```sh
+> Account "main": send-native-token rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100 true
 ```
 
 ### `send-nft`
