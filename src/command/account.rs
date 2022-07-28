@@ -85,7 +85,7 @@ pub enum AccountCommand {
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
     /// 0x08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
     /// This will create an output with an expiration and storage deposit return unlock condition. To gift the storage
-    /// deposit for the output, add `true`.
+    /// deposit for the output, add ` true`.
     SendNativeToken {
         address: String,
         token_id: String,
