@@ -7,7 +7,13 @@ use clap::{Parser, Subcommand};
 use iota_wallet::{
     account::{types::AccountAddress, AccountHandle, OutputsToClaim},
     iota_client::{
-        block::output::{AliasId, FoundryId, NftId, OutputId, TokenId},
+        block::{
+            address::Address,
+            output::{
+                unlock_condition::AddressUnlockCondition, AliasId, BasicOutputBuilder, FoundryId, NativeToken, NftId,
+                OutputId, TokenId, UnlockCondition,
+            },
+        },
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
@@ -75,13 +81,16 @@ pub enum AccountCommand {
     /// Send an amount below the storage deposit minimum to a bech32 address: `send
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1`
     SendMicro { address: String, amount: u64 },
-    /// Send native tokens to a bech32 address: `send-native
+    /// Send native tokens to a bech32 address: `send-native-token
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
     /// 0x08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
+    /// This will create an output with an expiration and storage deposit return unlock condition. To gift the storage
+    /// deposit for the output, add `true`.
     SendNativeToken {
         address: String,
         token_id: String,
         amount: String,
+        gift_storage_deposit: Option<bool>,
     },
     /// Send an NFT to a bech32 encoded address
     SendNft { address: String, nft_id: String },
@@ -368,16 +377,37 @@ pub async fn send_native_token_command(
     address: String,
     token_id: String,
     amount: String,
+    gift_storage_deposit: Option<bool>,
 ) -> Result<(), Error> {
-    let outputs = vec![AddressNativeTokens {
-        address,
-        native_tokens: vec![(
-            TokenId::from_str(&token_id)?,
-            U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
-        )],
-        ..Default::default()
-    }];
-    let transaction_result = account_handle.send_native_tokens(outputs, None).await?;
+    let transaction_result = if gift_storage_deposit.unwrap_or(false) {
+        // Send native tokens together with the required storage deposit
+        let rent_structure = account_handle.client().get_rent_structure().await?;
+
+        let outputs = vec![
+            BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
+                .add_unlock_condition(UnlockCondition::Address(AddressUnlockCondition::new(
+                    Address::try_from_bech32(address)?.1,
+                )))
+                .with_native_tokens(vec![NativeToken::new(
+                    TokenId::from_str(&token_id)?,
+                    U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+                )?])
+                .finish_output()?,
+        ];
+
+        account_handle.send(outputs, None).await?
+    } else {
+        // Send native tokens with storage deposit return and expiration
+        let outputs = vec![AddressNativeTokens {
+            address,
+            native_tokens: vec![(
+                TokenId::from_str(&token_id)?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+            )],
+            ..Default::default()
+        }];
+        account_handle.send_native_tokens(outputs, None).await?
+    };
 
     log::info!("Transaction created: {transaction_result:?}");
 
