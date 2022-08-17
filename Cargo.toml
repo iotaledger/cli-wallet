@@ -19,7 +19,7 @@ iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "fb7699ce
 log = { version = "0.4.17", default-features = false }
 prefix-hex = { version = "0.4.0", default-features = false, features = [ "std" ] }
 thiserror = { version = "1.0.31", default-features = false }
-tokio = { version = "1.20.0", default-features = false }    
+tokio = { version = "1.20.0", default-features = false, features = [ "fs" ] }    
 
 [profile.release]
 panic = "abort"
