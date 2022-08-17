@@ -14,13 +14,20 @@ use crate::{
         transactions_command, unspent_outputs_command, AccountCli, AccountCommand,
     },
     error::Error,
+    helper::bytes_from_hex_or_file,
 };
 
 // loop on the account prompt
 pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), Error> {
     loop {
-        if account_prompt_internal(account_handle.clone()).await? {
-            return Ok(());
+        match account_prompt_internal(account_handle.clone()).await {
+            Ok(true) => {
+                return Ok(());
+            }
+            Err(e) => {
+                log::error!("{e}");
+            }
+            _ => {}
         }
     }
 }
@@ -75,13 +82,31 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 }
                 AccountCommand::MintNativeToken {
                     maximum_supply,
-                    foundry_metadata,
-                } => mint_native_token_command(&account_handle, maximum_supply, foundry_metadata).await,
+                    foundry_metadata_hex,
+                    foundry_metadata_file,
+                } => {
+                    mint_native_token_command(
+                        &account_handle,
+                        maximum_supply,
+                        bytes_from_hex_or_file(foundry_metadata_hex, foundry_metadata_file).await?,
+                    )
+                    .await
+                }
                 AccountCommand::MintNft {
                     address,
-                    immutable_metadata,
-                    metadata,
-                } => mint_nft_command(&account_handle, address, immutable_metadata, metadata).await,
+                    immutable_metadata_hex,
+                    immutable_metadata_file,
+                    metadata_hex,
+                    metadata_file,
+                } => {
+                    mint_nft_command(
+                        &account_handle,
+                        address,
+                        bytes_from_hex_or_file(immutable_metadata_hex, immutable_metadata_file).await?,
+                        bytes_from_hex_or_file(metadata_hex, metadata_file).await?,
+                    )
+                    .await
+                }
                 AccountCommand::NewAddress => new_address_command(&account_handle).await,
                 AccountCommand::Output { output_id } => output_command(&account_handle, output_id).await,
                 AccountCommand::Outputs => outputs_command(&account_handle).await,
