@@ -60,14 +60,23 @@ pub enum AccountCommand {
     /// Mint a native token: `mint-native-token 100 0x... (foundry metadata)`
     MintNativeToken {
         maximum_supply: String,
-        foundry_metadata: Option<String>,
+        #[clap(long, group = "foundry_metadata")]
+        foundry_metadata_hex: Option<String>,
+        #[clap(long, group = "foundry_metadata")]
+        foundry_metadata_file: Option<String>,
     },
     /// Mint an NFT to an optional bech32 encoded address: `mint-nft
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 "immutable metadata" "metadata"`
     MintNft {
         address: Option<String>,
-        immutable_metadata: Option<String>,
-        metadata: Option<String>,
+        #[clap(long, group = "immutable_metadata")]
+        immutable_metadata_hex: Option<String>,
+        #[clap(long, group = "immutable_metadata")]
+        immutable_metadata_file: Option<String>,
+        #[clap(long, group = "metadata")]
+        metadata_hex: Option<String>,
+        #[clap(long, group = "metadata")]
+        metadata_file: Option<String>,
     },
     /// Generate a new address.
     NewAddress,
@@ -269,16 +278,13 @@ pub async fn mint_native_token_command(
     // todo: enable this when there is support to mint additional tokens for an existing token
     // circulating_supply: String,
     maximum_supply: String,
-    foundry_metadata: Option<String>,
+    foundry_metadata: Option<Vec<u8>>,
 ) -> Result<(), Error> {
     let native_token_options = NativeTokenOptions {
         account_address: None,
         circulating_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellanous(e.to_string()))?,
         maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellanous(e.to_string()))?,
-        foundry_metadata: foundry_metadata
-            .map(|s| prefix_hex::decode(&s))
-            .transpose()
-            .map_err(|e| Error::Miscellanous(e.to_string()))?,
+        foundry_metadata,
     };
 
     let transaction_result = account_handle.mint_native_token(native_token_options, None).await?;
@@ -292,11 +298,9 @@ pub async fn mint_native_token_command(
 pub async fn mint_nft_command(
     account_handle: &AccountHandle,
     address: Option<String>,
-    immutable_metadata: Option<String>,
-    metadata: Option<String>,
+    immutable_metadata: Option<Vec<u8>>,
+    metadata: Option<Vec<u8>>,
 ) -> Result<(), Error> {
-    let immutable_metadata = immutable_metadata.map(|immutable_metadata| immutable_metadata.as_bytes().to_vec());
-    let metadata = metadata.map(|metadata| metadata.as_bytes().to_vec());
     let nft_options = vec![NftOptions {
         address,
         immutable_metadata,
@@ -383,17 +387,15 @@ pub async fn send_native_token_command(
         // Send native tokens together with the required storage deposit
         let rent_structure = account_handle.client().get_rent_structure().await?;
 
-        let outputs = vec![
-            BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
-                .add_unlock_condition(UnlockCondition::Address(AddressUnlockCondition::new(
-                    Address::try_from_bech32(address)?.1,
-                )))
-                .with_native_tokens(vec![NativeToken::new(
-                    TokenId::from_str(&token_id)?,
-                    U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
-                )?])
-                .finish_output()?,
-        ];
+        let outputs = vec![BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
+            .add_unlock_condition(UnlockCondition::Address(AddressUnlockCondition::new(
+                Address::try_from_bech32(address)?.1,
+            )))
+            .with_native_tokens(vec![NativeToken::new(
+                TokenId::from_str(&token_id)?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+            )?])
+            .finish_output()?];
 
         account_handle.send(outputs, None).await?
     } else {
