@@ -20,8 +20,14 @@ use crate::{
 // loop on the account prompt
 pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), Error> {
     loop {
-        if account_prompt_internal(account_handle.clone()).await? {
-            return Ok(());
+        match account_prompt_internal(account_handle.clone()).await {
+            Ok(true) => {
+                return Ok(());
+            }
+            Err(e) => {
+                log::error!("{e}");
+            }
+            _ => {}
         }
     }
 }
