@@ -28,8 +28,11 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(Option<Accou
         |os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"),
     );
     let snapshot_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
-
-    let password = get_password("Stronghold password", !snapshot_path.exists())?;
+    let password = if let Some(AccountManagerCommand::Restore { .. }) = &cli.command {
+        get_password("Stronghold password", false)?
+    } else {
+        get_password("Stronghold password", !snapshot_path.exists())?
+    };
     let secret_manager = SecretManager::Stronghold(
         StrongholdSecretManager::builder()
             .password(&password)
@@ -39,9 +42,9 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(Option<Accou
     let (account_manager, account) = if let Some(command) = cli.command {
         if let AccountManagerCommand::Init(mnemonic_url) = command {
             (init_command(secret_manager, storage_path, mnemonic_url).await?, None)
-        } else if let AccountManagerCommand::Restore { backup_path, node } = command {
+        } else if let AccountManagerCommand::Restore { backup_path } = command {
             (
-                restore_command(secret_manager, storage_path, backup_path, node, password).await?,
+                restore_command(secret_manager, storage_path, backup_path, password).await?,
                 None,
             )
         } else {
