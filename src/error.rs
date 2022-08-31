@@ -18,7 +18,7 @@ pub enum Error {
     #[error("logger error: {0}")]
     Logger(#[from] LoggerError),
     #[error("{0}")]
-    Miscellanous(String),
+    Miscellaneous(String),
     #[error("generate at least one address before using the faucet")]
     NoAddressForFaucet,
     #[error("wallet error: {0}")]
