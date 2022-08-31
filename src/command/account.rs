@@ -138,7 +138,7 @@ pub async fn burn_native_token_command(
         .burn_native_token(
             (
                 TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
             ),
             None,
         )
@@ -261,7 +261,7 @@ pub async fn melt_native_token_command(
         .melt_native_token(
             (
                 TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
             ),
             None,
         )
@@ -282,8 +282,8 @@ pub async fn mint_native_token_command(
 ) -> Result<(), Error> {
     let native_token_options = NativeTokenOptions {
         account_address: None,
-        circulating_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellanous(e.to_string()))?,
-        maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellanous(e.to_string()))?,
+        circulating_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+        maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         foundry_metadata,
     };
 
@@ -394,7 +394,7 @@ pub async fn send_native_token_command(
                 )))
                 .with_native_tokens(vec![NativeToken::new(
                     TokenId::from_str(&token_id)?,
-                    U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+                    U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
                 )?])
                 .finish_output()?,
         ];
@@ -406,7 +406,7 @@ pub async fn send_native_token_command(
             address,
             native_tokens: vec![(
                 TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellanous(e.to_string()))?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
             )],
             ..Default::default()
         }];
