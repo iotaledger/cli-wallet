@@ -32,6 +32,8 @@ pub enum AccountManagerCommand {
     ChangePassword,
     /// Parameters for the init command.
     Init(InitParameters),
+    /// Generate a random mnemonic.
+    Mnemonic,
     /// Create a new account with an optional alias.
     New { alias: Option<String> },
     /// Restore accounts from a stronghold backup file.
@@ -88,7 +90,7 @@ pub async fn init_command(
 
     let mut file = File::options().create(true).append(true).open("mnemonic.txt")?;
     // Write mnemonic with new line
-    file.write_all(format!("{mnemonic}\n").as_bytes())?;
+    file.write_all(format!("init_command: {mnemonic}\n").as_bytes())?;
 
     log::info!("IMPORTANT: mnemonic has been written to \"mnemonic.txt\", handle it safely.");
     log::info!(
@@ -103,6 +105,21 @@ pub async fn init_command(
     log::info!("Mnemonic stored successfully");
 
     Ok(account_manager)
+}
+
+pub async fn mnemonic_command() -> Result<(), Error> {
+    let mnemonic = generate_mnemonic()?;
+
+    let mut file = File::options().create(true).append(true).open("mnemonic.txt")?;
+    // Write mnemonic with new line
+    file.write_all(format!("mnemonic_command: {mnemonic}\n").as_bytes())?;
+
+    log::info!("IMPORTANT: mnemonic has been written to \"mnemonic.txt\", handle it safely.");
+    log::info!(
+        "It is the only way to recover your account if you ever forget your password and/or lose the stronghold file."
+    );
+
+    Ok(())
 }
 
 pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Result<String, Error> {

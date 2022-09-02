@@ -45,11 +45,13 @@ fn logger_init(cli: &AccountManagerCli) -> Result<(), Error> {
 async fn run(cli: AccountManagerCli) -> Result<(), Error> {
     let (account_manager, account) = new_account_manager(cli.clone()).await?;
 
-    match cli.account.or(account) {
-        Some(account) => account::account_prompt(account_manager.get_account(account).await?).await?,
-        None => {
-            if let Some(account) = pick_account(&account_manager).await? {
-                account::account_prompt(account_manager.get_account(account).await?).await?;
+    if let Some(account_manager) = account_manager {
+        match cli.account.or(account) {
+            Some(account) => account::account_prompt(account_manager.get_account(account).await?).await?,
+            None => {
+                if let Some(account) = pick_account(&account_manager).await? {
+                    account::account_prompt(account_manager.get_account(account).await?).await?;
+                }
             }
         }
     }
