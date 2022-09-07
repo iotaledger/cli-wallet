@@ -16,8 +16,8 @@ use iota_wallet::{
         },
         request_funds_from_faucet,
     },
-    AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
-    U256,
+    AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, MintMoreNativeTokenOptions,
+    NativeTokenOptions, NftOptions, U256,
 };
 
 use crate::error::Error;
@@ -57,8 +57,14 @@ pub enum AccountCommand {
     },
     /// Melt a native token: `melt-native-token 0x... 100`
     MeltNativeToken { token_id: String, amount: String },
-    /// Mint a native token: `mint-native-token 100 0x... (foundry metadata)`
+    /// Mint more from a native token: `mint-more-native-token 0x... 10`
+    MintMoreNativeToken {
+        token_id: String,
+        additional_supply: String,
+    },
+    /// Mint a native token: `mint-native-token 100 100 0x... (foundry metadata)`
     MintNativeToken {
+        circulating_supply: String,
         maximum_supply: String,
         #[clap(long, group = "foundry_metadata")]
         foundry_metadata_hex: Option<String>,
@@ -272,17 +278,36 @@ pub async fn melt_native_token_command(
     Ok(())
 }
 
+// `mint-more-native-token` command
+pub async fn mint_more_native_token_command(
+    account_handle: &AccountHandle,
+    token_id: String,
+    addition_supply: String,
+) -> Result<(), Error> {
+    let native_token_options = MintMoreNativeTokenOptions {
+        additional_supply: U256::from_dec_str(&addition_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+        token_id: TokenId::from_str(&token_id)?,
+    };
+
+    let transaction_result = account_handle
+        .mint_more_native_token(native_token_options, None)
+        .await?;
+
+    log::info!("Minting more native token transaction sent: {transaction_result:?}");
+
+    Ok(())
+}
+
 // `mint-native-token` command
 pub async fn mint_native_token_command(
     account_handle: &AccountHandle,
-    // todo: enable this when there is support to mint additional tokens for an existing token
-    // circulating_supply: String,
+    circulating_supply: String,
     maximum_supply: String,
     foundry_metadata: Option<Vec<u8>>,
 ) -> Result<(), Error> {
     let native_token_options = NativeTokenOptions {
         account_address: None,
-        circulating_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+        circulating_supply: U256::from_dec_str(&circulating_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         foundry_metadata,
     };

@@ -9,9 +9,9 @@ use crate::{
     command::account::{
         addresses_command, balance_command, burn_native_token_command, burn_nft_command, claim_command,
         consolidate_command, destroy_alias_command, destroy_foundry_command, faucet_command, melt_native_token_command,
-        mint_native_token_command, mint_nft_command, new_address_command, output_command, outputs_command,
-        send_command, send_micro_command, send_native_token_command, send_nft_command, sync_command,
-        transactions_command, unspent_outputs_command, AccountCli, AccountCommand,
+        mint_more_native_token_command, mint_native_token_command, mint_nft_command, new_address_command,
+        output_command, outputs_command, send_command, send_micro_command, send_native_token_command, send_nft_command,
+        sync_command, transactions_command, unspent_outputs_command, AccountCli, AccountCommand,
     },
     error::Error,
     helper::bytes_from_hex_or_file,
@@ -80,13 +80,19 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::MeltNativeToken { token_id, amount } => {
                     melt_native_token_command(&account_handle, token_id, amount).await
                 }
+                AccountCommand::MintMoreNativeToken {
+                    token_id,
+                    additional_supply,
+                } => mint_more_native_token_command(&account_handle, token_id, additional_supply).await,
                 AccountCommand::MintNativeToken {
+                    circulating_supply,
                     maximum_supply,
                     foundry_metadata_hex,
                     foundry_metadata_file,
                 } => {
                     mint_native_token_command(
                         &account_handle,
+                        circulating_supply,
                         maximum_supply,
                         bytes_from_hex_or_file(foundry_metadata_hex, foundry_metadata_file).await?,
                     )

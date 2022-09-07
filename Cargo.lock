@@ -164,7 +164,7 @@ dependencies = [
  "hex",
  "iota-crypto 0.14.2",
  "iterator-sorted",
- "packable",
+ "packable 0.6.2",
  "prefix-hex",
  "primitive-types",
  "serde",
@@ -180,7 +180,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "0fda485ea7a4c023f99b485288bb2c7f79bbbf24de4940ff80be2ab6504a9462"
 dependencies = [
  "bee-block",
- "packable",
+ "packable 0.6.2",
  "thiserror",
 ]
 
@@ -463,7 +463,7 @@ dependencies = [
 
 [[package]]
 name = "cli-wallet"
-version = "1.0.0-beta.9"
+version = "1.0.0-beta.10"
 dependencies = [
  "clap",
  "dialoguer",
@@ -1178,7 +1178,7 @@ dependencies = [
  "iota_stronghold",
  "log",
  "num_cpus",
- "packable",
+ "packable 0.5.0",
  "prefix-hex",
  "primitive-types",
  "reqwest",
@@ -1232,7 +1232,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "92d67b0725fbfe9e75950848bf0304df70ecb71a58526b1a36a087d0bc089499"
 dependencies = [
  "aead",
- "bee-ternary",
  "blake2 0.10.4",
  "chacha20poly1305 0.9.1",
  "digest 0.10.3",
@@ -1248,6 +1247,18 @@ dependencies = [
 ]
 
 [[package]]
+name = "iota-crypto"
+version = "0.14.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "92d67b0725fbfe9e75950848bf0304df70ecb71a58526b1a36a087d0bc089499"
+dependencies = [
+ "bee-ternary",
+ "blake2 0.10.4",
+ "digest 0.10.3",
+ "ed25519-zebra",
+]
+
+[[package]]
 name = "iota-wallet"
 version = "0.2.0"
 source = "git+https://github.com/iotaledger/wallet.rs?rev=66d94faf8b860f3287bed28e207fa7d688890340#66d94faf8b860f3287bed28e207fa7d688890340"
@@ -1259,7 +1270,7 @@ dependencies = [
  "iota-client",
  "iota-crypto 0.14.2",
  "log",
- "packable",
+ "packable 0.5.0",
  "prefix-hex",
  "primitive-types",
  "rocksdb",
@@ -1510,9 +1521,34 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7e6da5d02b6ba18afdb21b1813fa25b97ad997201aed5883a9ef9141024cfbf"
 dependencies = [
  "autocfg",
- "packable-derive",
+ "packable-derive 0.5.0",
  "primitive-types",
  "serde",
+]
+
+[[package]]
+name = "packable"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "a7e6da5d02b6ba18afdb21b1813fa25b97ad997201aed5883a9ef9141024cfbf"
+dependencies = [
+ "autocfg",
+ "packable-derive 0.6.2",
+ "primitive-types",
+ "serde",
+]
+
+[[package]]
+name = "packable-derive"
+version = "0.6.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "00b336fd071ce4e492a7842a2c73fd742326468e0f6e6bb22d58b2dcb48565f8"
+dependencies = [
+ "proc-macro-crate",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]

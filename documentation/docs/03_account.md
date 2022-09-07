@@ -199,6 +199,24 @@ Melt the provided amount of a native token.
 > Account "main": melt-native-token 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
 ```
 
+### `mint-more-native-token`
+
+Mints more from an existing native token.
+
+#### Parameters
+
+| Name                | Optional  | Default | Example                                                                          |
+| ------------------- | --------- | ------- | -------------------------------------------------------------------------------- |
+| `token_id`          | ✘         | N/A     | "0x08a337e1654340a82aea57470dcfe1899681923d67012a8d8224ea4b62ec8fcdd90300000000" |
+| `additional_supply` | ✘         | N/A     | 10                                                                               |
+
+#### Examples
+
+Mint 10 additional native tokens.
+```sh
+> Account "main": mint-more-native-token 0x08a337e1654340a82aea57470dcfe1899681923d67012a8d8224ea4b62ec8fcdd90300000000 10
+```
+
 ### `mint-native-token`
 
 Mints a native token.
@@ -207,6 +225,7 @@ Mints a native token.
 
 | Name                      | Optional  | Default | Example            |
 | ------------------------- | --------- | ------- | ------------------ |
+| `circulating_supply`      | ✘         | N/A     | 1000               |
 | `maximum_supply`          | ✘         | N/A     | 1000               |
 | `foundry_metadata_hex`    | ✓         | None    | "0xabcdef"         |
 | `foundry_metadata_file`   | ✓         | None    | "metadata.json"    |
