@@ -159,9 +159,6 @@ pub async fn restore_command(
 
     account_manager.restore_backup(backup_path.into(), password).await?;
 
-    println!("{:?}", account_manager);
-    println!("{:?}", account_manager.get_client_options().await);
-
     Ok(account_manager)
 }
 
