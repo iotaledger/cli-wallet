@@ -10,14 +10,19 @@ use iota_wallet::{
 
 use crate::{
     command::account_manager::{
-        backup_command, change_password_command, init_command, new_command, restore_command, set_node_command,
-        sync_command, AccountManagerCli, AccountManagerCommand,
+        backup_command, change_password_command, init_command, mnemonic_command, new_command, restore_command,
+        set_node_command, sync_command, AccountManagerCli, AccountManagerCommand,
     },
     error::Error,
     helper::get_password,
 };
 
-pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManager, Option<String>), Error> {
+pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(Option<AccountManager>, Option<String>), Error> {
+    if let Some(AccountManagerCommand::Mnemonic) = cli.command {
+        mnemonic_command().await?;
+        return Ok((None, None));
+    }
+
     let storage_path = var_os("WALLET_DATABASE_PATH").map_or_else(
         || "./stardust-cli-wallet-db".to_string(),
         |os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"),
@@ -45,12 +50,14 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
             match command {
                 AccountManagerCommand::Backup { path } => backup_command(&account_manager, path, &password).await?,
                 AccountManagerCommand::ChangePassword => change_password_command(&account_manager, &password).await?,
-                // PANIC: this will never happen because of the if/else.
-                AccountManagerCommand::Init(_) => unreachable!(),
                 AccountManagerCommand::New { alias } => account = Some(new_command(&account_manager, alias).await?),
                 AccountManagerCommand::Restore { path } => restore_command(&account_manager, path, &password).await?,
                 AccountManagerCommand::SetNode { url } => set_node_command(&account_manager, url).await?,
                 AccountManagerCommand::Sync => sync_command(&account_manager).await?,
+                // PANIC: this will never happen because of the if/else.
+                AccountManagerCommand::Init(_) => unreachable!(),
+                // PANIC: this will never happen because it is checked at the beginning of the function.
+                AccountManagerCommand::Mnemonic => unreachable!(),
             };
 
             (account_manager, account)
@@ -66,5 +73,5 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(AccountManag
         )
     };
 
-    Ok((account_manager, account))
+    Ok((Some(account_manager), account))
 }
