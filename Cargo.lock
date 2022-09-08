@@ -1250,7 +1250,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.2.0"
-source = "git+https://github.com/thibault-martinez/wallet.rs?rev=504996e02d15513933dad41d0c6cc8757f8d840f#504996e02d15513933dad41d0c6cc8757f8d840f"
+source = "git+https://github.com/iotaledger/wallet.rs?rev=66d94faf8b860f3287bed28e207fa7d688890340#66d94faf8b860f3287bed28e207fa7d688890340"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -2247,9 +2247,9 @@ dependencies = [
 
 [[package]]
 name = "tokio-util"
-version = "0.7.3"
+version = "0.7.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cc463cd8deddc3770d20f9852143d50bf6094e640b485cb2e189a2099085ff45"
+checksum = "0bb2e075f03b3d66d8d8785356224ba688d2906a371015e225beeb65ca92c740"
 dependencies = [
  "bytes",
  "futures-core",

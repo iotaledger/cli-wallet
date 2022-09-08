@@ -55,7 +55,9 @@ pub struct InitParameters {
 }
 
 pub async fn backup_command(manager: &AccountManager, path: String, password: &str) -> Result<(), Error> {
-    manager.backup(path.into(), password.into()).await?;
+    manager.backup(path.clone().into(), password.into()).await?;
+
+    log::info!("Wallet has been backed up to \"{path}\".");
 
     Ok(())
 }
