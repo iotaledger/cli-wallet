@@ -15,7 +15,7 @@ path = "src/main.rs"
 clap = { version = "3.2.8", default-features = false, features = [ "derive", "std" ] }
 dialoguer = { version = "0.10.1", default-features = false, features = [ "password" ] }
 fern-logger = { version = "0.5.0", default-features = false }
-iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "21354624296a6f64973c6eeb1eb3d4277c2f3357", default-features = false, features = [ "storage", "stronghold" ] }
+iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "df9dd40ee60383fffa384d4f8687bcd99386b842", default-features = false, features = [ "storage", "stronghold" ] }
 log = { version = "0.4.17", default-features = false }
 prefix-hex = { version = "0.4.0", default-features = false, features = [ "std" ] }
 thiserror = { version = "1.0.31", default-features = false }

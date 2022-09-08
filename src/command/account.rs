@@ -337,7 +337,7 @@ pub async fn output_command(account_handle: &AccountHandle, output_id: String) -
 
 /// `outputs` command
 pub async fn outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let outputs = account_handle.list_outputs().await?;
+    let outputs = account_handle.list_outputs(None).await?;
 
     if outputs.is_empty() {
         log::info!("No outputs found");
@@ -457,7 +457,7 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
 
 /// `unspent-outputs` command
 pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let outputs = account_handle.list_unspent_outputs().await?;
+    let outputs = account_handle.list_unspent_outputs(None).await?;
 
     if outputs.is_empty() {
         log::info!("No outputs found");
