@@ -111,6 +111,17 @@ See [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) f
 $ ./wallet init --coin-type 4219
 ```
 
+### `./wallet mnemonic`
+
+Generates a new random mnemonic.
+
+#### Example
+
+Generate a new random mnemonic.
+```sh
+$ ./wallet mnemonic
+```
+
 ### `./wallet new`
 
 Creates a new account.
