@@ -37,7 +37,7 @@ pub enum AccountManagerCommand {
     /// Create a new account with an optional alias.
     New { alias: Option<String> },
     /// Restore accounts from a stronghold backup file.
-    Restore { path: String },
+    Restore { backup_path: String },
     /// Set the node to use.
     SetNode { url: String },
     /// Sync all accounts.
@@ -55,7 +55,9 @@ pub struct InitParameters {
 }
 
 pub async fn backup_command(manager: &AccountManager, path: String, password: &str) -> Result<(), Error> {
-    manager.backup(path.into(), password.into()).await?;
+    manager.backup(path.clone().into(), password.into()).await?;
+
+    log::info!("Wallet has been backed up to \"{path}\".");
 
     Ok(())
 }
@@ -137,10 +139,29 @@ pub async fn new_command(manager: &AccountManager, alias: Option<String>) -> Res
     Ok(alias)
 }
 
-pub async fn restore_command(manager: &AccountManager, path: String, password: &str) -> Result<(), Error> {
-    manager.restore_backup(path.into(), password.into()).await?;
+pub async fn restore_command(
+    secret_manager: SecretManager,
+    storage_path: String,
+    backup_path: String,
+    password: String,
+) -> Result<AccountManager, Error> {
+    let account_manager = AccountManager::builder()
+        .with_secret_manager(secret_manager)
+        // Will be overwritten by the backup's value.
+        .with_client_options(
+            ClientOptions::new()
+                .with_node("http://localhost:14265")?
+                .with_node_sync_disabled(),
+        )
+        .with_storage_path(&storage_path)
+        // Will be overwritten by the backup's value.
+        .with_coin_type(SHIMMER_COIN_TYPE)
+        .finish()
+        .await?;
 
-    Ok(())
+    account_manager.restore_backup(backup_path.into(), password).await?;
+
+    Ok(account_manager)
 }
 
 pub async fn set_node_command(manager: &AccountManager, url: String) -> Result<(), Error> {

@@ -27,18 +27,26 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(Option<Accou
         || "./stardust-cli-wallet-db".to_string(),
         |os_str| os_str.into_string().expect("invalid WALLET_DATABASE_PATH"),
     );
-    let stronghold_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
-
-    let password = get_password("Stronghold password", !stronghold_path.exists())?;
+    let snapshot_path = std::path::Path::new("./stardust-cli-wallet.stronghold");
+    let password = if let Some(AccountManagerCommand::Restore { .. }) = &cli.command {
+        get_password("Stronghold password", false)?
+    } else {
+        get_password("Stronghold password", !snapshot_path.exists())?
+    };
     let secret_manager = SecretManager::Stronghold(
         StrongholdSecretManager::builder()
             .password(&password)
-            .try_build(stronghold_path.to_path_buf())?,
+            .build(snapshot_path)?,
     );
 
     let (account_manager, account) = if let Some(command) = cli.command {
         if let AccountManagerCommand::Init(mnemonic_url) = command {
             (init_command(secret_manager, storage_path, mnemonic_url).await?, None)
+        } else if let AccountManagerCommand::Restore { backup_path } = command {
+            (
+                restore_command(secret_manager, storage_path, backup_path, password).await?,
+                None,
+            )
         } else {
             let account_manager = AccountManager::builder()
                 .with_secret_manager(secret_manager)
@@ -48,16 +56,18 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(Option<Accou
             let mut account = None;
 
             match command {
-                AccountManagerCommand::Backup { path } => backup_command(&account_manager, path, &password).await?,
+                AccountManagerCommand::Backup { path } => {
+                    backup_command(&account_manager, path, &password).await?;
+                    return Ok((None, None));
+                }
                 AccountManagerCommand::ChangePassword => change_password_command(&account_manager, &password).await?,
                 AccountManagerCommand::New { alias } => account = Some(new_command(&account_manager, alias).await?),
-                AccountManagerCommand::Restore { path } => restore_command(&account_manager, path, &password).await?,
                 AccountManagerCommand::SetNode { url } => set_node_command(&account_manager, url).await?,
                 AccountManagerCommand::Sync => sync_command(&account_manager).await?,
-                // PANIC: this will never happen because of the if/else.
-                AccountManagerCommand::Init(_) => unreachable!(),
-                // PANIC: this will never happen because it is checked at the beginning of the function.
-                AccountManagerCommand::Mnemonic => unreachable!(),
+                // PANIC: this will never happen because these variants have already been checked.
+                AccountManagerCommand::Init(_)
+                | AccountManagerCommand::Mnemonic
+                | AccountManagerCommand::Restore { .. } => unreachable!(),
             };
 
             (account_manager, account)
