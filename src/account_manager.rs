@@ -50,13 +50,14 @@ pub async fn new_account_manager(cli: AccountManagerCli) -> Result<(Option<Accou
             match command {
                 AccountManagerCommand::Backup { path } => backup_command(&account_manager, path, &password).await?,
                 AccountManagerCommand::ChangePassword => change_password_command(&account_manager, &password).await?,
-                // PANIC: this will never happen because of the if/else.
-                AccountManagerCommand::Init(_) => unreachable!(),
-                AccountManagerCommand::Mnemonic => mnemonic_command().await?,
                 AccountManagerCommand::New { alias } => account = Some(new_command(&account_manager, alias).await?),
                 AccountManagerCommand::Restore { path } => restore_command(&account_manager, path, &password).await?,
                 AccountManagerCommand::SetNode { url } => set_node_command(&account_manager, url).await?,
                 AccountManagerCommand::Sync => sync_command(&account_manager).await?,
+                // PANIC: this will never happen because of the if/else.
+                AccountManagerCommand::Init(_) => unreachable!(),
+                // PANIC: this will never happen because it is checked at the beginning of the function.
+                AccountManagerCommand::Mnemonic => unreachable!(),
             };
 
             (account_manager, account)
