@@ -106,6 +106,24 @@ Note that only Basic Outputs with only an address unlock condition can be consol
 > Account "main": consolidate
 ```
 
+### `decrease-native-token-supply`
+
+Melts a native token.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example                                                                          |
+| ---------- | --------- | ------- | -------------------------------------------------------------------------------- |
+| `token_id` | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000" |
+| `amount`   | ✘         | N/A     | 100                                                                              |
+
+#### Example
+
+Melt the provided amount of a native token.
+```sh
+> Account "main": decrease-native-token-supply 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
+```
+
 ### `destroy-alias`
 
 Destroys an alias.
@@ -181,40 +199,22 @@ Displays the account interface usage.
 > Account "main": help
 ```
 
-### `melt-native-token`
+### `increase-native-token-supply`
 
-Melts a native token.
+Mint more of a native token.
 
 #### Parameters
 
 | Name       | Optional  | Default | Example                                                                          |
 | ---------- | --------- | ------- | -------------------------------------------------------------------------------- |
 | `token_id` | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000" |
-| `amount`   | ✘         | N/A     | 100                                                                              |
+| `amount`   | ✘         | N/A     | 10                                                                               |
 
 #### Example
 
-Melt the provided amount of a native token.
-```sh
-> Account "main": melt-native-token 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
-```
-
-### `mint-more-native-token`
-
-Mints more from an existing native token.
-
-#### Parameters
-
-| Name                | Optional  | Default | Example                                                                          |
-| ------------------- | --------- | ------- | -------------------------------------------------------------------------------- |
-| `token_id`          | ✘         | N/A     | "0x08a337e1654340a82aea57470dcfe1899681923d67012a8d8224ea4b62ec8fcdd90300000000" |
-| `additional_supply` | ✘         | N/A     | 10                                                                               |
-
-#### Examples
-
 Mint 10 additional native tokens.
 ```sh
-> Account "main": mint-more-native-token 0x08a337e1654340a82aea57470dcfe1899681923d67012a8d8224ea4b62ec8fcdd90300000000 10
+> Account "main": increase-native-token-supply 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 10
 ```
 
 ### `mint-native-token`

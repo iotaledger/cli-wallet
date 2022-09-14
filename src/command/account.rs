@@ -16,8 +16,8 @@ use iota_wallet::{
         },
         request_funds_from_faucet,
     },
-    AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, MintMoreNativeTokenOptions,
-    NativeTokenOptions, NftOptions, U256,
+    AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
+    U256,
 };
 
 use crate::error::Error;
@@ -44,6 +44,8 @@ pub enum AccountCommand {
     Claim { output_id: Option<String> },
     /// Consolidate all basic outputs into one address.
     Consolidate,
+    /// Melt a native token: `decrease-native-token-supply 0x... 100`
+    DecreaseNativeTokenSupply { token_id: String, amount: String },
     /// Destroy an alias: `destroy-alias 0x...`
     DestroyAlias { alias_id: String },
     /// Destroy a foundry: `destroy-foundry 0x...`
@@ -55,13 +57,8 @@ pub enum AccountCommand {
         url: Option<String>,
         address: Option<String>,
     },
-    /// Melt a native token: `melt-native-token 0x... 100`
-    MeltNativeToken { token_id: String, amount: String },
-    /// Mint more from a native token: `mint-more-native-token 0x... 10`
-    MintMoreNativeToken {
-        token_id: String,
-        additional_supply: String,
-    },
+    /// Mint more of a native token: `increase-native-token-supply 0x... 100`
+    IncreaseNativeTokenSupply { token_id: String, amount: String },
     /// Mint a native token: `mint-native-token 100 100 0x... (foundry metadata)`
     MintNativeToken {
         circulating_supply: String,
@@ -142,10 +139,8 @@ pub async fn burn_native_token_command(
 
     let transaction_result = account_handle
         .burn_native_token(
-            (
-                TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
-            ),
+            TokenId::from_str(&token_id)?,
+            U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
             None,
         )
         .await?;
@@ -207,6 +202,25 @@ pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), E
     Ok(())
 }
 
+// `decrease-native-token-supply` command
+pub async fn decrease_native_token_command(
+    account_handle: &AccountHandle,
+    token_id: String,
+    amount: String,
+) -> Result<(), Error> {
+    let transaction_result = account_handle
+        .decrease_native_token_supply(
+            TokenId::from_str(&token_id)?,
+            U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+            None,
+        )
+        .await?;
+
+    log::info!("Native token melting transaction sent: {transaction_result:?}");
+
+    Ok(())
+}
+
 // `destroy-alias` command
 pub async fn destroy_alias_command(account_handle: &AccountHandle, alias_id: String) -> Result<(), Error> {
     log::info!("Destroying alias {alias_id}.");
@@ -257,40 +271,19 @@ pub async fn faucet_command(
     Ok(())
 }
 
-// `melt-native-token` command
-pub async fn melt_native_token_command(
+// `increase-native-token-supply` command
+pub async fn increase_native_token_command(
     account_handle: &AccountHandle,
     token_id: String,
     amount: String,
 ) -> Result<(), Error> {
     let transaction_result = account_handle
-        .melt_native_token(
-            (
-                TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
-            ),
+        .increase_native_token_supply(
+            TokenId::from_str(&token_id)?,
+            U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+            None,
             None,
         )
-        .await?;
-
-    log::info!("Native token melting transaction sent: {transaction_result:?}");
-
-    Ok(())
-}
-
-// `mint-more-native-token` command
-pub async fn mint_more_native_token_command(
-    account_handle: &AccountHandle,
-    token_id: String,
-    addition_supply: String,
-) -> Result<(), Error> {
-    let native_token_options = MintMoreNativeTokenOptions {
-        additional_supply: U256::from_dec_str(&addition_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
-        token_id: TokenId::from_str(&token_id)?,
-    };
-
-    let transaction_result = account_handle
-        .mint_more_native_token(native_token_options, None)
         .await?;
 
     log::info!("Minting more native token transaction sent: {transaction_result:?}");
