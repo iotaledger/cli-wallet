@@ -44,6 +44,8 @@ pub enum AccountCommand {
     Claim { output_id: Option<String> },
     /// Consolidate all basic outputs into one address.
     Consolidate,
+    /// Melt a native token: `decrease-native-token-supply 0x... 100`
+    DecreaseNativeTokenSupply { token_id: String, amount: String },
     /// Destroy an alias: `destroy-alias 0x...`
     DestroyAlias { alias_id: String },
     /// Destroy a foundry: `destroy-foundry 0x...`
@@ -55,10 +57,11 @@ pub enum AccountCommand {
         url: Option<String>,
         address: Option<String>,
     },
-    /// Melt a native token: `melt-native-token 0x... 100`
-    MeltNativeToken { token_id: String, amount: String },
-    /// Mint a native token: `mint-native-token 100 0x... (foundry metadata)`
+    /// Mint more of a native token: `increase-native-token-supply 0x... 100`
+    IncreaseNativeTokenSupply { token_id: String, amount: String },
+    /// Mint a native token: `mint-native-token 100 100 0x... (foundry metadata)`
     MintNativeToken {
+        circulating_supply: String,
         maximum_supply: String,
         #[clap(long, group = "foundry_metadata")]
         foundry_metadata_hex: Option<String>,
@@ -136,10 +139,8 @@ pub async fn burn_native_token_command(
 
     let transaction_result = account_handle
         .burn_native_token(
-            (
-                TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
-            ),
+            TokenId::from_str(&token_id)?,
+            U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
             None,
         )
         .await?;
@@ -201,6 +202,25 @@ pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), E
     Ok(())
 }
 
+// `decrease-native-token-supply` command
+pub async fn decrease_native_token_command(
+    account_handle: &AccountHandle,
+    token_id: String,
+    amount: String,
+) -> Result<(), Error> {
+    let transaction_result = account_handle
+        .decrease_native_token_supply(
+            TokenId::from_str(&token_id)?,
+            U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+            None,
+        )
+        .await?;
+
+    log::info!("Native token melting transaction sent: {transaction_result:?}");
+
+    Ok(())
+}
+
 // `destroy-alias` command
 pub async fn destroy_alias_command(account_handle: &AccountHandle, alias_id: String) -> Result<(), Error> {
     log::info!("Destroying alias {alias_id}.");
@@ -251,23 +271,22 @@ pub async fn faucet_command(
     Ok(())
 }
 
-// `melt-native-token` command
-pub async fn melt_native_token_command(
+// `increase-native-token-supply` command
+pub async fn increase_native_token_command(
     account_handle: &AccountHandle,
     token_id: String,
     amount: String,
 ) -> Result<(), Error> {
     let transaction_result = account_handle
-        .melt_native_token(
-            (
-                TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
-            ),
+        .increase_native_token_supply(
+            TokenId::from_str(&token_id)?,
+            U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+            None,
             None,
         )
         .await?;
 
-    log::info!("Native token melting transaction sent: {transaction_result:?}");
+    log::info!("Minting more native token transaction sent: {transaction_result:?}");
 
     Ok(())
 }
@@ -275,14 +294,13 @@ pub async fn melt_native_token_command(
 // `mint-native-token` command
 pub async fn mint_native_token_command(
     account_handle: &AccountHandle,
-    // todo: enable this when there is support to mint additional tokens for an existing token
-    // circulating_supply: String,
+    circulating_supply: String,
     maximum_supply: String,
     foundry_metadata: Option<Vec<u8>>,
 ) -> Result<(), Error> {
     let native_token_options = NativeTokenOptions {
         account_address: None,
-        circulating_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+        circulating_supply: U256::from_dec_str(&circulating_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         foundry_metadata,
     };

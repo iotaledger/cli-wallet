@@ -39,9 +39,9 @@ Creates a stronghold backup file.
 
 #### Parameters
 
-| Name    | Optional  | Example              |
-| ------- | --------- | -------------------- |
-| `path`  | ✘         | "backup.stronghold"  |
+| Name    | Optional  | Example           |
+| ------- | --------- | ----------------- |
+| `path`  | ✘         | backup.stronghold |
 
 #### Example
 
@@ -81,11 +81,11 @@ When just initialised, the wallet has no account yet, use the `new` command to c
 
 #### Parameters
 
-| Name        | Optional    | Default                      | Example                                                                                                                                                                              |
-| ----------- | ----------- |----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `mnemonic`  | ✓           | Randomly generated           | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC)  |
-| `node`      | ✓           | "http://localhost:14265/"    | "http://localhost:14265/"                                                                                                                                                            |
-| `coin-type` | ✓           | 4219 (=Shimmer)              | 4218 (=IOTA)                                                                                                                                                                         |
+| Name        | Optional    | Default                | Example                                                                                                                                                                             |
+| ----------- | ----------- |----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `mnemonic`  | ✓           | Randomly generated     | "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt" (DO NOT USE THIS MNEMONIC) |
+| `node`      | ✓           | http://localhost:14265 | http://localhost:14265                                                                                                                                                              |
+| `coin-type` | ✓           | 4219 (=Shimmer)        | 4218 (=IOTA)                                                                                                                                                                        |
 
 #### Examples
 
@@ -102,7 +102,7 @@ $ ./wallet init --mnemonic "aunt middle impose faith ramp kid olive good practic
 
 Initialise the wallet with a randomly generated mnemonic and a given node.
 ```sh
-$ ./wallet init --node "http://localhost:14265/"
+$ ./wallet init --node http://localhost:14265
 ```
 
 Initialise the wallet with a given coin type.
@@ -132,7 +132,7 @@ The wallet needs to be initialised (`init` command).
 
 | Name    | Optional  | Default       | Example |
 | ------- | --------- | ------------- | ------- |
-| `alias` | ✓         | Account index | "main"  |
+| `alias` | ✓         | Account index | main    |
 
 #### Examples
 
@@ -152,9 +152,9 @@ Restores accounts from a stronghold backup file.
 
 #### Parameters
 
-| Name    | Optional  | Example              |
-| ------- | --------- | -------------------- |
-| `path`  | ✘         | "backup.stronghold"  |
+| Name    | Optional  | Example           |
+| ------- | --------- | ----------------- |
+| `path`  | ✘         | backup.stronghold |
 
 #### Example
 
@@ -171,14 +171,14 @@ The new node URL is persisted to the storage and all future requests will use it
 
 #### Parameters
 
-| Name  | Optional  | Example                   |
-| ----- | --------- | ------------------------- |
-| `url` | ✘         | "http://localhost:14265/" |
+| Name  | Optional  | Example                |
+| ----- | --------- | ---------------------- |
+| `url` | ✘         | http://localhost:14265 |
 
 #### Example
 
 ```sh
-$ ./wallet set-node http://localhost:14265/
+$ ./wallet set-node http://localhost:14265
 ```
 
 ### `./wallet sync`

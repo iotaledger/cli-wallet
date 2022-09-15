@@ -8,10 +8,11 @@ use iota_wallet::account::AccountHandle;
 use crate::{
     command::account::{
         addresses_command, balance_command, burn_native_token_command, burn_nft_command, claim_command,
-        consolidate_command, destroy_alias_command, destroy_foundry_command, faucet_command, melt_native_token_command,
-        mint_native_token_command, mint_nft_command, new_address_command, output_command, outputs_command,
-        send_command, send_micro_command, send_native_token_command, send_nft_command, sync_command,
-        transactions_command, unspent_outputs_command, AccountCli, AccountCommand,
+        consolidate_command, decrease_native_token_command, destroy_alias_command, destroy_foundry_command,
+        faucet_command, increase_native_token_command, mint_native_token_command, mint_nft_command,
+        new_address_command, output_command, outputs_command, send_command, send_micro_command,
+        send_native_token_command, send_nft_command, sync_command, transactions_command, unspent_outputs_command,
+        AccountCli, AccountCommand,
     },
     error::Error,
     helper::bytes_from_hex_or_file,
@@ -69,6 +70,9 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::BurnNft { nft_id } => burn_nft_command(&account_handle, nft_id).await,
                 AccountCommand::Claim { output_id } => claim_command(&account_handle, output_id).await,
                 AccountCommand::Consolidate => consolidate_command(&account_handle).await,
+                AccountCommand::DecreaseNativeTokenSupply { token_id, amount } => {
+                    decrease_native_token_command(&account_handle, token_id, amount).await
+                }
                 AccountCommand::DestroyAlias { alias_id } => destroy_alias_command(&account_handle, alias_id).await,
                 AccountCommand::DestroyFoundry { foundry_id } => {
                     destroy_foundry_command(&account_handle, foundry_id).await
@@ -77,16 +81,18 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                     return Ok(true);
                 }
                 AccountCommand::Faucet { url, address } => faucet_command(&account_handle, url, address).await,
-                AccountCommand::MeltNativeToken { token_id, amount } => {
-                    melt_native_token_command(&account_handle, token_id, amount).await
+                AccountCommand::IncreaseNativeTokenSupply { token_id, amount } => {
+                    increase_native_token_command(&account_handle, token_id, amount).await
                 }
                 AccountCommand::MintNativeToken {
+                    circulating_supply,
                     maximum_supply,
                     foundry_metadata_hex,
                     foundry_metadata_file,
                 } => {
                     mint_native_token_command(
                         &account_handle,
+                        circulating_supply,
                         maximum_supply,
                         bytes_from_hex_or_file(foundry_metadata_hex, foundry_metadata_file).await?,
                     )

@@ -463,7 +463,7 @@ dependencies = [
 
 [[package]]
 name = "cli-wallet"
-version = "1.0.0-beta.9"
+version = "1.0.0-beta.10"
 dependencies = [
  "clap",
  "dialoguer",
@@ -1162,7 +1162,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "2.0.0-beta.3"
-source = "git+https://github.com/iotaledger/iota.rs?rev=f9bc46f9dbf55dad1a6df771e9921646772d88a3#f9bc46f9dbf55dad1a6df771e9921646772d88a3"
+source = "git+https://github.com/iotaledger/iota.rs?rev=d83b75ca52c4444220df496e725d3753cf0b7fe3#d83b75ca52c4444220df496e725d3753cf0b7fe3"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -1250,7 +1250,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "0.2.0"
-source = "git+https://github.com/iotaledger/wallet.rs?rev=66d94faf8b860f3287bed28e207fa7d688890340#66d94faf8b860f3287bed28e207fa7d688890340"
+source = "git+https://github.com/iotaledger/wallet.rs?rev=58df4927d4894b300d929d5099faa654459c82fc#58df4927d4894b300d929d5099faa654459c82fc"
 dependencies = [
  "async-trait",
  "backtrace",
