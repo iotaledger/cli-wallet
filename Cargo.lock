@@ -1162,7 +1162,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "2.0.0-beta.3"
-source = "git+https://github.com/iotaledger/iota.rs?rev=f9bc46f9dbf55dad1a6df771e9921646772d88a3#f9bc46f9dbf55dad1a6df771e9921646772d88a3"
+source = "git+https://github.com/iotaledger/iota.rs?rev=d83b75ca52c4444220df496e725d3753cf0b7fe3#d83b75ca52c4444220df496e725d3753cf0b7fe3"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -1510,34 +1510,9 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a7e6da5d02b6ba18afdb21b1813fa25b97ad997201aed5883a9ef9141024cfbf"
 dependencies = [
  "autocfg",
- "packable-derive 0.5.0",
- "primitive-types",
- "serde",
-]
-
-[[package]]
-name = "packable"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a7e6da5d02b6ba18afdb21b1813fa25b97ad997201aed5883a9ef9141024cfbf"
-dependencies = [
- "autocfg",
  "packable-derive",
  "primitive-types",
  "serde",
-]
-
-[[package]]
-name = "packable-derive"
-version = "0.6.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00b336fd071ce4e492a7842a2c73fd742326468e0f6e6bb22d58b2dcb48565f8"
-dependencies = [
- "proc-macro-crate",
- "proc-macro-error",
- "proc-macro2",
- "quote",
- "syn",
 ]
 
 [[package]]
