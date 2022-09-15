@@ -33,10 +33,10 @@ Burns a native token.
 
 #### Parameters
 
-| Name       | Optional  | Default | Example                                                                          |
-| ---------- | --------- | ------- | -------------------------------------------------------------------------------- |
-| `token_id` | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000" |
-| `amount`   | ✘         | N/A     | 100                                                                              |
+| Name       | Optional  | Default | Example                                                                        |
+| ---------- | --------- | ------- | ------------------------------------------------------------------------------ |
+| `token_id` | ✘         | N/A     | 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 |
+| `amount`   | ✘         | N/A     | 100                                                                            |
 
 #### Example
 
@@ -51,9 +51,9 @@ Burns an NFT.
 
 #### Parameters
 
-| Name     | Optional  | Default | Example                                                              |
-| -------- | --------- | ------- | -------------------------------------------------------------------- |
-| `nft_id` | ✘         | N/A     | "0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c" |
+| Name     | Optional  | Default | Example                                                            |
+| -------- | --------- | ------- | ------------------------------------------------------------------ |
+| `nft_id` | ✘         | N/A     | 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c |
 
 #### Example
 
@@ -68,9 +68,9 @@ Tries to claim outputs with storage deposit return, expiration or timelock unloc
 
 #### Parameters
 
-| Name        | Optional  | Default | Example                                                                  |
-| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
-| `output_id` | ✓         | N/A     | "0xd5dff9ee869dfa7796d5132b220cb5c00146c36abba27d3562e2d726decb50850000" |
+| Name        | Optional  | Default | Example                                                                |
+| ----------- | --------- | ------- | ---------------------------------------------------------------------- |
+| `output_id` | ✓         | N/A     | 0xd5dff9ee869dfa7796d5132b220cb5c00146c36abba27d3562e2d726decb50850000 |
 
 #### Examples
 
@@ -112,10 +112,10 @@ Melts a native token.
 
 #### Parameters
 
-| Name       | Optional  | Default | Example                                                                          |
-| ---------- | --------- | ------- | -------------------------------------------------------------------------------- |
-| `token_id` | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000" |
-| `amount`   | ✘         | N/A     | 100                                                                              |
+| Name       | Optional  | Default | Example                                                                        |
+| ---------- | --------- | ------- | ------------------------------------------------------------------------------ |
+| `token_id` | ✘         | N/A     | 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 |
+| `amount`   | ✘         | N/A     | 100                                                                            |
 
 #### Example
 
@@ -130,9 +130,9 @@ Destroys an alias.
 
 #### Parameters
 
-| Name       | Optional  | Default | Example                                                              |
-| ---------- | --------- | ------- | -------------------------------------------------------------------- |
-| `alias_id` | ✘         | N/A     | "0xb2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd" |
+| Name       | Optional  | Default | Example                                                            |
+| ---------- | --------- | ------- | ------------------------------------------------------------------ |
+| `alias_id` | ✘         | N/A     | 0xb2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd |
 
 #### Example
 
@@ -146,9 +146,9 @@ Destroys a foundry.
 
 #### Parameters
 
-| Name         | Optional  | Default | Example                                                                          |
-| ------------ | --------- | ------- | -------------------------------------------------------------------------------- |
-| `foundry_id` | ✘         | N/A     | "0x08b2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd0100000000" |
+| Name         | Optional  | Default | Example                                                                        |
+| ------------ | --------- | ------- | ------------------------------------------------------------------------------ |
+| `foundry_id` | ✘         | N/A     | 0x08b2bcba092bfb3fe3a12afcf21115016b27d833a7c456404fe2fe0921799f24dd0100000000 |
 
 #### Example
 
@@ -172,10 +172,10 @@ Requests funds from a faucet.
 
 #### Parameters
 
-| Name      | Optional  | Default                              | Example                                                           |
-| --------- | --------- | ------------------------------------ | ----------------------------------------------------------------- |
-| `url`     | ✓         | "http://localhost:8091/api/enqueue"  | "http://localhost:8091/api/enqueue"                               |
-| `address` | ✓         | The latest address of the account    | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
+| Name      | Optional  | Default                           | Example                                                         |
+| --------- | --------- | --------------------------------- | --------------------------------------------------------------- |
+| `url`     | ✓         | http://localhost:8091/api/enqueue | http://localhost:8091/api/enqueue                               |
+| `address` | ✓         | The latest address of the account | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 |
 
 #### Examples
 
@@ -205,10 +205,10 @@ Mint more of a native token.
 
 #### Parameters
 
-| Name       | Optional  | Default | Example                                                                          |
-| ---------- | --------- | ------- | -------------------------------------------------------------------------------- |
-| `token_id` | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000" |
-| `amount`   | ✘         | N/A     | 10                                                                               |
+| Name       | Optional  | Default | Example                                                                        |
+| ---------- | --------- | ------- | ------------------------------------------------------------------------------ |
+| `token_id` | ✘         | N/A     | 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 |
+| `amount`   | ✘         | N/A     | 10                                                                             |
 
 #### Example
 
@@ -223,12 +223,12 @@ Mints a native token.
 
 #### Parameters
 
-| Name                      | Optional  | Default | Example            |
-| ------------------------- | --------- | ------- | ------------------ |
-| `circulating_supply`      | ✘         | N/A     | 1000               |
-| `maximum_supply`          | ✘         | N/A     | 1000               |
-| `foundry_metadata_hex`    | ✓         | None    | "0xabcdef"         |
-| `foundry_metadata_file`   | ✓         | None    | "metadata.json"    |
+| Name                      | Optional  | Default | Example       |
+| ------------------------- | --------- | ------- | ------------- |
+| `circulating_supply`      | ✘         | N/A     | 1000          |
+| `maximum_supply`          | ✘         | N/A     | 1000          |
+| `foundry_metadata_hex`    | ✓         | None    | 0xabcdef      |
+| `foundry_metadata_file`   | ✓         | None    | metadata.json |
 
 #### Examples
 
@@ -253,13 +253,13 @@ Mints an NFT.
 
 #### Parameters
 
-| Name                      | Optional  | Default                           | Example                                                           |
-| ------------------------- | --------- | --------------------------------- | ----------------------------------------------------------------- |
-| `address`                 | ✓         | The first address of the account  | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
-| `immutable_metadata_hex`  | ✓         | None                              | "0xabcdef"                                                        |
-| `immutable_metadata_file` | ✓         | None                              | "metadata.json"                                                   |
-| `metadata_hex`            | ✓         | None                              | "0xabcdef"                                                        |
-| `metadata_file`           | ✓         | None                              | "metadata.json"                                                   |
+| Name                      | Optional  | Default                           | Example                                                         |
+| ------------------------- | --------- | --------------------------------- | --------------------------------------------------------------- |
+| `address`                 | ✓         | The first address of the account  | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 |
+| `immutable_metadata_hex`  | ✓         | None                              | 0xabcdef                                                        |
+| `immutable_metadata_file` | ✓         | None                              | metadata.json                                                   |
+| `metadata_hex`            | ✓         | None                              | 0xabcdef                                                        |
+| `metadata_file`           | ✓         | None                              | metadata.json                                                   |
 
 #### Examples
 
@@ -275,7 +275,7 @@ Mint an NFT to a given address.
 
 Mint an NFT to a given address with hexadecimal immutable metadata and metadata from a file.
 ```sh
-> Account "main": mint-nft rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 --immutable-metadata-hex 0xabcdef --metadata-file metadata.json"
+> Account "main": mint-nft rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 --immutable-metadata-hex 0xabcdef --metadata-file metadata.json
 ```
 
 ### `new-address`
@@ -294,9 +294,9 @@ Displays an output that is stored in the account.
 
 #### Parameters
 
-| Name        | Optional  | Default | Example                                                                  |
-| ----------- | --------- | ------- | ------------------------------------------------------------------------ |
-| `output_id` | ✘         | N/A     | "0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100" |
+| Name        | Optional  | Default | Example                                                                |
+| ----------- | --------- | ------- | ---------------------------------------------------------------------- |
+| `output_id` | ✘         | N/A     | 0x1c7a765db0c1f5eceb0ea5578585359c5b0c1ab8d958829f5990997b93f0ec7d0100 |
 
 #### Example
 
@@ -320,10 +320,10 @@ Sends an amount to an address.
 
 #### Parameters
 
-| Name      | Optional  | Default | Example                                                           |
-| --------- | --------- | ------- | ----------------------------------------------------------------- |
-| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
-| `amount`  | ✘         | N/A     | 1000000                                                           |
+| Name      | Optional  | Default | Example                                                         |
+| --------- | --------- | ------- | --------------------------------------------------------------- |
+| `address` | ✘         | N/A     | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 |
+| `amount`  | ✘         | N/A     | 1000000                                                         |
 
 #### Example
 
@@ -337,10 +337,10 @@ Sends a micro amount to an address with StorageDepositReturn and Expiration Unlo
 
 #### Parameters
 
-| Name      | Optional  | Default | Example                                                           |
-| --------- | --------- | ------- | ----------------------------------------------------------------- |
-| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3" |
-| `amount`  | ✘         | N/A     | 1                                                                 |
+| Name      | Optional  | Default | Example                                                         |
+| --------- | --------- | ------- | --------------------------------------------------------------- |
+| `address` | ✘         | N/A     | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 |
+| `amount`  | ✘         | N/A     | 1                                                               |
 
 #### Example
 
@@ -356,12 +356,12 @@ To send the native tokens together with the required storage deposit and without
 
 #### Parameters
 
-| Name                   | Optional  | Default | Example                                                                           |
-| ---------------------- | --------- | ------- | --------------------------------------------------------------------------------- |
-| `address`              | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"                 |
-| `token_id`             | ✘         | N/A     | "0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000"  |
-| `amount`               | ✘         | N/A     | 100                                                                               |
-| `gift_storage_deposit` | ✓         | false   | true                                                                              |
+| Name                   | Optional  | Default | Example                                                                         |
+| ---------------------- | --------- | ------- | ------------------------------------------------------------------------------- |
+| `address`              | ✘         | N/A     | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3                 |
+| `token_id`             | ✘         | N/A     | 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000  |
+| `amount`               | ✘         | N/A     | 100                                                                             |
+| `gift_storage_deposit` | ✓         | false   | true                                                                            |
 
 #### Example
 
@@ -383,10 +383,10 @@ Sends an NFT to an address.
 
 #### Parameters
 
-| Name      | Optional  | Default | Example                                                               |
-| --------- | --------- | ------- | --------------------------------------------------------------------- |
-| `address` | ✘         | N/A     | "rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3"     |
-| `nft_id`  | ✘         | N/A     | "0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c"  |
+| Name      | Optional  | Default | Example                                                             |
+| --------- | --------- | ------- | ------------------------------------------------------------------- |
+| `address` | ✘         | N/A     | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3     |
+| `nft_id`  | ✘         | N/A     | 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c  |
 
 #### Example
 
