@@ -170,21 +170,32 @@ pub async fn balance_command(account_handle: &AccountHandle) -> Result<(), Error
 
 // `claim` command
 pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<String>) -> Result<(), Error> {
-    let claiming_txs = if let Some(output_id) = output_id {
+    if let Some(output_id) = output_id {
         log::info!("Claiming output {output_id}");
 
-        account_handle
+        let claiming_tx = account_handle
             .claim_outputs(vec![OutputId::from_str(&output_id)?])
-            .await?
+            .await?;
+
+        log::info!("Claim transaction sent: {claiming_tx:?}");
     } else {
         log::info!("Claiming outputs.");
 
-        account_handle.try_claim_outputs(OutputsToClaim::All).await?
-    };
+        let output_ids = account_handle
+            .get_unlockable_outputs_with_additional_unlock_conditions(OutputsToClaim::All)
+            .await?;
 
-    for claiming_tx in claiming_txs {
-        log::info!("Claim transaction sent: {claiming_tx:?}");
-    }
+        if output_ids.is_empty() {
+            log::info!("No outputs available to claim.");
+        }
+
+        // Doing chunks of only 60, because we might need to create the double amount of outputs, because of potential
+        // storage deposit return unlock conditions and also consider the remainder output.
+        for output_ids_chunk in output_ids.chunks(60) {
+            let claiming_tx = account_handle.claim_outputs(output_ids_chunk.to_vec()).await?;
+            log::info!("Claim transaction sent: {claiming_tx:?}");
+        }
+    };
 
     Ok(())
 }
