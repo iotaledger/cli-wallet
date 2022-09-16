@@ -1,5 +1,7 @@
 # Welcome
 
+![cli-wallet](/img/cli-wallet.gif)
+
 The [cli-wallet](https://github.com/iotaledger/cli-wallet) is a stateful Command Line Interface wrapper around
 [wallet.rs](https://github.com/iotaledger/wallet.rs).
 

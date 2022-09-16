@@ -1,5 +1,7 @@
 # IOTA Stardust CLI Wallet
 
+![cli-wallet](./documentation/static/img/cli-wallet.gif)
+
 Command line interface application for the [IOTA wallet library](https://github.com/iotaledger/wallet.rs).
 
 ## Usage
