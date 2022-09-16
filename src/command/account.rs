@@ -204,11 +204,9 @@ pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<Str
 pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
     log::info!("Consolidating outputs.");
 
-    let consolidation_txs = account_handle.consolidate_outputs(true, None).await?;
+    let consolidation_tx = account_handle.consolidate_outputs(true, None).await?;
 
-    for consolidation_tx in consolidation_txs {
-        log::info!("Consolidation transaction sent: {consolidation_tx:?}");
-    }
+    log::info!("Consolidation transaction sent: {consolidation_tx:?}");
 
     Ok(())
 }
