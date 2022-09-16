@@ -5,7 +5,10 @@ use std::str::FromStr;
 
 use clap::{Parser, Subcommand};
 use iota_wallet::{
-    account::{types::AccountAddress, AccountHandle, OutputsToClaim},
+    account::{
+        types::{AccountAddress, TransactionDto},
+        AccountHandle, OutputsToClaim,
+    },
     iota_client::{
         block::{
             address::Address,
@@ -59,7 +62,7 @@ pub enum AccountCommand {
     },
     /// Mint more of a native token: `increase-native-token-supply 0x... 100`
     IncreaseNativeTokenSupply { token_id: String, amount: String },
-    /// Mint a native token: `mint-native-token 100 100 0x... (foundry metadata)`
+    /// Mint a native token: `mint-native-token 100 100 --foundry-metadata-hex 0x... (foundry metadata)`
     MintNativeToken {
         circulating_supply: String,
         maximum_supply: String,
@@ -137,7 +140,7 @@ pub async fn burn_native_token_command(
 ) -> Result<(), Error> {
     log::info!("Burning native token {token_id} {amount}.");
 
-    let transaction_result = account_handle
+    let transaction = account_handle
         .burn_native_token(
             TokenId::from_str(&token_id)?,
             U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
@@ -145,7 +148,11 @@ pub async fn burn_native_token_command(
         )
         .await?;
 
-    log::info!("{transaction_result:?}",);
+    log::info!(
+        "Burning transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -154,9 +161,13 @@ pub async fn burn_native_token_command(
 pub async fn burn_nft_command(account_handle: &AccountHandle, nft_id: String) -> Result<(), Error> {
     log::info!("Burning nft {nft_id}.");
 
-    let transaction_result = account_handle.burn_nft(NftId::from_str(&nft_id)?, None).await?;
+    let transaction = account_handle.burn_nft(NftId::from_str(&nft_id)?, None).await?;
 
-    log::info!("{transaction_result:?}");
+    log::info!(
+        "Burning transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -173,11 +184,15 @@ pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<Str
     if let Some(output_id) = output_id {
         log::info!("Claiming output {output_id}");
 
-        let claiming_tx = account_handle
+        let transaction = account_handle
             .claim_outputs(vec![OutputId::from_str(&output_id)?])
             .await?;
 
-        log::info!("Claim transaction sent: {claiming_tx:?}");
+        log::info!(
+            "Claiming transaction sent:\ntx id: {}\n{:?}",
+            transaction.transaction_id,
+            transaction.block_id
+        );
     } else {
         log::info!("Claiming outputs.");
 
@@ -192,8 +207,12 @@ pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<Str
         // Doing chunks of only 60, because we might need to create the double amount of outputs, because of potential
         // storage deposit return unlock conditions and also consider the remainder output.
         for output_ids_chunk in output_ids.chunks(60) {
-            let claiming_tx = account_handle.claim_outputs(output_ids_chunk.to_vec()).await?;
-            log::info!("Claim transaction sent: {claiming_tx:?}");
+            let transaction = account_handle.claim_outputs(output_ids_chunk.to_vec()).await?;
+            log::info!(
+                "Claiming transaction sent:\ntx id: {}\n{:?}",
+                transaction.transaction_id,
+                transaction.block_id
+            );
         }
     };
 
@@ -204,9 +223,13 @@ pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<Str
 pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), Error> {
     log::info!("Consolidating outputs.");
 
-    let consolidation_tx = account_handle.consolidate_outputs(true, None).await?;
+    let transaction = account_handle.consolidate_outputs(true, None).await?;
 
-    log::info!("Consolidation transaction sent: {consolidation_tx:?}");
+    log::info!(
+        "Consolidation transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -217,7 +240,7 @@ pub async fn decrease_native_token_command(
     token_id: String,
     amount: String,
 ) -> Result<(), Error> {
-    let transaction_result = account_handle
+    let transaction = account_handle
         .decrease_native_token_supply(
             TokenId::from_str(&token_id)?,
             U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
@@ -225,7 +248,11 @@ pub async fn decrease_native_token_command(
         )
         .await?;
 
-    log::info!("Native token melting transaction sent: {transaction_result:?}");
+    log::info!(
+        "Native token melting transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -234,11 +261,15 @@ pub async fn decrease_native_token_command(
 pub async fn destroy_alias_command(account_handle: &AccountHandle, alias_id: String) -> Result<(), Error> {
     log::info!("Destroying alias {alias_id}.");
 
-    let transaction_result = account_handle
+    let transaction = account_handle
         .destroy_alias(AliasId::from_str(&alias_id)?, None)
         .await?;
 
-    log::info!("{transaction_result:?}");
+    log::info!(
+        "Destroying alias transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -247,11 +278,15 @@ pub async fn destroy_alias_command(account_handle: &AccountHandle, alias_id: Str
 pub async fn destroy_foundry_command(account_handle: &AccountHandle, foundry_id: String) -> Result<(), Error> {
     log::info!("Destroying foundry {foundry_id}.");
 
-    let transaction_result = account_handle
+    let transaction = account_handle
         .destroy_foundry(FoundryId::from_str(&foundry_id)?, None)
         .await?;
 
-    log::info!("{transaction_result:?}");
+    log::info!(
+        "Destroying foundry transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -286,7 +321,7 @@ pub async fn increase_native_token_command(
     token_id: String,
     amount: String,
 ) -> Result<(), Error> {
-    let transaction_result = account_handle
+    let mint_transaction = account_handle
         .increase_native_token_supply(
             TokenId::from_str(&token_id)?,
             U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
@@ -295,7 +330,11 @@ pub async fn increase_native_token_command(
         )
         .await?;
 
-    log::info!("Minting more native token transaction sent: {transaction_result:?}");
+    log::info!(
+        "Minting more native token transaction sent:\ntx id: {}\n{:?}",
+        mint_transaction.transaction.transaction_id,
+        mint_transaction.transaction.block_id
+    );
 
     Ok(())
 }
@@ -314,9 +353,13 @@ pub async fn mint_native_token_command(
         foundry_metadata,
     };
 
-    let transaction_result = account_handle.mint_native_token(native_token_options, None).await?;
+    let mint_transaction = account_handle.mint_native_token(native_token_options, None).await?;
 
-    log::info!("Native token minting transaction sent: {transaction_result:?}");
+    log::info!(
+        "Native token minting transaction sent:\ntx id: {}\n{:?}",
+        mint_transaction.transaction.transaction_id,
+        mint_transaction.transaction.block_id
+    );
 
     Ok(())
 }
@@ -333,9 +376,13 @@ pub async fn mint_nft_command(
         immutable_metadata,
         metadata,
     }];
-    let transaction_result = account_handle.mint_nfts(nft_options, None).await?;
+    let transaction = account_handle.mint_nfts(nft_options, None).await?;
 
-    log::info!("NFT minting transaction sent: {transaction_result:?}");
+    log::info!(
+        "NFT minting transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -379,9 +426,13 @@ pub async fn outputs_command(account_handle: &AccountHandle) -> Result<(), Error
 // `send` command
 pub async fn send_command(account_handle: &AccountHandle, address: String, amount: u64) -> Result<(), Error> {
     let outputs = vec![AddressWithAmount { address, amount }];
-    let transaction_result = account_handle.send_amount(outputs, None).await?;
+    let transaction = account_handle.send_amount(outputs, None).await?;
 
-    log::info!("Transaction created: {transaction_result:?}");
+    log::info!(
+        "Transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -395,9 +446,13 @@ pub async fn send_micro_command(account_handle: &AccountHandle, address: String,
         expiration: None,
     }];
 
-    let transaction_result = account_handle.send_micro_transaction(outputs, None).await?;
+    let transaction = account_handle.send_micro_transaction(outputs, None).await?;
 
-    log::info!("Micro transaction created: {transaction_result:?}");
+    log::info!(
+        "Micro transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -410,7 +465,7 @@ pub async fn send_native_token_command(
     amount: String,
     gift_storage_deposit: Option<bool>,
 ) -> Result<(), Error> {
-    let transaction_result = if gift_storage_deposit.unwrap_or(false) {
+    let transaction = if gift_storage_deposit.unwrap_or(false) {
         // Send native tokens together with the required storage deposit
         let rent_structure = account_handle.client().get_rent_structure().await?;
 
@@ -440,7 +495,11 @@ pub async fn send_native_token_command(
         account_handle.send_native_tokens(outputs, None).await?
     };
 
-    log::info!("Transaction created: {transaction_result:?}");
+    log::info!(
+        "Native token transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -451,9 +510,13 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
         address,
         nft_id: NftId::from_str(&nft_id)?,
     }];
-    let transaction_result = account_handle.send_nft(outputs, None).await?;
+    let transaction = account_handle.send_nft(outputs, None).await?;
 
-    log::info!("Transaction created: {transaction_result:?}");
+    log::info!(
+        "Nft transaction sent:\ntx id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
@@ -474,9 +537,9 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
     if transactions.is_empty() {
         log::info!("No transactions found");
     } else {
-        // Format to not take too much space with pretty printing but still have a clear separation between transactions
-        let txs = transactions.iter().map(|tx| format!("{tx:?}")).collect::<Vec<String>>();
-        log::info!("{txs:#?}");
+        for tx in transactions {
+            log::info!("{}", serde_json::to_string(&TransactionDto::from(&tx))?);
+        }
     }
 
     Ok(())

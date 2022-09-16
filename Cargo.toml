@@ -1,6 +1,6 @@
 [package]
 name = "cli-wallet"
-version = "1.0.0-beta.10"
+version = "1.0.0-beta.11"
 authors = [ "IOTA Stiftung" ]
 edition = "2021"
 homepage = "https://iota.org"
@@ -18,6 +18,7 @@ fern-logger = { version = "0.5.0", default-features = false }
 iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "a45278f2c06058a24bd056a9f91f08d3e42fa9fa", default-features = false, features = [ "storage", "stronghold" ] }
 log = { version = "0.4.17", default-features = false }
 prefix-hex = { version = "0.4.0", default-features = false, features = [ "std" ] }
+serde_json = { version = "1.0.85", default-features = false }
 thiserror = { version = "1.0.31", default-features = false }
 tokio = { version = "1.20.0", default-features = false, features = [ "fs" ] }    
 
