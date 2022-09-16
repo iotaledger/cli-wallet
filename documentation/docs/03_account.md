@@ -234,17 +234,17 @@ Mints a native token.
 
 Mint a native token with a maximum supply.
 ```sh
-> Account "main": mint-native-token 1000
+> Account "main": mint-native-token 1000 1000
 ```
 
 Mint a native token with a maximum supply and hexadecimal foundry metadata.
 ```sh
-> Account "main": mint-native-token 1000 --foundry-metadata-hex 0xabcdef
+> Account "main": mint-native-token 1000 1000 --foundry-metadata-hex 0xabcdef
 ```
 
 Mint a native token with a maximum supply and foundry metadata from a file.
 ```sh
-> Account "main": mint-native-token 1000 --foundry-metadata-file metadata.json
+> Account "main": mint-native-token 1000 1000 --foundry-metadata-file metadata.json
 ```
 
 ### `mint-nft`
