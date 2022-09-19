@@ -149,7 +149,7 @@ pub async fn burn_native_token_command(
         .await?;
 
     log::info!(
-        "Burning transaction sent:\ntx id: {}\n{:?}",
+        "Burning transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -164,7 +164,7 @@ pub async fn burn_nft_command(account_handle: &AccountHandle, nft_id: String) ->
     let transaction = account_handle.burn_nft(NftId::from_str(&nft_id)?, None).await?;
 
     log::info!(
-        "Burning transaction sent:\ntx id: {}\n{:?}",
+        "Burning transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -189,7 +189,7 @@ pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<Str
             .await?;
 
         log::info!(
-            "Claiming transaction sent:\ntx id: {}\n{:?}",
+            "Claiming transaction sent:\ntransaction id: {}\n{:?}",
             transaction.transaction_id,
             transaction.block_id
         );
@@ -209,7 +209,7 @@ pub async fn claim_command(account_handle: &AccountHandle, output_id: Option<Str
         for output_ids_chunk in output_ids.chunks(60) {
             let transaction = account_handle.claim_outputs(output_ids_chunk.to_vec()).await?;
             log::info!(
-                "Claiming transaction sent:\ntx id: {}\n{:?}",
+                "Claiming transaction sent:\ntransaction id: {}\n{:?}",
                 transaction.transaction_id,
                 transaction.block_id
             );
@@ -226,7 +226,7 @@ pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), E
     let transaction = account_handle.consolidate_outputs(true, None).await?;
 
     log::info!(
-        "Consolidation transaction sent:\ntx id: {}\n{:?}",
+        "Consolidation transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -249,7 +249,7 @@ pub async fn decrease_native_token_command(
         .await?;
 
     log::info!(
-        "Native token melting transaction sent:\ntx id: {}\n{:?}",
+        "Native token melting transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -266,7 +266,7 @@ pub async fn destroy_alias_command(account_handle: &AccountHandle, alias_id: Str
         .await?;
 
     log::info!(
-        "Destroying alias transaction sent:\ntx id: {}\n{:?}",
+        "Destroying alias transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -283,7 +283,7 @@ pub async fn destroy_foundry_command(account_handle: &AccountHandle, foundry_id:
         .await?;
 
     log::info!(
-        "Destroying foundry transaction sent:\ntx id: {}\n{:?}",
+        "Destroying foundry transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -331,7 +331,7 @@ pub async fn increase_native_token_command(
         .await?;
 
     log::info!(
-        "Minting more native token transaction sent:\ntx id: {}\n{:?}",
+        "Minting more native token transaction sent:\ntransaction id: {}\n{:?}",
         mint_transaction.transaction.transaction_id,
         mint_transaction.transaction.block_id
     );
@@ -356,7 +356,7 @@ pub async fn mint_native_token_command(
     let mint_transaction = account_handle.mint_native_token(native_token_options, None).await?;
 
     log::info!(
-        "Native token minting transaction sent:\ntx id: {}\n{:?}",
+        "Native token minting transaction sent:\ntransaction id: {}\n{:?}",
         mint_transaction.transaction.transaction_id,
         mint_transaction.transaction.block_id
     );
@@ -379,7 +379,7 @@ pub async fn mint_nft_command(
     let transaction = account_handle.mint_nfts(nft_options, None).await?;
 
     log::info!(
-        "NFT minting transaction sent:\ntx id: {}\n{:?}",
+        "NFT minting transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -429,7 +429,7 @@ pub async fn send_command(account_handle: &AccountHandle, address: String, amoun
     let transaction = account_handle.send_amount(outputs, None).await?;
 
     log::info!(
-        "Transaction sent:\ntx id: {}\n{:?}",
+        "Transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -449,7 +449,7 @@ pub async fn send_micro_command(account_handle: &AccountHandle, address: String,
     let transaction = account_handle.send_micro_transaction(outputs, None).await?;
 
     log::info!(
-        "Micro transaction sent:\ntx id: {}\n{:?}",
+        "Micro transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -496,7 +496,7 @@ pub async fn send_native_token_command(
     };
 
     log::info!(
-        "Native token transaction sent:\ntx id: {}\n{:?}",
+        "Native token transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
@@ -513,7 +513,7 @@ pub async fn send_nft_command(account_handle: &AccountHandle, address: String, n
     let transaction = account_handle.send_nft(outputs, None).await?;
 
     log::info!(
-        "Nft transaction sent:\ntx id: {}\n{:?}",
+        "Nft transaction sent:\ntransaction id: {}\n{:?}",
         transaction.transaction_id,
         transaction.block_id
     );
