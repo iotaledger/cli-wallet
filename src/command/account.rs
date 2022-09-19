@@ -62,7 +62,7 @@ pub enum AccountCommand {
     },
     /// Mint more of a native token: `increase-native-token-supply 0x... 100`
     IncreaseNativeTokenSupply { token_id: String, amount: String },
-    /// Mint a native token: `mint-native-token 100 100 --foundry-metadata-hex 0x... (foundry metadata)`
+    /// Mint a native token: `mint-native-token 100 100 --foundry-metadata-hex 0x...`
     MintNativeToken {
         circulating_supply: String,
         maximum_supply: String,
