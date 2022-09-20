@@ -57,7 +57,9 @@ Send a regular amount from the main account to the savings address.
 $ ./wallet main
 > Account "main": send [ADDRESS] 1000000
 > ...
-> INFO  Transaction created ...
+> INFO  Transaction sent:
+> transaction id: 0x...
+> Some(BlockId(0x...))
 > Account "main": exit
 ```
 
@@ -77,7 +79,9 @@ Send a micro amount from the main account to the savings address.
 $ ./wallet main
 > Account "main": send-micro [ADDRESS] 1
 > ...
-> INFO  Transaction created ...
+> INFO  Micro transaction sent:
+> transaction id: 0x...
+> Some(BlockId(0x...))
 > Account "main": exit
 ```
 
@@ -97,9 +101,11 @@ $ ./wallet savings
 Mint native tokens, with foundry metadata, from the main account.
 ```sh
 $ ./wallet main
-> Account "main": mint-native-token 1000 0xabcdef
+> Account "main": mint-native-token 1000 1000 --foundry-metadata-hex 0xabcdef
 > ...
-> INFO  Native token minting transaction sent...
+> INFO  Native token minting transaction sent:
+> transaction id: 0x...
+> Some(BlockId(0x...))
 > Account "main": exit
 ```
 
@@ -121,7 +127,9 @@ $ ./wallet main
 > ...
 > INFO  Synced: AccountBalance ...TokenId([TOKEN ID])...
 > Account "main": send-native-token [ADDRESS] [TOKEN ID] 100
-> INFO  Transaction created...
+> INFO  Native token transaction sent:
+> transaction id: 0x...
+> Some(BlockId(0x...))
 > Account "main": exit
 ```
 
@@ -134,7 +142,9 @@ Mint an NFT.
 $ ./wallet main
 > Account "main": mint-nft
 > ...
-> INFO  NFT minting transaction sent...
+> INFO  NFT minting transaction sent:
+> transaction id: 0x...
+> Some(BlockId(0x...))
 > Account "main": exit
 ```
 
@@ -156,7 +166,9 @@ $ ./wallet main
 > ...
 > INFO  Synced: AccountBalance ...NftId([NFT ID])...
 > Account "main": send-nft [ADDRESS] [NFT ID]
-> INFO  Transaction created...
+> INFO  Nft transaction sent:
+> transaction id: 0x...
+> Some(BlockId(0x...))
 > Account "main": exit
 ```
 
