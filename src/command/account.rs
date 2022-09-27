@@ -47,6 +47,8 @@ pub enum AccountCommand {
     Claim { output_id: Option<String> },
     /// Consolidate all basic outputs into one address.
     Consolidate,
+    /// Create a new alias output.
+    CreateAliasOutput,
     /// Melt a native token: `decrease-native-token-supply 0x... 100`
     DecreaseNativeTokenSupply { token_id: String, amount: String },
     /// Destroy an alias: `destroy-alias 0x...`
@@ -83,6 +85,12 @@ pub enum AccountCommand {
         metadata_hex: Option<String>,
         #[clap(long, group = "metadata")]
         metadata_file: Option<String>,
+        #[clap(long)]
+        tag: Option<String>,
+        #[clap(long)]
+        sender: Option<String>,
+        #[clap(long)]
+        issuer: Option<String>,
     },
     /// Generate a new address.
     NewAddress,
@@ -234,6 +242,21 @@ pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), E
     Ok(())
 }
 
+// `create-alias-output` command
+pub async fn create_alias_outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    log::info!("Creating alias output.");
+
+    let transaction = account_handle.create_alias_output(None, None).await?;
+
+    log::info!(
+        "Alias output creation transaction sent:\ntransaction id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
+
+    Ok(())
+}
+
 // `decrease-native-token-supply` command
 pub async fn decrease_native_token_command(
     account_handle: &AccountHandle,
@@ -347,7 +370,7 @@ pub async fn mint_native_token_command(
     foundry_metadata: Option<Vec<u8>>,
 ) -> Result<(), Error> {
     let native_token_options = NativeTokenOptions {
-        account_address: None,
+        alias_id: None,
         circulating_supply: U256::from_dec_str(&circulating_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         foundry_metadata,
@@ -370,8 +393,19 @@ pub async fn mint_nft_command(
     address: Option<String>,
     immutable_metadata: Option<Vec<u8>>,
     metadata: Option<Vec<u8>>,
+    tag: Option<String>,
+    sender: Option<String>,
+    issuer: Option<String>,
 ) -> Result<(), Error> {
+    let tag = if let Some(hex) = tag {
+        Some(prefix_hex::decode(&hex).map_err(|e| Error::Miscellaneous(e.to_string()))?)
+    } else {
+        None
+    };
     let nft_options = vec![NftOptions {
+        issuer,
+        sender,
+        tag,
         address,
         immutable_metadata,
         metadata,
