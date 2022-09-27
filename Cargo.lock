@@ -1163,7 +1163,7 @@ dependencies = [
 [[package]]
 name = "iota-client"
 version = "2.0.0-beta.3"
-source = "git+https://github.com/iotaledger/iota.rs?rev=6b7004fb130fa5765539c9bea707d92c3eb1ff72#6b7004fb130fa5765539c9bea707d92c3eb1ff72"
+source = "git+https://github.com/iotaledger/iota.rs?rev=d83b75ca52c4444220df496e725d3753cf0b7fe3#d83b75ca52c4444220df496e725d3753cf0b7fe3"
 dependencies = [
  "async-trait",
  "backtrace",
