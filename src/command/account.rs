@@ -127,7 +127,7 @@ pub enum AccountCommand {
 
 /// `addresses` command
 pub async fn addresses_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let addresses = account_handle.list_addresses().await?;
+    let addresses = account_handle.addresses().await?;
 
     if addresses.is_empty() {
         log::info!("No addresses found");
@@ -323,7 +323,7 @@ pub async fn faucet_command(
     let address = if let Some(address) = address {
         address
     } else {
-        match account_handle.list_addresses().await?.last() {
+        match account_handle.addresses().await?.last() {
             Some(address) => address.address().to_bech32(),
             None => return Err(Error::NoAddressForFaucet),
         }
@@ -445,7 +445,7 @@ pub async fn output_command(account_handle: &AccountHandle, output_id: String) -
 
 /// `outputs` command
 pub async fn outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let outputs = account_handle.list_outputs(None).await?;
+    let outputs = account_handle.outputs(None).await?;
 
     if outputs.is_empty() {
         log::info!("No outputs found");
@@ -501,7 +501,8 @@ pub async fn send_native_token_command(
 ) -> Result<(), Error> {
     let transaction = if gift_storage_deposit.unwrap_or(false) {
         // Send native tokens together with the required storage deposit
-        let rent_structure = account_handle.client().get_rent_structure().await?;
+        let rent_structure = account_handle.client().get_rent_structure()?;
+        let token_supply = account_handle.client().get_token_supply()?;
 
         let outputs = vec![
             BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
@@ -512,7 +513,7 @@ pub async fn send_native_token_command(
                     TokenId::from_str(&token_id)?,
                     U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
                 )?])
-                .finish_output()?,
+                .finish_output(token_supply)?,
         ];
 
         account_handle.send(outputs, None).await?
@@ -566,7 +567,7 @@ pub async fn sync_command(account_handle: &AccountHandle) -> Result<(), Error> {
 
 /// `transactions` command
 pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let transactions = account_handle.list_transactions().await?;
+    let transactions = account_handle.transactions().await?;
 
     if transactions.is_empty() {
         log::info!("No transactions found");
@@ -581,7 +582,7 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
 
 /// `unspent-outputs` command
 pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let outputs = account_handle.list_unspent_outputs(None).await?;
+    let outputs = account_handle.unspent_outputs(None).await?;
 
     if outputs.is_empty() {
         log::info!("No outputs found");
@@ -600,7 +601,7 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
         log = format!("{log}\nChange address");
     }
 
-    let addresses = account_handle.list_addresses_with_unspent_outputs().await?;
+    let addresses = account_handle.addresses_with_unspent_outputs().await?;
 
     if let Ok(index) = addresses.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
         (a.key_index(), a.internal())
