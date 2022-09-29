@@ -8,9 +8,9 @@ use iota_wallet::account::AccountHandle;
 use crate::{
     command::account::{
         addresses_command, balance_command, burn_native_token_command, burn_nft_command, claim_command,
-        consolidate_command, decrease_native_token_command, destroy_alias_command, destroy_foundry_command,
-        faucet_command, increase_native_token_command, mint_native_token_command, mint_nft_command,
-        new_address_command, output_command, outputs_command, send_command, send_micro_command,
+        consolidate_command, create_alias_outputs_command, decrease_native_token_command, destroy_alias_command,
+        destroy_foundry_command, faucet_command, increase_native_token_command, mint_native_token_command,
+        mint_nft_command, new_address_command, output_command, outputs_command, send_command, send_micro_command,
         send_native_token_command, send_nft_command, sync_command, transactions_command, unspent_outputs_command,
         AccountCli, AccountCommand,
     },
@@ -70,6 +70,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::BurnNft { nft_id } => burn_nft_command(&account_handle, nft_id).await,
                 AccountCommand::Claim { output_id } => claim_command(&account_handle, output_id).await,
                 AccountCommand::Consolidate => consolidate_command(&account_handle).await,
+                AccountCommand::CreateAliasOutput => create_alias_outputs_command(&account_handle).await,
                 AccountCommand::DecreaseNativeTokenSupply { token_id, amount } => {
                     decrease_native_token_command(&account_handle, token_id, amount).await
                 }
@@ -104,12 +105,18 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                     immutable_metadata_file,
                     metadata_hex,
                     metadata_file,
+                    tag,
+                    sender,
+                    issuer,
                 } => {
                     mint_nft_command(
                         &account_handle,
                         address,
                         bytes_from_hex_or_file(immutable_metadata_hex, immutable_metadata_file).await?,
                         bytes_from_hex_or_file(metadata_hex, metadata_file).await?,
+                        tag,
+                        sender,
+                        issuer,
                     )
                     .await
                 }

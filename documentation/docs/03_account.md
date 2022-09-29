@@ -106,6 +106,16 @@ Note that only Basic Outputs with only an address unlock condition can be consol
 > Account "main": consolidate
 ```
 
+### `create-alias-output`
+
+Create a new alias output.
+
+#### Example
+
+```sh
+> Account "main": create-alias-output
+```
+
 ### `decrease-native-token-supply`
 
 Melts a native token.
@@ -260,6 +270,9 @@ Mints an NFT.
 | `immutable_metadata_file` | ✓         | None                              | metadata.json                                                   |
 | `metadata_hex`            | ✓         | None                              | 0xabcdef                                                        |
 | `metadata_file`           | ✓         | None                              | metadata.json                                                   |
+| `tag`                     | ✓         | None                              | 0xabcdef                                                        |
+| `sender`                  | ✓         | None                              | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 |
+| `issuer`                  | ✓         | None                              | rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 |
 
 #### Examples
 
@@ -276,6 +289,11 @@ Mint an NFT to a given address.
 Mint an NFT to a given address with hexadecimal immutable metadata and metadata from a file.
 ```sh
 > Account "main": mint-nft rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 --immutable-metadata-hex 0xabcdef --metadata-file metadata.json
+```
+
+Mint an NFT to a given address with hexadecimal tag and sender feature.
+```sh
+> Account "main": mint-nft --tag 0xabcdef --sender rms1qq5k0ut6nl2vpyehdvg5k4ygyntd4r44t9lw2ksex280x60lc2fmcgdsmku
 ```
 
 ### `new-address`

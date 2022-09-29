@@ -47,6 +47,8 @@ pub enum AccountCommand {
     Claim { output_id: Option<String> },
     /// Consolidate all basic outputs into one address.
     Consolidate,
+    /// Create a new alias output.
+    CreateAliasOutput,
     /// Melt a native token: `decrease-native-token-supply 0x... 100`
     DecreaseNativeTokenSupply { token_id: String, amount: String },
     /// Destroy an alias: `destroy-alias 0x...`
@@ -83,6 +85,12 @@ pub enum AccountCommand {
         metadata_hex: Option<String>,
         #[clap(long, group = "metadata")]
         metadata_file: Option<String>,
+        #[clap(long)]
+        tag: Option<String>,
+        #[clap(long)]
+        sender: Option<String>,
+        #[clap(long)]
+        issuer: Option<String>,
     },
     /// Generate a new address.
     NewAddress,
@@ -119,7 +127,7 @@ pub enum AccountCommand {
 
 /// `addresses` command
 pub async fn addresses_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let addresses = account_handle.list_addresses().await?;
+    let addresses = account_handle.addresses().await?;
 
     if addresses.is_empty() {
         log::info!("No addresses found");
@@ -234,6 +242,21 @@ pub async fn consolidate_command(account_handle: &AccountHandle) -> Result<(), E
     Ok(())
 }
 
+// `create-alias-output` command
+pub async fn create_alias_outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    log::info!("Creating alias output.");
+
+    let transaction = account_handle.create_alias_output(None, None).await?;
+
+    log::info!(
+        "Alias output creation transaction sent:\ntransaction id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
+
+    Ok(())
+}
+
 // `decrease-native-token-supply` command
 pub async fn decrease_native_token_command(
     account_handle: &AccountHandle,
@@ -300,7 +323,7 @@ pub async fn faucet_command(
     let address = if let Some(address) = address {
         address
     } else {
-        match account_handle.list_addresses().await?.last() {
+        match account_handle.addresses().await?.last() {
             Some(address) => address.address().to_bech32(),
             None => return Err(Error::NoAddressForFaucet),
         }
@@ -347,7 +370,7 @@ pub async fn mint_native_token_command(
     foundry_metadata: Option<Vec<u8>>,
 ) -> Result<(), Error> {
     let native_token_options = NativeTokenOptions {
-        account_address: None,
+        alias_id: None,
         circulating_supply: U256::from_dec_str(&circulating_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         maximum_supply: U256::from_dec_str(&maximum_supply).map_err(|e| Error::Miscellaneous(e.to_string()))?,
         foundry_metadata,
@@ -370,8 +393,19 @@ pub async fn mint_nft_command(
     address: Option<String>,
     immutable_metadata: Option<Vec<u8>>,
     metadata: Option<Vec<u8>>,
+    tag: Option<String>,
+    sender: Option<String>,
+    issuer: Option<String>,
 ) -> Result<(), Error> {
+    let tag = if let Some(hex) = tag {
+        Some(prefix_hex::decode(&hex).map_err(|e| Error::Miscellaneous(e.to_string()))?)
+    } else {
+        None
+    };
     let nft_options = vec![NftOptions {
+        issuer,
+        sender,
+        tag,
         address,
         immutable_metadata,
         metadata,
@@ -411,7 +445,7 @@ pub async fn output_command(account_handle: &AccountHandle, output_id: String) -
 
 /// `outputs` command
 pub async fn outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let outputs = account_handle.list_outputs(None).await?;
+    let outputs = account_handle.outputs(None).await?;
 
     if outputs.is_empty() {
         log::info!("No outputs found");
@@ -467,7 +501,8 @@ pub async fn send_native_token_command(
 ) -> Result<(), Error> {
     let transaction = if gift_storage_deposit.unwrap_or(false) {
         // Send native tokens together with the required storage deposit
-        let rent_structure = account_handle.client().get_rent_structure().await?;
+        let rent_structure = account_handle.client().get_rent_structure()?;
+        let token_supply = account_handle.client().get_token_supply()?;
 
         let outputs = vec![
             BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
@@ -478,7 +513,7 @@ pub async fn send_native_token_command(
                     TokenId::from_str(&token_id)?,
                     U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
                 )?])
-                .finish_output()?,
+                .finish_output(token_supply)?,
         ];
 
         account_handle.send(outputs, None).await?
@@ -532,7 +567,7 @@ pub async fn sync_command(account_handle: &AccountHandle) -> Result<(), Error> {
 
 /// `transactions` command
 pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let transactions = account_handle.list_transactions().await?;
+    let transactions = account_handle.transactions().await?;
 
     if transactions.is_empty() {
         log::info!("No transactions found");
@@ -547,7 +582,7 @@ pub async fn transactions_command(account_handle: &AccountHandle) -> Result<(), 
 
 /// `unspent-outputs` command
 pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    let outputs = account_handle.list_unspent_outputs(None).await?;
+    let outputs = account_handle.unspent_outputs(None).await?;
 
     if outputs.is_empty() {
         log::info!("No outputs found");
@@ -566,7 +601,7 @@ pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddr
         log = format!("{log}\nChange address");
     }
 
-    let addresses = account_handle.list_addresses_with_unspent_outputs().await?;
+    let addresses = account_handle.addresses_with_unspent_outputs().await?;
 
     if let Ok(index) = addresses.binary_search_by_key(&(address.key_index(), address.internal()), |a| {
         (a.key_index(), a.internal())
