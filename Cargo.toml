@@ -1,6 +1,6 @@
 [package]
 name = "cli-wallet"
-version = "1.0.0-rc.1"
+version = "1.0.0-rc.2"
 authors = [ "IOTA Stiftung" ]
 edition = "2021"
 homepage = "https://iota.org"
@@ -12,15 +12,15 @@ name = "wallet"
 path = "src/main.rs"
 
 [dependencies]
-clap = { version = "3.2.8", default-features = false, features = [ "derive", "std" ] }
-dialoguer = { version = "0.10.1", default-features = false, features = [ "password" ] }
+clap = { version = "3.2.23", default-features = false, features = [ "derive", "std" ] }
+dialoguer = { version = "0.10.2", default-features = false, features = [ "password" ] }
 fern-logger = { version = "0.5.0", default-features = false }
-iota-wallet = { version = "1.0.0-rc.1", default-features = false, features = [ "storage", "stronghold" ] }
+iota-wallet = { version = "1.0.0-rc.2", default-features = false, features = [ "storage", "stronghold" ] }
 log = { version = "0.4.17", default-features = false }
-prefix-hex = { version = "0.4.0", default-features = false, features = [ "std" ] }
-serde_json = { version = "1.0.85", default-features = false }
-thiserror = { version = "1.0.31", default-features = false }
-tokio = { version = "1.20.0", default-features = false, features = [ "fs" ] }    
+prefix-hex = { version = "0.5.0", default-features = false, features = [ "std" ] }
+serde_json = { version = "1.0.87", default-features = false }
+thiserror = { version = "1.0.37", default-features = false }
+tokio = { version = "1.21.2", default-features = false, features = [ "fs" ] }    
 
 [profile.release]
 panic = "abort"
