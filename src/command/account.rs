@@ -637,37 +637,65 @@ pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(
 }
 
 pub async fn vote_command(account_handle: &AccountHandle, event_id: String, answers: Vec<u8>) -> Result<(), Error> {
-    account_handle.vote(EventId::from_str(&event_id)?, answers).await?;
+    let transaction = account_handle.vote(EventId::from_str(&event_id)?, answers).await?;
+
+    log::info!(
+        "Voting transaction sent:\ntransaction id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
 
 pub async fn stop_participating_command(account_handle: &AccountHandle, event_id: String) -> Result<(), Error> {
-    account_handle.stop_participating(EventId::from_str(&event_id)?).await?;
+    let transaction = account_handle.stop_participating(EventId::from_str(&event_id)?).await?;
+
+    log::info!(
+        "Stop participating transaction sent:\ntransaction id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
 
 pub async fn get_participation_overview_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    account_handle.get_participation_overview().await?;
+    let participation_overview = account_handle.get_participation_overview().await?;
+
+    log::info!("Participation overview: {participation_overview:?}");
 
     Ok(())
 }
 
 pub async fn get_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
-    account_handle.get_voting_power().await?;
+    let voting_power = account_handle.get_voting_power().await?;
+
+    log::info!("Voting power: {voting_power}");
 
     Ok(())
 }
 
 pub async fn increase_voting_power_command(account_handle: &AccountHandle, amount: u64) -> Result<(), Error> {
-    account_handle.increase_voting_power(amount).await?;
+    let transaction = account_handle.increase_voting_power(amount).await?;
+
+    log::info!(
+        "Increase voting power transaction sent:\ntransaction id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
 
 pub async fn decrease_voting_power_command(account_handle: &AccountHandle, amount: u64) -> Result<(), Error> {
-    account_handle.decrease_voting_power(amount).await?;
+    let transaction = account_handle.decrease_voting_power(amount).await?;
+
+    log::info!(
+        "Decrease voting power transaction sent:\ntransaction id: {}\n{:?}",
+        transaction.transaction_id,
+        transaction.block_id
+    );
 
     Ok(())
 }
