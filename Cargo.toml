@@ -15,7 +15,8 @@ path = "src/main.rs"
 clap = { version = "3.2.23", default-features = false, features = [ "derive", "std" ] }
 dialoguer = { version = "0.10.2", default-features = false, features = [ "password" ] }
 fern-logger = { version = "0.5.0", default-features = false }
-iota-wallet = { version = "1.0.0-rc.2", default-features = false, features = [ "storage", "stronghold" ] }
+# iota-wallet = { version = "1.0.0-rc.2", default-features = false, features = [ "storage", "stronghold" ] }
+iota-wallet = { git = "https://github.com/Thoralf-M/wallet.rs", rev = "ab184747c913e446dae742132fa494841794218d", default-features = false, features = [ "storage", "stronghold" ] }
 log = { version = "0.4.17", default-features = false }
 prefix-hex = { version = "0.5.0", default-features = false, features = [ "std" ] }
 serde_json = { version = "1.0.87", default-features = false }

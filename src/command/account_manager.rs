@@ -149,9 +149,7 @@ pub async fn restore_command(
         .with_secret_manager(secret_manager)
         // Will be overwritten by the backup's value.
         .with_client_options(
-            ClientOptions::new()
-                .with_node("http://localhost:14265")?
-                .with_node_sync_disabled(),
+            ClientOptions::new().with_node("http://localhost:14265")?, // .with_node_sync_disabled(),
         )
         .with_storage_path(&storage_path)
         // Will be overwritten by the backup's value.
