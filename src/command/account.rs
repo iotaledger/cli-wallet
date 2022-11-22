@@ -159,8 +159,8 @@ pub enum AccountCommand {
     StopParticipating {
         event_id: String,
     },
-    GetParticipationOverview,
-    GetVotingPower,
+    ParticipationOverview,
+    VotingPower,
     IncreaseVotingPower {
         amount: u64,
     },
@@ -661,7 +661,7 @@ pub async fn stop_participating_command(account_handle: &AccountHandle, event_id
     Ok(())
 }
 
-pub async fn get_participation_overview_command(account_handle: &AccountHandle) -> Result<(), Error> {
+pub async fn participation_overview_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let participation_overview = account_handle.get_participation_overview().await?;
 
     log::info!("Participation overview: {participation_overview:?}");
@@ -669,7 +669,7 @@ pub async fn get_participation_overview_command(account_handle: &AccountHandle) 
     Ok(())
 }
 
-pub async fn get_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
+pub async fn voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
     let voting_power = account_handle.get_voting_power().await?;
 
     log::info!("Voting power: {voting_power}");

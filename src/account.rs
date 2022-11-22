@@ -10,11 +10,11 @@ use crate::{
         addresses_command, balance_command, burn_native_token_command, burn_nft_command, claim_command,
         consolidate_command, create_alias_outputs_command, decrease_native_token_command,
         decrease_voting_power_command, destroy_alias_command, destroy_foundry_command, faucet_command,
-        get_participation_overview_command, get_voting_power_command, increase_native_token_command,
-        increase_voting_power_command, mint_native_token_command, mint_nft_command, new_address_command,
-        output_command, outputs_command, send_command, send_micro_command, send_native_token_command, send_nft_command,
-        stop_participating_command, sync_command, transactions_command, unspent_outputs_command, vote_command,
-        voting_output_command, AccountCli, AccountCommand,
+        increase_native_token_command, increase_voting_power_command, mint_native_token_command, mint_nft_command,
+        new_address_command, output_command, outputs_command, participation_overview_command, send_command,
+        send_micro_command, send_native_token_command, send_nft_command, stop_participating_command, sync_command,
+        transactions_command, unspent_outputs_command, vote_command, voting_output_command, voting_power_command,
+        AccountCli, AccountCommand,
     },
     error::Error,
     helper::bytes_from_hex_or_file,
@@ -143,8 +143,8 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::StopParticipating { event_id } => {
                     stop_participating_command(&account_handle, event_id).await
                 }
-                AccountCommand::GetParticipationOverview => get_participation_overview_command(&account_handle).await,
-                AccountCommand::GetVotingPower => get_voting_power_command(&account_handle).await,
+                AccountCommand::ParticipationOverview => participation_overview_command(&account_handle).await,
+                AccountCommand::VotingPower => voting_power_command(&account_handle).await,
                 AccountCommand::IncreaseVotingPower { amount } => {
                     increase_voting_power_command(&account_handle, amount).await
                 }
