@@ -1075,8 +1075,8 @@ dependencies = [
 
 [[package]]
 name = "iota-client"
-version = "2.0.1-rc.3"
-source = "git+https://github.com/iotaledger/iota.rs?rev=d6555555c4b834c3f2d407f489b34837eb6d9527#d6555555c4b834c3f2d407f489b34837eb6d9527"
+version = "2.0.1-rc.4"
+source = "git+https://github.com/iotaledger/iota.rs?rev=9fc711b380585fc5001f31e380ea322644d3d24f#9fc711b380585fc5001f31e380ea322644d3d24f"
 dependencies = [
  "async-trait",
  "backtrace",
@@ -1134,7 +1134,7 @@ dependencies = [
 [[package]]
 name = "iota-pow"
 version = "1.0.0-rc.1"
-source = "git+https://github.com/iotaledger/iota.rs?rev=d6555555c4b834c3f2d407f489b34837eb6d9527#d6555555c4b834c3f2d407f489b34837eb6d9527"
+source = "git+https://github.com/iotaledger/iota.rs?rev=9fc711b380585fc5001f31e380ea322644d3d24f#9fc711b380585fc5001f31e380ea322644d3d24f"
 dependencies = [
  "iota-crypto",
  "thiserror",
@@ -1142,8 +1142,8 @@ dependencies = [
 
 [[package]]
 name = "iota-types"
-version = "1.0.0-rc.2"
-source = "git+https://github.com/iotaledger/iota.rs?rev=d6555555c4b834c3f2d407f489b34837eb6d9527#d6555555c4b834c3f2d407f489b34837eb6d9527"
+version = "1.0.0-rc.3"
+source = "git+https://github.com/iotaledger/iota.rs?rev=9fc711b380585fc5001f31e380ea322644d3d24f#9fc711b380585fc5001f31e380ea322644d3d24f"
 dependencies = [
  "bech32",
  "bitflags",
@@ -1166,7 +1166,7 @@ dependencies = [
 [[package]]
 name = "iota-wallet"
 version = "1.0.0-rc.2"
-source = "git+https://github.com/Thoralf-M/wallet.rs?rev=ab184747c913e446dae742132fa494841794218d#ab184747c913e446dae742132fa494841794218d"
+source = "git+https://github.com/Thoralf-M/wallet.rs?rev=3fdef71d5f648dd0dbe7f4cf50a0e850267ff835#3fdef71d5f648dd0dbe7f4cf50a0e850267ff835"
 dependencies = [
  "async-trait",
  "backtrace",
