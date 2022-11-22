@@ -40,21 +40,35 @@ pub enum AccountCommand {
     /// Print the account balance.
     Balance,
     /// Burn a native token: `burn-native-token 0x... 100`
-    BurnNativeToken { token_id: String, amount: String },
+    BurnNativeToken {
+        token_id: String,
+        amount: String,
+    },
     /// Burn an NFT: `burn-nft 0x...`
-    BurnNft { nft_id: String },
+    BurnNft {
+        nft_id: String,
+    },
     /// Claim outputs with storage deposit return, expiration or timelock unlock conditions.
-    Claim { output_id: Option<String> },
+    Claim {
+        output_id: Option<String>,
+    },
     /// Consolidate all basic outputs into one address.
     Consolidate,
     /// Create a new alias output.
     CreateAliasOutput,
     /// Melt a native token: `decrease-native-token-supply 0x... 100`
-    DecreaseNativeTokenSupply { token_id: String, amount: String },
+    DecreaseNativeTokenSupply {
+        token_id: String,
+        amount: String,
+    },
     /// Destroy an alias: `destroy-alias 0x...`
-    DestroyAlias { alias_id: String },
+    DestroyAlias {
+        alias_id: String,
+    },
     /// Destroy a foundry: `destroy-foundry 0x...`
-    DestroyFoundry { foundry_id: String },
+    DestroyFoundry {
+        foundry_id: String,
+    },
     /// Exit from the account prompt.
     Exit,
     /// Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:8091/api/enqueue`
@@ -63,7 +77,10 @@ pub enum AccountCommand {
         address: Option<String>,
     },
     /// Mint more of a native token: `increase-native-token-supply 0x... 100`
-    IncreaseNativeTokenSupply { token_id: String, amount: String },
+    IncreaseNativeTokenSupply {
+        token_id: String,
+        amount: String,
+    },
     /// Mint a native token: `mint-native-token 100 100 --foundry-metadata-hex 0x...`
     MintNativeToken {
         circulating_supply: String,
@@ -95,15 +112,23 @@ pub enum AccountCommand {
     /// Generate a new address.
     NewAddress,
     /// Display an output.
-    Output { output_id: String },
+    Output {
+        output_id: String,
+    },
     /// List all outputs.
     Outputs,
     /// Send an amount to a bech32 encoded address: `send
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1000000`
-    Send { address: String, amount: u64 },
+    Send {
+        address: String,
+        amount: u64,
+    },
     /// Send an amount below the storage deposit minimum to a bech32 address: `send
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1`
-    SendMicro { address: String, amount: u64 },
+    SendMicro {
+        address: String,
+        amount: u64,
+    },
     /// Send native tokens to a bech32 address: `send-native-token
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
     /// 0x08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
@@ -116,13 +141,22 @@ pub enum AccountCommand {
         gift_storage_deposit: Option<bool>,
     },
     /// Send an NFT to a bech32 encoded address
-    SendNft { address: String, nft_id: String },
+    SendNft {
+        address: String,
+        nft_id: String,
+    },
     /// Sync the account with the Tangle.
     Sync,
     /// List the account transactions.
     Transactions,
     /// List the unspent outputs.
     UnspentOutputs,
+    Vote,
+    StopParticipating,
+    GetParticipationOverview,
+    GetVotingPower,
+    IncreaseVotingPower,
+    DecreaseVotingPower,
 }
 
 /// `addresses` command
@@ -592,7 +626,31 @@ pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(
     Ok(())
 }
 
-pub async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<(), Error> {
+pub async fn vote_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    Ok(())
+}
+
+pub async fn stop_participating_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    Ok(())
+}
+
+pub async fn get_participation_overview_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    Ok(())
+}
+
+pub async fn get_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    Ok(())
+}
+
+pub async fn increase_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    Ok(())
+}
+
+pub async fn decrease_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    Ok(())
+}
+
+async fn print_address(account_handle: &AccountHandle, address: &AccountAddress) -> Result<(), Error> {
     let mut log = format!("Address {}: {}", address.key_index(), address.address().to_bech32());
 
     if *address.internal() {

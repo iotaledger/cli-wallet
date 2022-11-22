@@ -8,10 +8,12 @@ use iota_wallet::account::AccountHandle;
 use crate::{
     command::account::{
         addresses_command, balance_command, burn_native_token_command, burn_nft_command, claim_command,
-        consolidate_command, create_alias_outputs_command, decrease_native_token_command, destroy_alias_command,
-        destroy_foundry_command, faucet_command, increase_native_token_command, mint_native_token_command,
-        mint_nft_command, new_address_command, output_command, outputs_command, send_command, send_micro_command,
-        send_native_token_command, send_nft_command, sync_command, transactions_command, unspent_outputs_command,
+        consolidate_command, create_alias_outputs_command, decrease_native_token_command,
+        decrease_voting_power_command, destroy_alias_command, destroy_foundry_command, faucet_command,
+        get_participation_overview_command, get_voting_power_command, increase_native_token_command,
+        increase_voting_power_command, mint_native_token_command, mint_nft_command, new_address_command,
+        output_command, outputs_command, send_command, send_micro_command, send_native_token_command, send_nft_command,
+        stop_participating_command, sync_command, transactions_command, unspent_outputs_command, vote_command,
         AccountCli, AccountCommand,
     },
     error::Error,
@@ -137,6 +139,12 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::Sync => sync_command(&account_handle).await,
                 AccountCommand::Transactions => transactions_command(&account_handle).await,
                 AccountCommand::UnspentOutputs => unspent_outputs_command(&account_handle).await,
+                AccountCommand::Vote => vote_command(&account_handle).await,
+                AccountCommand::StopParticipating => stop_participating_command(&account_handle).await,
+                AccountCommand::GetParticipationOverview => get_participation_overview_command(&account_handle).await,
+                AccountCommand::GetVotingPower => get_voting_power_command(&account_handle).await,
+                AccountCommand::IncreaseVotingPower => increase_voting_power_command(&account_handle).await,
+                AccountCommand::DecreaseVotingPower => decrease_voting_power_command(&account_handle).await,
             } {
                 log::error!("{}", err);
             }
