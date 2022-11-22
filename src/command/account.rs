@@ -17,6 +17,7 @@ use iota_wallet::{
                 OutputId, TokenId, UnlockCondition,
             },
         },
+        node_api::participation::types::EventId,
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
@@ -151,12 +152,21 @@ pub enum AccountCommand {
     Transactions,
     /// List the unspent outputs.
     UnspentOutputs,
-    Vote,
-    StopParticipating,
+    Vote {
+        event_id: String,
+        answers: Vec<u8>,
+    },
+    StopParticipating {
+        event_id: String,
+    },
     GetParticipationOverview,
     GetVotingPower,
-    IncreaseVotingPower,
-    DecreaseVotingPower,
+    IncreaseVotingPower {
+        amount: u64,
+    },
+    DecreaseVotingPower {
+        amount: u64,
+    },
 }
 
 /// `addresses` command
@@ -626,27 +636,39 @@ pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(
     Ok(())
 }
 
-pub async fn vote_command(account_handle: &AccountHandle) -> Result<(), Error> {
+pub async fn vote_command(account_handle: &AccountHandle, event_id: String, answers: Vec<u8>) -> Result<(), Error> {
+    account_handle.vote(EventId::from_str(&event_id)?, answers).await?;
+
     Ok(())
 }
 
-pub async fn stop_participating_command(account_handle: &AccountHandle) -> Result<(), Error> {
+pub async fn stop_participating_command(account_handle: &AccountHandle, event_id: String) -> Result<(), Error> {
+    account_handle.stop_participating(EventId::from_str(&event_id)?).await?;
+
     Ok(())
 }
 
 pub async fn get_participation_overview_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    account_handle.get_participation_overview().await?;
+
     Ok(())
 }
 
 pub async fn get_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    account_handle.get_voting_power().await?;
+
     Ok(())
 }
 
-pub async fn increase_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
+pub async fn increase_voting_power_command(account_handle: &AccountHandle, amount: u64) -> Result<(), Error> {
+    account_handle.increase_voting_power(amount).await?;
+
     Ok(())
 }
 
-pub async fn decrease_voting_power_command(account_handle: &AccountHandle) -> Result<(), Error> {
+pub async fn decrease_voting_power_command(account_handle: &AccountHandle, amount: u64) -> Result<(), Error> {
+    account_handle.decrease_voting_power(amount).await?;
+
     Ok(())
 }
 

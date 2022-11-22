@@ -139,12 +139,18 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::Sync => sync_command(&account_handle).await,
                 AccountCommand::Transactions => transactions_command(&account_handle).await,
                 AccountCommand::UnspentOutputs => unspent_outputs_command(&account_handle).await,
-                AccountCommand::Vote => vote_command(&account_handle).await,
-                AccountCommand::StopParticipating => stop_participating_command(&account_handle).await,
+                AccountCommand::Vote { event_id, answers } => vote_command(&account_handle, event_id, answers).await,
+                AccountCommand::StopParticipating { event_id } => {
+                    stop_participating_command(&account_handle, event_id).await
+                }
                 AccountCommand::GetParticipationOverview => get_participation_overview_command(&account_handle).await,
                 AccountCommand::GetVotingPower => get_voting_power_command(&account_handle).await,
-                AccountCommand::IncreaseVotingPower => increase_voting_power_command(&account_handle).await,
-                AccountCommand::DecreaseVotingPower => decrease_voting_power_command(&account_handle).await,
+                AccountCommand::IncreaseVotingPower { amount } => {
+                    increase_voting_power_command(&account_handle, amount).await
+                }
+                AccountCommand::DecreaseVotingPower { amount } => {
+                    decrease_voting_power_command(&account_handle, amount).await
+                }
             } {
                 log::error!("{}", err);
             }
