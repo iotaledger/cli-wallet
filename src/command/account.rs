@@ -167,6 +167,7 @@ pub enum AccountCommand {
     DecreaseVotingPower {
         amount: u64,
     },
+    VotingOutput,
 }
 
 /// `addresses` command
@@ -696,6 +697,14 @@ pub async fn decrease_voting_power_command(account_handle: &AccountHandle, amoun
         transaction.transaction_id,
         transaction.block_id
     );
+
+    Ok(())
+}
+
+pub async fn voting_output_command(account_handle: &AccountHandle) -> Result<(), Error> {
+    let output = account_handle.get_voting_output().await?;
+
+    log::info!("Voting output: {output:?}");
 
     Ok(())
 }

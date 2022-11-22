@@ -14,7 +14,7 @@ use crate::{
         increase_voting_power_command, mint_native_token_command, mint_nft_command, new_address_command,
         output_command, outputs_command, send_command, send_micro_command, send_native_token_command, send_nft_command,
         stop_participating_command, sync_command, transactions_command, unspent_outputs_command, vote_command,
-        AccountCli, AccountCommand,
+        voting_output_command, AccountCli, AccountCommand,
     },
     error::Error,
     helper::bytes_from_hex_or_file,
@@ -151,6 +151,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
                 AccountCommand::DecreaseVotingPower { amount } => {
                     decrease_voting_power_command(&account_handle, amount).await
                 }
+                AccountCommand::VotingOutput => voting_output_command(&account_handle).await,
             } {
                 log::error!("{}", err);
             }
