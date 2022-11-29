@@ -41,35 +41,21 @@ pub enum AccountCommand {
     /// Print the account balance.
     Balance,
     /// Burn a native token: `burn-native-token 0x... 100`
-    BurnNativeToken {
-        token_id: String,
-        amount: String,
-    },
+    BurnNativeToken { token_id: String, amount: String },
     /// Burn an NFT: `burn-nft 0x...`
-    BurnNft {
-        nft_id: String,
-    },
+    BurnNft { nft_id: String },
     /// Claim outputs with storage deposit return, expiration or timelock unlock conditions.
-    Claim {
-        output_id: Option<String>,
-    },
+    Claim { output_id: Option<String> },
     /// Consolidate all basic outputs into one address.
     Consolidate,
     /// Create a new alias output.
     CreateAliasOutput,
     /// Melt a native token: `decrease-native-token-supply 0x... 100`
-    DecreaseNativeTokenSupply {
-        token_id: String,
-        amount: String,
-    },
+    DecreaseNativeTokenSupply { token_id: String, amount: String },
     /// Destroy an alias: `destroy-alias 0x...`
-    DestroyAlias {
-        alias_id: String,
-    },
+    DestroyAlias { alias_id: String },
     /// Destroy a foundry: `destroy-foundry 0x...`
-    DestroyFoundry {
-        foundry_id: String,
-    },
+    DestroyFoundry { foundry_id: String },
     /// Exit from the account prompt.
     Exit,
     /// Request funds from the faucet to the latest address, `url` is optional, default is `http://localhost:8091/api/enqueue`
@@ -78,10 +64,7 @@ pub enum AccountCommand {
         address: Option<String>,
     },
     /// Mint more of a native token: `increase-native-token-supply 0x... 100`
-    IncreaseNativeTokenSupply {
-        token_id: String,
-        amount: String,
-    },
+    IncreaseNativeTokenSupply { token_id: String, amount: String },
     /// Mint a native token: `mint-native-token 100 100 --foundry-metadata-hex 0x...`
     MintNativeToken {
         circulating_supply: String,
@@ -113,23 +96,15 @@ pub enum AccountCommand {
     /// Generate a new address.
     NewAddress,
     /// Display an output.
-    Output {
-        output_id: String,
-    },
+    Output { output_id: String },
     /// List all outputs.
     Outputs,
     /// Send an amount to a bech32 encoded address: `send
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1000000`
-    Send {
-        address: String,
-        amount: u64,
-    },
+    Send { address: String, amount: u64 },
     /// Send an amount below the storage deposit minimum to a bech32 address: `send
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 1`
-    SendMicro {
-        address: String,
-        amount: u64,
-    },
+    SendMicro { address: String, amount: u64 },
     /// Send native tokens to a bech32 address: `send-native-token
     /// rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3
     /// 0x08e3a2f76cc934bc0cc21575b4610c1d7d4eb589ae0100000000000000000000000000000000 10`
@@ -142,31 +117,26 @@ pub enum AccountCommand {
         gift_storage_deposit: Option<bool>,
     },
     /// Send an NFT to a bech32 encoded address
-    SendNft {
-        address: String,
-        nft_id: String,
-    },
+    SendNft { address: String, nft_id: String },
     /// Sync the account with the Tangle.
     Sync,
     /// List the account transactions.
     Transactions,
     /// List the unspent outputs.
     UnspentOutputs,
-    Vote {
-        event_id: String,
-        answers: Vec<u8>,
-    },
-    StopParticipating {
-        event_id: String,
-    },
+    /// Cast given votes for a given event
+    Vote { event_id: String, answers: Vec<u8> },
+    /// Stop participating to a given event
+    StopParticipating { event_id: String },
+    /// Calculate the participation overview of the account
     ParticipationOverview,
+    /// Get the voting power of the account
     VotingPower,
-    IncreaseVotingPower {
-        amount: u64,
-    },
-    DecreaseVotingPower {
-        amount: u64,
-    },
+    /// Increase the voting power of the account
+    IncreaseVotingPower { amount: u64 },
+    /// Decrease the voting power of the account
+    DecreaseVotingPower { amount: u64 },
+    /// Get the voting output of the account
     VotingOutput,
 }
 
@@ -549,17 +519,15 @@ pub async fn send_native_token_command(
         let rent_structure = account_handle.client().get_rent_structure().await?;
         let token_supply = account_handle.client().get_token_supply().await?;
 
-        let outputs = vec![
-            BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
-                .add_unlock_condition(UnlockCondition::Address(AddressUnlockCondition::new(
-                    Address::try_from_bech32(address)?.1,
-                )))
-                .with_native_tokens(vec![NativeToken::new(
-                    TokenId::from_str(&token_id)?,
-                    U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
-                )?])
-                .finish_output(token_supply)?,
-        ];
+        let outputs = vec![BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
+            .add_unlock_condition(UnlockCondition::Address(AddressUnlockCondition::new(
+                Address::try_from_bech32(address)?.1,
+            )))
+            .with_native_tokens(vec![NativeToken::new(
+                TokenId::from_str(&token_id)?,
+                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+            )?])
+            .finish_output(token_supply)?];
 
         account_handle.send(outputs, None).await?
     } else {
