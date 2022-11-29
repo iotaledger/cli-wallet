@@ -134,6 +134,23 @@ Melt the provided amount of a native token.
 > Account "main": decrease-native-token-supply 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 100
 ```
 
+### `decrease-voting-power`
+
+Decreases the voting power of the account.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example  |
+| ---------- | --------- | ------- | -------- |
+| `amount`   | ✘         | N/A     | 100000   |
+
+#### Example
+
+Decrease the voting power of the account by 100000.
+```sh
+> Account "main": decrease-voting-power 100000
+```
+
 ### `destroy-alias`
 
 Destroys an alias.
@@ -211,7 +228,7 @@ Displays the account interface usage.
 
 ### `increase-native-token-supply`
 
-Mint more of a native token.
+Mints more of a native token.
 
 #### Parameters
 
@@ -225,6 +242,23 @@ Mint more of a native token.
 Mint 10 additional native tokens.
 ```sh
 > Account "main": increase-native-token-supply 0x08860e1f3593ba86c597cf86f61d8b04d8a714c02c7c5da7132d45be9c2ce6445c0300000000 10
+```
+
+### `increase-voting-power`
+
+Increases the voting power of the account.
+
+#### Parameters
+
+| Name       | Optional  | Default | Example  |
+| ---------- | --------- | ------- | -------- |
+| `amount`   | ✘         | N/A     | 100000   |
+
+#### Example
+
+Increase the voting power of the account by 100000.
+```sh
+> Account "main": increase-voting-power 100000
 ```
 
 ### `mint-native-token`
@@ -332,6 +366,16 @@ Displays all outputs that are stored in the account.
 > Account "main": outputs
 ```
 
+### `participation-overview`
+
+Calculates the participation overview of the account.
+
+#### Example
+
+```sh
+> Account "main": participation-overview
+```
+
 ### `send`
 
 Sends an amount to an address.
@@ -412,6 +456,22 @@ Sends an NFT to an address.
 > Account "main": send-nft rms1qztwng6cty8cfm42nzvq099ev7udhrnk0rw8jt8vttf9kpqnxhpsx869vr3 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
 ```
 
+### `stop-participating`
+
+Stops participating to a given event.
+
+#### Parameters
+
+| Name          | Optional  | Default | Example                                                                |
+| ------------- | --------- | ------- | ---------------------------------------------------------------------- |
+| `event_id`    | ✘         | N/A     | `0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c`   |
+
+#### Example
+
+```sh
+> Account "main": stop-participating 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c
+```
+
 ### `sync`
 
 Synchronises the account.
@@ -440,4 +500,41 @@ Displays all unspent outputs that are stored in the account.
 
 ```sh
 > Account "main": unspent-outputs
+```
+
+### `vote`
+
+Casts given votes for a given event.
+
+#### Parameters
+
+| Name          | Optional         | Default | Example                                                                 |
+| ------------- | ---------------- | ------- | ----------------------------------------------------------------------- |
+| `event_id`    | ✘                | N/A     | `0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c`    |
+| `answers`     | ✘ (at least one) | N/A     | 0 1 1 0                                                                 |
+
+#### Example
+
+```sh
+> Account "main": vote 0x397ae8552dcf0dc604a44c9d86a5005d09f95d67e2965ea3b1c1271f9a9ae44c 0 1 1 0
+```
+
+### `voting-output`
+
+Gets the voting output of the account.
+
+#### Example
+
+```sh
+> Account "main": voting-output
+```
+
+### `voting-power`
+
+Gets the voting power of the account.
+
+#### Example
+
+```sh
+> Account "main": voting-power
 ```
