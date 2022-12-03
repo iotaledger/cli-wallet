@@ -1,6 +1,7 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
+
 use clap::Parser;
 use dialoguer::Input;
 use iota_wallet::account::AccountHandle;
@@ -15,13 +16,14 @@ use crate::{
         AccountCli, AccountCommand,
     },
     error::Error,
-    helper::bytes_from_hex_or_file,
+    helper::bytes_from_hex_or_file, account_history::AccountHistory,
 };
 
 // loop on the account prompt
 pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), Error> {
+    let mut history = AccountHistory::default();
     loop {
-        match account_prompt_internal(account_handle.clone()).await {
+        match account_prompt_internal(account_handle.clone(), &mut history).await {
             Ok(true) => {
                 return Ok(());
             }
@@ -34,12 +36,13 @@ pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), Error> 
 }
 
 // loop on the account prompt
-pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bool, Error> {
+pub async fn account_prompt_internal(account_handle: AccountHandle, history: &mut AccountHistory) -> Result<bool, Error> {
     let alias = {
         let account = account_handle.read().await;
         account.alias().clone()
     };
-    let command: String = Input::new().with_prompt(format!("Account \"{}\"", alias)).interact()?;
+    
+    let command: String = Input::new().with_prompt(format!("Account \"{}\"", alias)).history_with(history).interact_text()?;
 
     match command.as_str() {
         "h" => {

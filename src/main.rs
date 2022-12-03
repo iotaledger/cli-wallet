@@ -3,6 +3,7 @@
 
 mod account;
 mod account_manager;
+mod account_history;
 mod command;
 mod error;
 mod helper;
