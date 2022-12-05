@@ -1,7 +1,6 @@
 // Copyright 2020-2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-
 use clap::Parser;
 use dialoguer::Input;
 use iota_wallet::account::AccountHandle;
