@@ -6,6 +6,7 @@ use dialoguer::Input;
 use iota_wallet::account::AccountHandle;
 
 use crate::{
+    account_history::AccountHistory,
     command::account::{
         addresses_command, balance_command, burn_native_token_command, burn_nft_command, claim_command,
         consolidate_command, create_alias_outputs_command, decrease_native_token_command,
@@ -17,7 +18,7 @@ use crate::{
         AccountCli, AccountCommand,
     },
     error::Error,
-    helper::bytes_from_hex_or_file, account_history::AccountHistory,
+    helper::bytes_from_hex_or_file,
 };
 
 // loop on the account prompt
@@ -37,13 +38,19 @@ pub async fn account_prompt(account_handle: AccountHandle) -> Result<(), Error> 
 }
 
 // loop on the account prompt
-pub async fn account_prompt_internal(account_handle: AccountHandle, history: &mut AccountHistory) -> Result<bool, Error> {
+pub async fn account_prompt_internal(
+    account_handle: AccountHandle,
+    history: &mut AccountHistory,
+) -> Result<bool, Error> {
     let alias = {
         let account = account_handle.read().await;
         account.alias().clone()
     };
-    
-    let command: String = Input::new().with_prompt(format!("Account \"{}\"", alias)).history_with(history).interact_text()?;
+
+    let command: String = Input::new()
+        .with_prompt(format!("Account \"{}\"", alias))
+        .history_with(history)
+        .interact_text()?;
 
     match command.as_str() {
         "h" => {

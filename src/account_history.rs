@@ -1,8 +1,9 @@
 // Copyright 2022 IOTA Stiftung
 // SPDX-License-Identifier: Apache-2.0
 
-use dialoguer::History;
 use std::collections::VecDeque;
+
+use dialoguer::History;
 
 pub struct AccountHistory {
     max: usize,
@@ -24,8 +25,8 @@ impl<T: ToString> History<T> for AccountHistory {
     }
 
     fn write(&mut self, val: &T) {
-        if self.history.contains(&val.to_string()){
-            return
+        if self.history.contains(&val.to_string()) {
+            return;
         }
         if self.history.len() == self.max {
             self.history.pop_back();

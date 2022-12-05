@@ -2,8 +2,8 @@
 // SPDX-License-Identifier: Apache-2.0
 
 mod account;
-mod account_manager;
 mod account_history;
+mod account_manager;
 mod command;
 mod error;
 mod helper;
