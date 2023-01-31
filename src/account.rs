@@ -41,7 +41,7 @@ pub async fn account_prompt_internal(account_handle: AccountHandle) -> Result<bo
         let account = account_handle.read().await;
         account.alias().clone()
     };
-    let command: String = Input::new().with_prompt(format!("Account \"{}\"", alias)).interact()?;
+    let command: String = Input::new().with_prompt(format!("Account \"{alias}\"")).interact()?;
 
     match command.as_str() {
         "h" => {

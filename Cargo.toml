@@ -13,14 +13,14 @@ path = "src/main.rs"
 
 [dependencies]
 clap = { version = "3.2.23", default-features = false, features = [ "derive", "std" ] }
-dialoguer = { version = "0.10.2", default-features = false, features = [ "password" ] }
+dialoguer = { version = "0.10.3", default-features = false, features = [ "password" ] }
 fern-logger = { version = "0.5.0", default-features = false }
-iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "a00b4d48886fad6983f0b320baa750518d2b06d1", default-features = false, features = [ "storage", "stronghold", "participation" ] }
+iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "e06b2b39c1f6e244a74a5e8f9ce3dfd0a1b428ad", default-features = false, features = [ "storage", "stronghold", "participation" ] }
 log = { version = "0.4.17", default-features = false }
 prefix-hex = { version = "0.5.0", default-features = false, features = [ "std" ] }
-serde_json = { version = "1.0.87", default-features = false }
-thiserror = { version = "1.0.37", default-features = false }
-tokio = { version = "1.21.2", default-features = false, features = [ "fs" ] }    
+serde_json = { version = "1.0.91", default-features = false }
+thiserror = { version = "1.0.38", default-features = false }
+tokio = { version = "1.25.0", default-features = false, features = [ "fs" ] }    
 
 [profile.release]
 panic = "abort"
