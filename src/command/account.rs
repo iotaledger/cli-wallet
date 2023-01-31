@@ -17,7 +17,7 @@ use iota_wallet::{
                 OutputId, TokenId, UnlockCondition,
             },
         },
-        node_api::participation::types::EventId,
+        node_api::participation::types::ParticipationEventId,
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
@@ -519,15 +519,17 @@ pub async fn send_native_token_command(
         let rent_structure = account_handle.client().get_rent_structure().await?;
         let token_supply = account_handle.client().get_token_supply().await?;
 
-        let outputs = vec![BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
-            .add_unlock_condition(UnlockCondition::Address(AddressUnlockCondition::new(
-                Address::try_from_bech32(address)?.1,
-            )))
-            .with_native_tokens(vec![NativeToken::new(
-                TokenId::from_str(&token_id)?,
-                U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
-            )?])
-            .finish_output(token_supply)?];
+        let outputs = vec![
+            BasicOutputBuilder::new_with_minimum_storage_deposit(rent_structure)?
+                .add_unlock_condition(UnlockCondition::Address(AddressUnlockCondition::new(
+                    Address::try_from_bech32(address)?.1,
+                )))
+                .with_native_tokens(vec![NativeToken::new(
+                    TokenId::from_str(&token_id)?,
+                    U256::from_dec_str(&amount).map_err(|e| Error::Miscellaneous(e.to_string()))?,
+                )?])
+                .finish_output(token_supply)?,
+        ];
 
         account_handle.send(outputs, None).await?
     } else {
@@ -608,7 +610,9 @@ pub async fn unspent_outputs_command(account_handle: &AccountHandle) -> Result<(
 }
 
 pub async fn vote_command(account_handle: &AccountHandle, event_id: String, answers: Vec<u8>) -> Result<(), Error> {
-    let transaction = account_handle.vote(EventId::from_str(&event_id)?, answers).await?;
+    let transaction = account_handle
+        .vote(Some(ParticipationEventId::from_str(&event_id)?), Some(answers))
+        .await?;
 
     log::info!(
         "Voting transaction sent:\n{:?}\n{:?}",
@@ -620,7 +624,9 @@ pub async fn vote_command(account_handle: &AccountHandle, event_id: String, answ
 }
 
 pub async fn stop_participating_command(account_handle: &AccountHandle, event_id: String) -> Result<(), Error> {
-    let transaction = account_handle.stop_participating(EventId::from_str(&event_id)?).await?;
+    let transaction = account_handle
+        .stop_participating(ParticipationEventId::from_str(&event_id)?)
+        .await?;
 
     log::info!(
         "Stop participating transaction sent:\n{:?}\n{:?}",
