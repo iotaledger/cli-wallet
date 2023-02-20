@@ -14,7 +14,7 @@ Compare the checksum from the release with a checksum locally produced.
 
 You can use the following command to produce the checksum.
 ```sh
-$ shasum -a 256 [PATH TO BINARY]
+shasum -a 256 [PATH TO BINARY]
 ```
 
 ### 3. Rename
@@ -22,7 +22,7 @@ $ shasum -a 256 [PATH TO BINARY]
 For convenience, rename the binary to simply `wallet`.
 
 ```sh
-$ mv [PATH TO BINARY] wallet
+mv [PATH TO BINARY] wallet
 ```
 
 ## From source
@@ -34,9 +34,9 @@ https://www.rust-lang.org/tools/install
 ### 2. Compile
 
 ```sh
-$ git clone https://github.com/iotaledger/cli-wallet -b develop
-$ cd cli-wallet
-$ cargo build --profile production
+git clone https://github.com/iotaledger/cli-wallet -b develop
+cd cli-wallet
+cargo build --profile production
 ```
 
 Resulting binary will be located at `./target/production/wallet`.

@@ -18,7 +18,7 @@ The wallet needs to be initialised (`init` command) and with at least one accoun
 #### Example
 
 ```sh
-$ ./wallet
+./wallet
 ```
 
 ### `./wallet [account]`
@@ -30,7 +30,7 @@ The wallet needs to be initialised (`init` command).
 #### Example
 
 ```sh
-$ ./wallet main
+./wallet main
 ```
 
 ### `./wallet backup`
@@ -47,7 +47,7 @@ Creates a stronghold backup file.
 
 Create a stronghold backup file.
 ```sh
-$ ./wallet backup backup.stronghold
+./wallet backup backup.stronghold
 ```
 
 ### `./wallet change-password`
@@ -58,7 +58,7 @@ Changes the stronghold password.
 
 Change the stronghold password.
 ```sh
-$ ./wallet change-password
+./wallet change-password
 ```
 
 ### `./wallet help`
@@ -68,7 +68,7 @@ Displays the account manager interface usage and exits.
 #### Example
 
 ```sh
-$ ./wallet help
+./wallet help
 ```
 
 ### `./wallet init`
@@ -91,24 +91,24 @@ When just initialised, the wallet has no account yet, use the `new` command to c
 
 Initialise the wallet with a randomly generated mnemonic and the default node.
 ```sh
-$ ./wallet init
+./wallet init
 ```
 
 Initialise the wallet with a given mnemonic and the default node.
 DO NOT USE THIS MNEMONIC.
 ```sh
-$ ./wallet init --mnemonic "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt"
+./wallet init --mnemonic "aunt middle impose faith ramp kid olive good practice motor grab ready group episode oven matrix silver rhythm avocado assume humble tiger shiver hurt"
 ```
 
 Initialise the wallet with a randomly generated mnemonic and a given node.
 ```sh
-$ ./wallet init --node http://localhost:14265
+./wallet init --node http://localhost:14265
 ```
 
 Initialise the wallet with a given coin type.
 See [SLIP-0044](https://github.com/satoshilabs/slips/blob/master/slip-0044.md) for all registered coin types.
 ```sh
-$ ./wallet init --coin-type 4219
+./wallet init --coin-type 4219
 ```
 
 ### `./wallet mnemonic`
@@ -119,7 +119,7 @@ Generates a new random mnemonic.
 
 Generate a new random mnemonic.
 ```sh
-$ ./wallet mnemonic
+./wallet mnemonic
 ```
 
 ### `./wallet new`
@@ -138,12 +138,12 @@ The wallet needs to be initialised (`init` command).
 
 Create a new account with the account index as alias.
 ```sh
-$ ./wallet new
+./wallet new
 ```
 
 Create a new account with a provided alias.
 ```sh
-$ ./wallet new main
+./wallet new main
 ```
 
 ### `./wallet restore`
@@ -160,7 +160,7 @@ Restores accounts from a stronghold backup file.
 
 Restore accounts from a stronghold backup file.
 ```sh
-$ ./wallet restore backup.stronghold
+./wallet restore backup.stronghold
 ```
 
 ### `./wallet set-node`
@@ -178,7 +178,7 @@ The new node URL is persisted to the storage and all future requests will use it
 #### Example
 
 ```sh
-$ ./wallet set-node http://localhost:14265
+./wallet set-node http://localhost:14265
 ```
 
 ### `./wallet sync`
@@ -188,5 +188,5 @@ Synchronises all accounts.
 #### Example
 
 ```sh
-$ ./wallet sync
+./wallet sync
 ```

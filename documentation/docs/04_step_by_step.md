@@ -8,14 +8,14 @@ It is advised to do them all at least once in the given order to understand the 
 
 Initialise the wallet with a given node and a randomly generated mnemonic.
 ```sh
-$ ./wallet init --node [NODE API URL]
+./wallet init --node [NODE API URL]
 > ...
 > INFO  Mnemonic stored successfully
 ```
 
 Create a main account.
 ```sh
-$ ./wallet new main
+./wallet new main
 > ...
 > INFO  Created account "main"
 > Account "main": exit
@@ -23,7 +23,7 @@ $ ./wallet new main
 
 Create a savings account.
 ```sh
-$ ./wallet new savings
+./wallet new savings
 > ...
 > INFO  Created account "savings"
 > Account "savings": exit
@@ -33,7 +33,7 @@ $ ./wallet new savings
 
 Get some funds from the faucet to the main account.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": faucet [FAUCET ENQUEUE API URL]
 > ...
 > Account "main": sync
@@ -46,7 +46,7 @@ $ ./wallet main
 
 Get an address from the savings account.
 ```sh
-$ ./wallet savings
+./wallet savings
 > Account "savings": addresses
 > INFO  Address 0: [ADDRESS]
 > Account "savings": exit
@@ -54,7 +54,7 @@ $ ./wallet savings
 
 Send a regular amount from the main account to the savings address.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": send [ADDRESS] 1000000
 > ...
 > INFO  Transaction sent:
@@ -67,7 +67,7 @@ $ ./wallet main
 
 Generate a new address from the savings account.
 ```sh
-$ ./wallet savings
+./wallet savings
 > Account "savings": new-address
 > ...
 > INFO  Address 1: [ADDRESS]
@@ -76,7 +76,7 @@ $ ./wallet savings
 
 Send a micro amount from the main account to the savings address.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": send-micro [ADDRESS] 1
 > ...
 > INFO  Micro transaction sent:
@@ -87,7 +87,7 @@ $ ./wallet main
 
 Check the savings balance.
 ```sh
-$ ./wallet savings
+./wallet savings
 > Account "savings": balance
 > ...
 > INFO  AccountBalance ...
@@ -100,7 +100,7 @@ $ ./wallet savings
 
 Mint native tokens, with foundry metadata, from the main account.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": mint-native-token 1000 1000 --foundry-metadata-hex 0xabcdef
 > ...
 > INFO  Native token minting transaction sent:
@@ -113,7 +113,7 @@ $ ./wallet main
 
 Generate a new address from the savings account.
 ```sh
-$ ./wallet savings
+./wallet savings
 > Account "savings": new-address
 > ...
 > INFO  Address 2: [ADDRESS]
@@ -122,7 +122,7 @@ $ ./wallet savings
 
 Send native tokens to the savings address.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": sync
 > ...
 > INFO  Synced: AccountBalance ...TokenId([TOKEN ID])...
@@ -139,7 +139,7 @@ $ ./wallet main
 
 Mint an NFT.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": mint-nft
 > ...
 > INFO  NFT minting transaction sent:
@@ -152,7 +152,7 @@ $ ./wallet main
 
 Generate a new address from the savings account.
 ```sh
-$ ./wallet savings
+./wallet savings
 > Account "savings": new-address
 > ...
 > INFO  Address 3: [ADDRESS]
@@ -161,7 +161,7 @@ $ ./wallet savings
 
 Send the NFT to the savings address.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": sync
 > ...
 > INFO  Synced: AccountBalance ...NftId([NFT ID])...
@@ -176,7 +176,7 @@ $ ./wallet main
 
 List the transactions of the main account.
 ```sh
-$ ./wallet main
+./wallet main
 > Account "main": transactions
 > ...
 > INFO  Transaction...
