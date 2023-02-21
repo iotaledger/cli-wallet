@@ -10,6 +10,7 @@ use iota_wallet::{
         AccountHandle, OutputsToClaim,
     },
     iota_client::{
+        api_types::plugins::participation::types::ParticipationEventId,
         block::{
             address::Address,
             output::{
@@ -17,7 +18,6 @@ use iota_wallet::{
                 OutputId, TokenId, UnlockCondition,
             },
         },
-        node_api::participation::types::ParticipationEventId,
         request_funds_from_faucet,
     },
     AddressAndNftId, AddressNativeTokens, AddressWithAmount, AddressWithMicroAmount, NativeTokenOptions, NftOptions,
