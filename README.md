@@ -1,3 +1,6 @@
+> **Warning**
+> Archived - The CLI wallet has been moved to [wallet.rs](https://github.com/iotaledger/wallet.rs)
+
 # IOTA Stardust CLI Wallet
 
 ![cli-wallet](./documentation/static/img/cli-wallet.gif)
