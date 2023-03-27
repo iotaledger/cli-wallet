@@ -15,7 +15,7 @@ path = "src/main.rs"
 anyhow = "1.0.38"
 iota-wallet = { git = "https://github.com/iotaledger/wallet.rs", rev = "b6772bfd7c89a45be222c9a8991fe73a6ddfccc5", features = ["ledger-nano", "ledger-nano-simulator"] }
 tokio = { version = "1.12.0", features = ["full"] }
-dialoguer = "0.8.0"
+dialoguer = "0.10.3"
 clap = { version = "3.0.0-beta.2", features = ["yaml"] }
 serde_json = { version = "1.0.68", default-features = false }
 futures = "0.3.17"
